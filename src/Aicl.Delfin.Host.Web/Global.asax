@@ -1,0 +1,1 @@
+<%@ Application Inherits="Aicl.Delfin.Host.Web.Global" %>
