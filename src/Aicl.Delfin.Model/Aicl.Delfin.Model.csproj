@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Aicl.Delfin.Model</RootNamespace>
+    <AssemblyName>Aicl.Delfin.Model</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\..\lib\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite">
+      <HintPath>..\..\lib\ServiceStack.OrmLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="ServiceStack.FluentValidation.Mvc3">
+      <HintPath>..\..\lib\ServiceStack.FluentValidation.Mvc3.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface">
+      <HintPath>..\..\lib\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Operations\Response.cs" />
+    <Compile Include="Operations\AuthenticationResponse.cs" />
+    <Compile Include="Operations\AuthorizationResponse.cs" />
+    <Compile Include="Types\Auth\AuthRole.cs" />
+    <Compile Include="Types\Auth\Authentication.cs" />
+    <Compile Include="Types\Auth\Authorization.cs" />
+    <Compile Include="Types\Auth\AuthPermission.cs" />
+    <Compile Include="Types\Auth\AuthRolePermission.cs" />
+    <Compile Include="Types\Auth\AuthRoleUser.cs" />
+    <Compile Include="Attributes\Auth\Authentication.cs" />
+    <Compile Include="Attributes\Auth\AuthPermission.cs" />
+    <Compile Include="Attributes\Auth\AuthRole.cs" />
+    <Compile Include="Attributes\Auth\AuthRolePermission.cs" />
+    <Compile Include="Attributes\Auth\AuthRoleUser.cs" />
+    <Compile Include="IHasIntUserId.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Operations\" />
+    <Folder Include="Properties\" />
+    <Folder Include="Attributes\" />
+    <Folder Include="Types\Auth\" />
+    <Folder Include="Attributes\Auth\" />
+  </ItemGroup>
+</Project>
