@@ -55,6 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Paginador.cs" />
     <Compile Include="BL.Authorization.cs" />
+    <Compile Include="BL.Ciudad.cs" />
+    <Compile Include="BL.cs" />
+    <Compile Include="BL.Cliente.cs" />
+    <Compile Include="BL.Contacto.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

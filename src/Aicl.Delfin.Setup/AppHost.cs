@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Funq;
 using ServiceStack.CacheAccess;
@@ -63,13 +64,51 @@ namespace Aicl.Delfin.Setup
 
             log.InfoFormat("Configurando role Admin");
             ConfigurePermissions(dbFactory, cu);
-			
+
+			CreateAppTables(dbFactory);
+
 			log.InfoFormat("AppHost Configured: " + DateTime.Now);
 		}
 		
-		
+
+		void CreateAppTables(IDbConnectionFactory factory)
+        {
+			log.InfoFormat("Creando AppTables....");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var fileName= appSettings.Get<string>("AssemblyWithModels", string.Empty);
+			if(string.IsNullOrEmpty( fileName )){
+				log.InfoFormat("AssemblyWithModels NO Definido");
+			}
+
+			var nameSpace= appSettings.Get<string>("ModelsNamespace", string.Empty);
+
+			Assembly assembly = Assembly.LoadFrom(fileName);
+
+			if (assembly==null){
+				log.InfoFormat("AssemblyWithModels NO pudo ser cargado");
+			}
+
+			factory.Exec(dbCmd=>{
+				foreach(Type t in  assembly.GetTypes()){
+					if (t.Namespace==nameSpace && !( t.Name.StartsWith("Auth") || t.Name.StartsWith("Userauth"))
+					    && ! t.IsInterface
+					    )
+					{	
+						log.InfoFormat( "Creando {0} ", t.Name);
+						dbCmd.CreateTable(false, t);
+						log.InfoFormat( "Tabla {0} creada", t.Name);
+					}
+				}
+			});
+
+			log.InfoFormat("AppTables ok");
+		}
+
         void ConfigurePermissions(IDbConnectionFactory factory, CreatedUsers users)
         {
+
 
             var appSettings = new ConfigurationResourceManager();
 
@@ -78,12 +117,12 @@ namespace Aicl.Delfin.Setup
 
             factory.Exec(dbCmd=>{
 
-                log.InfoFormat("Creando tablas");
+                log.InfoFormat("Creando Auth tablas");
                 dbCmd.CreateTable<AuthPermission>();
                 dbCmd.CreateTable<AuthRole>();
                 dbCmd.CreateTable<AuthRolePermission>();
                 dbCmd.CreateTable<AuthRoleUser>();
-                log.InfoFormat("Tablas creadas");
+                log.InfoFormat("Auth Tablas creadas");
 
                 AuthRole aur= dbCmd.FirstOrDefault<AuthRole>(r=> r.Name=="Admin");
                 if(aur==default(AuthRole))

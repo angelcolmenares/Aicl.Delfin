@@ -66,6 +66,9 @@
     <Compile Include="Attributes\Auth\AuthRolePermission.cs" />
     <Compile Include="Attributes\Auth\AuthRoleUser.cs" />
     <Compile Include="IHasIntUserId.cs" />
+    <Compile Include="Types\Cliente.cs" />
+    <Compile Include="Types\Contacto.cs" />
+    <Compile Include="Types\Ciudad.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -62,6 +62,9 @@
     <Compile Include="Auth\AuthenticationProvider.cs" />
     <Compile Include="Auth\AuthorizationService.cs" />
     <Compile Include="Auth\AuthenticationService.cs" />
+    <Compile Include="Services\CiudadService.cs" />
+    <Compile Include="Services\ClienteService.cs" />
+    <Compile Include="Services\ContactoService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
