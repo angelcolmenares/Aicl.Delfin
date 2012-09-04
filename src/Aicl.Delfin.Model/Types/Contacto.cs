@@ -21,6 +21,8 @@ namespace Aicl.Delfin.Model.Types
 		[AutoIncrement]
 		public int Id { get; set; }
 
+		public int IdCliente { get; set; }
+
         [StringLength(128)]
         [Required]
 		[Index]
@@ -46,7 +48,7 @@ namespace Aicl.Delfin.Model.Types
 		[Required]
         public string Direccion {get;set;}
 
-		[StringLength(6)]
+		[StringLength(16)]
         public string CodigoPostal {get;set;}
 
 		public bool Activo { get; set;}

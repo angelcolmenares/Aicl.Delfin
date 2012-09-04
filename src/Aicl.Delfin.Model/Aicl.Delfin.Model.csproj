@@ -69,6 +69,12 @@
     <Compile Include="Types\Cliente.cs" />
     <Compile Include="Types\Contacto.cs" />
     <Compile Include="Types\Ciudad.cs" />
+    <Compile Include="Types\Servicio.cs" />
+    <Compile Include="Types\Procedimiento.cs" />
+    <Compile Include="Types\PedidoItem.cs" />
+    <Compile Include="Types\ServicioProcedimiento.cs" />
+    <Compile Include="Types\Pedido.cs" />
+    <Compile Include="Types\FormaPago.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -66,6 +66,7 @@ namespace Aicl.Delfin.Setup
             ConfigurePermissions(dbFactory, cu);
 
 			CreateAppTables(dbFactory);
+			CreateCiudades(dbFactory);
 
 			log.InfoFormat("AppHost Configured: " + DateTime.Now);
 		}
@@ -90,6 +91,9 @@ namespace Aicl.Delfin.Setup
 				log.InfoFormat("AssemblyWithModels NO pudo ser cargado");
 			}
 
+
+			var recreateAppTables = appSettings.Get<bool>("RecreateAppTables", false);
+
 			factory.Exec(dbCmd=>{
 				foreach(Type t in  assembly.GetTypes()){
 					if (t.Namespace==nameSpace && !( t.Name.StartsWith("Auth") || t.Name.StartsWith("Userauth"))
@@ -97,7 +101,7 @@ namespace Aicl.Delfin.Setup
 					    )
 					{	
 						log.InfoFormat( "Creando {0} ", t.Name);
-						dbCmd.CreateTable(false, t);
+						dbCmd.CreateTable(recreateAppTables, t);
 						log.InfoFormat( "Tabla {0} creada", t.Name);
 					}
 				}
@@ -105,6 +109,26 @@ namespace Aicl.Delfin.Setup
 
 			log.InfoFormat("AppTables ok");
 		}
+
+		void CreateCiudades(IDbConnectionFactory factory)
+        {
+			log.InfoFormat("Creando Ciudades....");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var crear= appSettings.Get<bool>("CrearCiudades", false);
+			if(!crear){
+				log.InfoFormat("Crear ciudades NO");
+			}
+
+			factory.Exec(dbCmd=>{
+				dbCmd.DeleteAll<Ciudad>();
+				dbCmd.InsertAll(new Ciudades());
+			});
+
+			log.InfoFormat("Crear Ciudades ok");
+		}
+
 
         void ConfigurePermissions(IDbConnectionFactory factory, CreatedUsers users)
         {
@@ -143,7 +167,6 @@ namespace Aicl.Delfin.Setup
                     dbCmd.Insert(auru);
                     log.InfoFormat("Admin Role asignado al usuario Admin");
                 }
-
 
              });
 

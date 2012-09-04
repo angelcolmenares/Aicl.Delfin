@@ -65,6 +65,12 @@
     <Compile Include="Services\CiudadService.cs" />
     <Compile Include="Services\ClienteService.cs" />
     <Compile Include="Services\ContactoService.cs" />
+    <Compile Include="Services\FormaPagoService.cs" />
+    <Compile Include="Services\PedidoService.cs" />
+    <Compile Include="Services\PedidoItemService.cs" />
+    <Compile Include="Services\ProcedimientoService.cs" />
+    <Compile Include="Services\ServicioService.cs" />
+    <Compile Include="Services\ServicioProcedimiento.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

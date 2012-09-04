@@ -20,13 +20,15 @@ namespace Aicl.Delfin.Model.Types
 		[AutoIncrement]
 		public int Id { get; set; }
 
-        [StringLength(128)]
+        [StringLength(48)]
         [Required]
 		[Index]
         public string Nombre {get;set;}
 
-		[StringLength(4)]
-        public string CodigoPostal {get;set;}
+		[StringLength(5)]
+		[Required]
+		[Index(true)]
+        public string Codigo {get;set;}
 
 	}
 }
