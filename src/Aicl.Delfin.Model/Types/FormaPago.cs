@@ -1,6 +1,5 @@
 using ServiceStack.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
-using ServiceStack.DesignPatterns.Model;
 using ServiceStack.ServiceHost;
 
 namespace Aicl.Delfin.Model.Types
@@ -9,7 +8,7 @@ namespace Aicl.Delfin.Model.Types
 	[RestService("/FormaPago/read","get")]
 	[RestService("/FormaPago/update/{Id}","put")]
 	[RestService("/FormaPago/destroy/{Id}","delete" )]
-	public class FormaPago:IHasId<int>
+	public class FormaPago:IHasActivo
 	{
 
 		public FormaPago ()
@@ -29,6 +28,7 @@ namespace Aicl.Delfin.Model.Types
 
 		public int DiasCredito {get;set;}
 
+		public bool Activo {get;set;}
 	}
 }
 

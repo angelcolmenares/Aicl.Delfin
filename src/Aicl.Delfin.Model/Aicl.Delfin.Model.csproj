@@ -75,6 +75,9 @@
     <Compile Include="Types\ServicioProcedimiento.cs" />
     <Compile Include="Types\Pedido.cs" />
     <Compile Include="Types\FormaPago.cs" />
+    <Compile Include="Types\Consecutivo.cs" />
+    <Compile Include="IHasActivo.cs" />
+    <Compile Include="Types\ClienteContacto.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

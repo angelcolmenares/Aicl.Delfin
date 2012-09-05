@@ -11,7 +11,7 @@ namespace Aicl.Delfin.Model.Types
 	[RestService("/Cliente/read/Nit/{Nit}","get")]
 	[RestService("/Cliente/update/{Id}","put")]
 	[RestService("/Cliente/destroy/{Id}","delete" )]
-	public class Cliente:IHasId<int>
+	public class Cliente:IHasActivo
 	{
 		public Cliente ()
 		{

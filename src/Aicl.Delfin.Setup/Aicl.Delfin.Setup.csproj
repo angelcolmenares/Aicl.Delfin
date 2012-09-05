@@ -76,6 +76,7 @@
     <Compile Include="AppHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ciudades.cs" />
+    <Compile Include="FormasPago.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

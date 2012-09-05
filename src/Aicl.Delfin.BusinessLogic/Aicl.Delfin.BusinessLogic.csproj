@@ -65,6 +65,7 @@
     <Compile Include="BL.Procedimiento.cs" />
     <Compile Include="BL.Servicio.cs" />
     <Compile Include="BL.ServicioProcedimiento.cs" />
+    <Compile Include="BL.Consecutivo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

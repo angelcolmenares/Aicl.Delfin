@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 using Funq;
@@ -67,6 +68,7 @@ namespace Aicl.Delfin.Setup
 
 			CreateAppTables(dbFactory);
 			CreateCiudades(dbFactory);
+			CreateFormasPago(dbFactory);
 
 			log.InfoFormat("AppHost Configured: " + DateTime.Now);
 		}
@@ -84,13 +86,15 @@ namespace Aicl.Delfin.Setup
 			}
 
 			var nameSpace= appSettings.Get<string>("ModelsNamespace", string.Empty);
+			var ignore = appSettings.Get<string>("Ignore", string.Empty);
+
+			string [] ilist= ignore.Split(',');
 
 			Assembly assembly = Assembly.LoadFrom(fileName);
 
 			if (assembly==null){
 				log.InfoFormat("AssemblyWithModels NO pudo ser cargado");
 			}
-
 
 			var recreateAppTables = appSettings.Get<bool>("RecreateAppTables", false);
 
@@ -101,7 +105,7 @@ namespace Aicl.Delfin.Setup
 					    )
 					{	
 						log.InfoFormat( "Creando {0} ", t.Name);
-						dbCmd.CreateTable(recreateAppTables, t);
+						dbCmd.CreateTable(recreateAppTables &&  !ilist.Contains(t.Name), t);
 						log.InfoFormat( "Tabla {0} creada", t.Name);
 					}
 				}
@@ -116,9 +120,10 @@ namespace Aicl.Delfin.Setup
 
 			var appSettings = new ConfigurationResourceManager();
 
-			var crear= appSettings.Get<bool>("CrearCiudades", false);
+			var crear= appSettings.Get<bool>("CreateCiudades", false);
 			if(!crear){
 				log.InfoFormat("Crear ciudades NO");
+				return;
 			}
 
 			factory.Exec(dbCmd=>{
@@ -128,6 +133,27 @@ namespace Aicl.Delfin.Setup
 
 			log.InfoFormat("Crear Ciudades ok");
 		}
+
+		void CreateFormasPago(IDbConnectionFactory factory)
+        {
+			log.InfoFormat("Creando FormasPago....");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var crear= appSettings.Get<bool>("CreateFormasPago", false);
+			if(!crear){
+				log.InfoFormat("Crear FormasPago NO");
+				return;
+			}
+
+			factory.Exec(dbCmd=>{
+				dbCmd.DeleteAll<FormaPago>();
+				dbCmd.InsertAll(new FormasPago());
+			});
+
+			log.InfoFormat("Crear FormasPago ok");
+		}
+
 
 
         void ConfigurePermissions(IDbConnectionFactory factory, CreatedUsers users)

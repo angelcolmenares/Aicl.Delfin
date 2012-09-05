@@ -30,6 +30,9 @@ namespace Aicl.Delfin.Model.Types
 		[AutoIncrement]
 		public int Id { get;set;}
 
+		[Index(true)]
+		public int Consecutivo {get;set;}
+
 		public int IdContacto {get; set;}
 
 		public DateTime FechaCreacion {get;set;}

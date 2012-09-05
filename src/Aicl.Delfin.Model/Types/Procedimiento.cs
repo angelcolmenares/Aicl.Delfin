@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using ServiceStack.DataAnnotations;
-using ServiceStack.DesignPatterns.Model;
 using ServiceStack.ServiceHost;
 
 namespace Aicl.Delfin.Model.Types
@@ -12,7 +11,7 @@ namespace Aicl.Delfin.Model.Types
 	[RestService("/Procedimiento/read/Nombre/{Nombre}","get")]
 	[RestService("/Procedimiento/update/{Id}","put")]
 	[RestService("/Procedimiento/destroy/{Id}","delete" )]
-	public class Procedimiento:IHasId<int>
+	public class Procedimiento:IHasActivo
 	{
 		public Procedimiento ()
 		{

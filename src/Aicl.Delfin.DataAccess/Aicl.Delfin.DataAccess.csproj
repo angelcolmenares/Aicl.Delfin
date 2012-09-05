@@ -60,11 +60,11 @@
     <Compile Include="DALProxy.cs" />
     <Compile Include="RedisExtensions.cs" />
     <Compile Include="OrmLiteExtensions.cs" />
+    <Compile Include="DALProxyExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="DAL\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aicl.Delfin.Model\Aicl.Delfin.Model.csproj">
