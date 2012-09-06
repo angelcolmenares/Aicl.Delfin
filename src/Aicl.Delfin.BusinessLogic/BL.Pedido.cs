@@ -8,6 +8,7 @@ using Mono.Linq.Expressions;
 using System.Collections.Generic;
 using System;
 using ServiceStack.ServiceInterface;
+using ServiceStack.Common;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -25,6 +26,19 @@ namespace Aicl.Delfin.BusinessLogic
 				var paginador= new Paginador(httpRequest);
             	
                 var predicate = PredicateBuilder.True<Pedido>();
+
+				if(request.Consecutivo!=default(int))
+				{
+					predicate= q=>q.Consecutivo==request.Consecutivo;
+				}
+				else
+				{
+					if(!request.NombreCliente.IsNullOrEmpty())
+						predicate= q=>q.NombreCliente.StartsWith(request.NombreCliente);
+
+					if(!request.NitCliente.IsNullOrEmpty())
+						predicate= predicate.AndAlso(q=>q.NitCliente.StartsWith(request.NitCliente));
+				}
 
                 var visitor = ReadExtensions.CreateExpression<Pedido>();
 				visitor.Where(predicate);

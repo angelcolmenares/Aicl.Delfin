@@ -397,8 +397,8 @@ Ext.define('Aicl.data.Store',{
     	
     	config.proxy= config.proxy || Aicl.Util.createRestProxy( {
     		storeId: config.storeId,
-			url: config.proxy && config.proxy.url?
-				config.proxy.url:
+			url: config.url?
+				config.url:
 				Aicl.Util.getUrlApi()+'/' + config.storeId
     	});
     	
@@ -409,7 +409,6 @@ Ext.define('Aicl.data.Store',{
             write: (config.listeners && config.listeners.write)?
             config.listeners.write(store, operation, options):
             function(store, operation, options){
-            	//console.log('store'+ this.storeId+ '  write arguments: ', arguments); 
                 var record =  operation.getRecords()[0],
                     name = Ext.String.capitalize(operation.action),
                     verb;                                
@@ -419,13 +418,32 @@ Ext.define('Aicl.data.Store',{
                 } else {
                     verb = name + 'd';
                 }
-                //console.log('store'+ this.storeId +' write record: ', record);
                 Aicl.Util.msg(name, Ext.String.format("{0} {1}: {2}", verb, this.storeId , record.getId()));
             }
         };
         this.callParent(arguments);
     }
 });  
+
+Ext.define('Aicl.data.RemoteStore',{
+	extend: 'Aicl.data.Store',
+	constructor: function(config){
+		config=config||{};
+		config.pageSize= 12;
+    	config.remoteSort=true;
+    	config.proxy= config.proxy || Aicl.Util.createRestProxy({
+    		storeId:config.storeId,
+    		url: config.url?
+				config.url:
+				Aicl.Util.getUrlApi()+'/' + config.storeId,
+    		totalProperty: 'TotalCount',
+        	pageParam:'page',
+        	limitParam:'limit',
+        	startParam:'start'
+    	});
+		if(arguments.length==0)	this.callParent([config]);	else this.callParent(arguments);
+	}
+});
 
 
 Ext.data.Store.implement({
@@ -2248,3 +2266,476 @@ Ext.define('Ext.ux.layout.component.field.BoxSelectField', {
 // fin custom combobox
 
 
+// models 
+Ext.define('App.model.Ciudad',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Nombre',
+		type: 'string'
+	},{
+		name: 'Codigo',
+		type: 'string'
+	}]
+});
+
+Ext.define('App.model.Cliente',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Nit',
+		type: 'string'
+	},{
+		name: 'Nombre',
+		type: 'string'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	}]
+});
+
+Ext.define('App.model.ClienteContacto',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'IdContacto',
+		type: 'int'
+	},{
+		name: 'NombreContacto',
+		type: 'string'
+	},{
+		name: 'CargoContacto',
+		type: 'string'
+	},{
+		name: 'TelefonoContacto',
+		type: 'string'
+	},{
+		name: 'FaxContacto',
+		type: 'string'
+	},{
+		name: 'CelularContacto',
+		type: 'string'
+	},{
+		name: 'MailContacto',
+		type: 'string'
+	},{
+		name: 'DireccionContacto',
+		type: 'string'
+	},{
+		name: 'CodigoPostalContacto',
+		type: 'string'
+	},{
+		name: 'ActivoContacto',
+		type: 'boolean'
+	},{
+		name: 'IdCiudad',
+		type: 'int'
+	},{
+		name: 'NombreCiudad',
+		type: 'string'
+	},{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Nit',
+		type: 'string'
+	},{
+		name: 'Nombre',
+		type: 'string'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	}]
+});
+
+Ext.define('App.model.Consecutivo',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Documento',
+		type: 'string'
+	},{
+		name: 'Prefijo',
+		type: 'string'
+	},{
+		name: 'Valor',
+		type: 'int'
+	}]
+});
+
+Ext.define('App.model.Contacto',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'IdCliente',
+		type: 'int'
+	},{
+		name: 'Nombre',
+		type: 'string'
+	},{
+		name: 'Cargo',
+		type: 'string'
+	},{
+		name: 'Telefono',
+		type: 'string'
+	},{
+		name: 'Fax',
+		type: 'string'
+	},{
+		name: 'Celular',
+		type: 'string'
+	},{
+		name: 'Mail',
+		type: 'string'
+	},{
+		name: 'Direccion',
+		type: 'string'
+	},{
+		name: 'CodigoPostal',
+		type: 'string'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	},{
+		name: 'IdCiudad',
+		type: 'int'
+	},{
+		name: 'NombreCiudad',
+		type: 'string'
+	}]
+});
+
+Ext.define('App.model.FormaPago',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Modo',
+		type: 'string'
+	},{
+		name: 'Descripcion',
+		type: 'string'
+	},{
+		name: 'DiasCredito',
+		type: 'int'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	}]
+});
+
+Ext.define('App.model.Pedido',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Consecutivo',
+		type: 'int'
+	},{
+		name: 'IdContacto',
+		type: 'int'
+	},{
+		name: 'FechaCreacion',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'FechaActualizacion',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'FechaEnvio',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'FechaAceptacion',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'FechaAnulado',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'DiasDeVigencia',
+		type: 'int'
+	},{
+		name: 'VigenteHasta',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'IdCreadoPor',
+		type: 'int'
+	},{
+		name: 'NombreCreadoPor',
+		type: 'string'
+	},{
+		name: 'IdEnviadoPor',
+		type: 'int'
+	},{
+		name: 'NombreEnviadoPor',
+		type: 'string'
+	},{
+		name: 'IdAceptadoPor',
+		type: 'int'
+	},{
+		name: 'NombreAceptadoPor',
+		type: 'string'
+	},{
+		name: 'IdAnuladoPor',
+		type: 'int'
+	},{
+		name: 'NombreAnuladoPor',
+		type: 'string'
+	},{
+		name: 'IdFormaPago',
+		type: 'int'
+	},{
+		name: 'DescripcionFormaPago',
+		type: 'string'
+	},{
+		name: 'NombreContacto',
+		type: 'string'
+	},{
+		name: 'CargoContacto',
+		type: 'string'
+	},{
+		name: 'TelefonoContacto',
+		type: 'string'
+	},{
+		name: 'FaxContacto',
+		type: 'string'
+	},{
+		name: 'CelularContacto',
+		type: 'string'
+	},{
+		name: 'MailContacto',
+		type: 'string'
+	},{
+		name: 'DireccionContacto',
+		type: 'string'
+	},{
+		name: 'CodigoPostalContacto',
+		type: 'string'
+	},{
+		name: 'NitCliente',
+		type: 'string'
+	},{
+		name: 'NombreCliente',
+		type: 'string'
+	}]
+});
+
+Ext.define('App.model.PedidoItem',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'IdServicio',
+		type: 'int'
+	},{
+		name: 'IdProcedimiento',
+		type: 'int'
+	},{
+		name: 'Cantidad',
+		type: 'int'
+	},{
+		name: 'Descripcion',
+		type: 'string'
+	},{
+		name: 'Nota',
+		type: 'string'
+	},{
+		name: 'NombreServicio',
+		type: 'string'
+	},{
+		name: 'DescripcionProcedimiento',
+		type: 'string'
+	},{
+		name: 'Descuento',
+		type: 'number'
+	},{
+		name: 'ValorUnitario',
+		type: 'number'
+	},{
+		name: 'PorcentajeIva',
+		type: 'number'
+	},{
+		name: 'ValorBase',
+		type: 'number'
+	},{
+		name: 'ValorIva',
+		type: 'number'
+	}]
+});
+
+Ext.define('App.model.Procedimiento',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Nombre',
+		type: 'string'
+	},{
+		name: 'Descripcion',
+		type: 'string'
+	},{
+		name: 'ValorUnitario',
+		type: 'number'
+	},{
+		name: 'PorcentajeIva',
+		type: 'number'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	},{
+		name: 'ValorBase',
+		type: 'number'
+	},{
+		name: 'ValorIva',
+		type: 'number'
+	}]
+});
+
+Ext.define('App.model.Servicio',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Nombre',
+		type: 'string'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	}]
+});
+
+Ext.define('App.model.ServicioProcedimiento',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'IdServicio',
+		type: 'int'
+	},{
+		name: 'IdProcedimiento',
+		type: 'int'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	},{
+		name: 'NombreProcedimiento',
+		type: 'string'
+	},{
+		name: 'DescripcionProcedimiento',
+		type: 'string'
+	},{
+		name: 'ValorUnitarioProcedimiento',
+		type: 'number'
+	},{
+		name: 'PorcentajeIvaProcedimiento',
+		type: 'number'
+	},{
+		name: 'ActivoProcedimiento',
+		type: 'boolean'
+	},{
+		name: 'ValorBaseProcedimiento',
+		type: 'number'
+	},{
+		name: 'ValorIvaProcedimiento',
+		type: 'number'
+	}]
+});
+// fin models
+
+// stores
+Ext.define('App.store.Ciudad',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.Ciudad',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Ciudad';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.Cliente',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.Cliente',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Cliente';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+
+Ext.define('App.store.ClienteContacto',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.ClienteContacto',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'ClienteContacto';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.Consecutivo',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Consecutivo',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Consecutivo';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.Contacto',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Contacto',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Contacto';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.FormaPago',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.FormaPago',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'FormaPago';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.Pedido',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.Pedido',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Pedido';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.PedidoItem',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.PedidoItem',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'PedidoItem';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.Procedimiento',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.Procedimiento',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Procedimiento';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+
+Ext.define('App.store.Servicio',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.Servicio',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Servicio';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.ServicioProcedimiento',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.ServicioProcedimiento',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'ServicioProcedimiento';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+// fin stores

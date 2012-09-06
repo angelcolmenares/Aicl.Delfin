@@ -2,6 +2,7 @@ using System;
 using ServiceStack.DataAnnotations;
 using ServiceStack.DesignPatterns.Model;
 using ServiceStack.ServiceHost;
+using System.ComponentModel.DataAnnotations;
 
 namespace Aicl.Delfin.Model.Types
 {
@@ -25,6 +26,12 @@ namespace Aicl.Delfin.Model.Types
 		public int IdProcedimiento { get; set;}
 
 		public int Cantidad {get; set;}
+
+		[StringLength(256)]
+		public string Descripcion {get;set;} // rango y otras cosas
+
+		[StringLength(256)]
+		public string Nota {get;set;} // rango y otras cosas
 
 		[BelongsTo(typeof(Servicio),"Nombre")]
 		public string NombreServicio {get; set;}

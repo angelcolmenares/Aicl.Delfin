@@ -83,6 +83,7 @@ namespace Aicl.Delfin.Setup
 			var fileName= appSettings.Get<string>("AssemblyWithModels", string.Empty);
 			if(string.IsNullOrEmpty( fileName )){
 				log.InfoFormat("AssemblyWithModels NO Definido");
+				return;
 			}
 
 			var nameSpace= appSettings.Get<string>("ModelsNamespace", string.Empty);
@@ -94,6 +95,7 @@ namespace Aicl.Delfin.Setup
 
 			if (assembly==null){
 				log.InfoFormat("AssemblyWithModels NO pudo ser cargado");
+				return;
 			}
 
 			var recreateAppTables = appSettings.Get<bool>("RecreateAppTables", false);
@@ -105,8 +107,15 @@ namespace Aicl.Delfin.Setup
 					    )
 					{	
 						log.InfoFormat( "Creando {0} ", t.Name);
-						dbCmd.CreateTable(recreateAppTables &&  !ilist.Contains(t.Name), t);
-						log.InfoFormat( "Tabla {0} creada", t.Name);
+						try{
+							dbCmd.CreateTable(recreateAppTables &&  !ilist.Contains(t.Name), t);
+							log.InfoFormat( "Tabla {0} creada", t.Name);
+						}
+						catch(Exception e ){
+							log.InfoFormat( "Error al crear  {0} : {1} ", t.Name, e.Message);
+							Console.WriteLine("Enter para continuar");
+							Console.ReadLine();
+						}
 					}
 				}
 			});
@@ -159,20 +168,25 @@ namespace Aicl.Delfin.Setup
         void ConfigurePermissions(IDbConnectionFactory factory, CreatedUsers users)
         {
 
-
             var appSettings = new ConfigurationResourceManager();
 
-            if (!appSettings.Get<bool>("CreatePermissionsTables", false) ||
-                !appSettings.Get("AddUsers", false)) return ;
+			var reCreatePermissionsTables = appSettings.Get<bool>("ReCreatePermissionsTables", false);
+
+			Console.WriteLine("Recrear PermissionsTables : {0}", reCreatePermissionsTables);
 
             factory.Exec(dbCmd=>{
 
                 log.InfoFormat("Creando Auth tablas");
-                dbCmd.CreateTable<AuthPermission>();
-                dbCmd.CreateTable<AuthRole>();
-                dbCmd.CreateTable<AuthRolePermission>();
-                dbCmd.CreateTable<AuthRoleUser>();
+                dbCmd.CreateTable<AuthPermission>(reCreatePermissionsTables);
+                dbCmd.CreateTable<AuthRole>(reCreatePermissionsTables);
+                dbCmd.CreateTable<AuthRolePermission>(reCreatePermissionsTables);
+                dbCmd.CreateTable<AuthRoleUser>(reCreatePermissionsTables);
                 log.InfoFormat("Auth Tablas creadas");
+
+				if (!appSettings.Get("AddUsers", false)) {
+					log.InfoFormat("AddUsers NO");
+					return ;
+				}
 
                 AuthRole aur= dbCmd.FirstOrDefault<AuthRole>(r=> r.Name=="Admin");
                 if(aur==default(AuthRole))

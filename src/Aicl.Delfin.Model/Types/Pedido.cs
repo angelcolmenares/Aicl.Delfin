@@ -12,9 +12,9 @@ namespace Aicl.Delfin.Model.Types
 	[JoinTo(typeof(Contacto),typeof(Cliente),"IdCliente","Id", Order=1)]
 	[JoinTo(typeof(FormaPago),"IdFormaPago","Id", Order=2)]
 	[JoinTo(typeof(UserAuth),"IdCreadoPor","Id", Order=3)]
-	[JoinTo(typeof(UserAuth),"IdEnviadoPor","Id", ParentAlias="SendBy", Order=4, JoinType=JoinType.Left)]
-	[JoinTo(typeof(UserAuth),"IdAceptadoPor","Id", ParentAlias="AcceptedBy", Order=5, JoinType=JoinType.Left)]
-	[JoinTo(typeof(UserAuth),"IdAnuladoPor","Id", ParentAlias="AnuladoPor", Order=6, JoinType=JoinType.Left)]
+	[JoinTo(typeof(UserAuth),"IdEnviadoPor","Id", ChildAlias="SendBy", Order=4, JoinType=JoinType.Left)]
+	[JoinTo(typeof(UserAuth),"IdAceptadoPor","Id", ChildAlias="AcceptedBy", Order=5, JoinType=JoinType.Left)]
+	[JoinTo(typeof(UserAuth),"IdAnuladoPor","Id", ChildAlias="AnuladoPor", Order=6, JoinType=JoinType.Left)]
 
 	[RestService("/Pedido/create","post")]
 	[RestService("/Pedido/read","get")]
