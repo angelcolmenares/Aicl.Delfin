@@ -42,17 +42,17 @@ namespace Aicl.Delfin.Model.Types
 		[DecimalLength(10,6)]
 		public decimal Descuento {get; set;}
 
-		[DecimalLength(18,2)]
-		public decimal ValorUnitario {get; set;}
-
 		[DecimalLength(5,2)]
 		public decimal PorcentajeIva {get; set;}
 
+		[DecimalLength(18,2)]
+		public decimal ValorBase {get; set;	}
+
 		[Ignore]
 		[DecimalLength(18,2)]
-		public decimal ValorBase {
+		public decimal ValorUnitario{
 			get{
-				return Math.Ceiling(ValorUnitario/(1.00m+PorcentajeIva/100.00m));
+				return Math.Floor(ValorBase*(1.00m+PorcentajeIva/100.00m));
 			}
 		}
 

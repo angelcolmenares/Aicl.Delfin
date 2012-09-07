@@ -2302,7 +2302,7 @@ Ext.define('App.model.Cliente',{
 
 Ext.define('App.model.ClienteContacto',{
 	extend: 'Ext.data.Model',
-	idProperty: 'Id',
+	idProperty: 'IdContacto',
 	fields:[{
 		name: 'IdContacto',
 		type: 'int'

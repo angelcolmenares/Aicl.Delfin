@@ -10,11 +10,12 @@ namespace Aicl.Delfin.Model.Types
 {
 	[JoinTo(typeof(Contacto),"IdContacto","Id",Order=0)]
 	[JoinTo(typeof(Contacto),typeof(Cliente),"IdCliente","Id", Order=1)]
-	[JoinTo(typeof(FormaPago),"IdFormaPago","Id", Order=2)]
-	[JoinTo(typeof(UserAuth),"IdCreadoPor","Id", Order=3)]
-	[JoinTo(typeof(UserAuth),"IdEnviadoPor","Id", ChildAlias="SendBy", Order=4, JoinType=JoinType.Left)]
-	[JoinTo(typeof(UserAuth),"IdAceptadoPor","Id", ChildAlias="AcceptedBy", Order=5, JoinType=JoinType.Left)]
-	[JoinTo(typeof(UserAuth),"IdAnuladoPor","Id", ChildAlias="AnuladoPor", Order=6, JoinType=JoinType.Left)]
+	[JoinTo(typeof(FormaPago),"IdFormaPago","Id", Order=3)]
+	[JoinTo(typeof(UserAuth),"IdCreadoPor","Id", Order=4)]
+	[JoinTo(typeof(UserAuth),"IdEnviadoPor","Id", ChildAlias="SendBy", Order=5, JoinType=JoinType.Left)]
+	[JoinTo(typeof(UserAuth),"IdAceptadoPor","Id", ChildAlias="AcceptedBy", Order=6, JoinType=JoinType.Left)]
+	[JoinTo(typeof(UserAuth),"IdAnuladoPor","Id", ChildAlias="AnuladoPor", Order=7, JoinType=JoinType.Left)]
+	[JoinTo(typeof(Ciudad),"IdCiudadDestinatario","Id",  Order=8)]
 
 	[RestService("/Pedido/create","post")]
 	[RestService("/Pedido/read","get")]
@@ -54,7 +55,6 @@ namespace Aicl.Delfin.Model.Types
 						FechaEnvio.Value.AddDays(DiasDeVigencia>0?DiasDeVigencia-1:0):
 						FechaEnvio;
 			}
-
 		}
 
 		public int IdCreadoPor {get; set;}
@@ -93,27 +93,6 @@ namespace Aicl.Delfin.Model.Types
 		#region Contacto
 		[BelongsTo(typeof(Contacto),"Nombre")]
 		public string NombreContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"Cargo")]
-        public string CargoContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"Telefono")]
-        public string TelefonoContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"Fax")]
-        public string FaxContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"Celular")]
-        public string CelularContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"Mail")]
-        public string MailContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"Direccion")]
-        public string DireccionContacto {get;set;}
-
-		[BelongsTo(typeof(Contacto),"CodigoPostal")]
-        public string CodigoPostalContacto {get;set;}
 		#endregion Contacto
 
 		#region Cliente
@@ -123,6 +102,35 @@ namespace Aicl.Delfin.Model.Types
         [BelongsTo(typeof(Cliente),"Nombre")]
         public string NombreCliente {get;set;}
 		#endregion Cliente
+
+		public int IdCiudadDestinatario { get; set;}
+
+		[BelongsTo(typeof(Ciudad),"Nombre")]
+		public string NombreCiudadDestinatario {get;set;}
+
+		[StringLength(128)]
+        [Required]
+        public string NombreDestinatario {get;set;}
+
+		[StringLength(64)]
+        [Required]
+        public string CargoDestinatario {get;set;}
+
+		[StringLength(16)]
+        public string TelefonoDestinatario {get;set;}
+
+		[StringLength(16)]
+        public string FaxDestinatario {get;set;}
+
+		[StringLength(16)]
+        public string CelularDestinatario {get;set;}
+
+		[StringLength(128)]
+        public string MailDestinatario {get;set;}
+
+		[StringLength(256)]
+        public string DireccionDestinatario {get;set;}
+
 
 	}
 }

@@ -1,19 +1,20 @@
 Ext.define('App.controller.Pedido',{
 	extend: 'Ext.app.Controller',
-    stores: ['Pedido', 'PedidoItem','FormaPago','ClienteContacto'],  
+    stores: ['Pedido', 'PedidoItem','FormaPago','ClienteContacto','Ciudad'],  
     views:  ['pedido.Panel' ],
     refs:[
     	{ref: 'mainPanel', selector: 'pedidopanel' },
     	{ref: 'pedidoNewButton',   selector: 'toolbar[name=mainToolbar] button[action=new]' },
-    	{ref: 'pedidoSaveButton', selector: 'pedidoform button[action=save]' },
-    	{ref: 'pedidoDeleteButton', selector: 'pedidoform button[action=delete]' },
+    	{ref: 'pedidoSaveButton', selector: 'toolbar[name=mainToolbar] button[action=save]' },
+    	{ref: 'pedidoDeleteButton', selector: 'toolbar[name=mainToolbar] button[action=delete]' },
     	{ref: 'buscarPedidoText', 	 selector: 'pedidopanel textfield[name=buscarPedidoText]'},
     	
     	{ref: 'pedidoList',    	 selector: 'pedidolist' },
     	{ref: 'pedidoForm',    	 selector: 'pedidoform' },
     	{ref: 'pedidoSelectButton', selector: 'pedidolist button[action=select]'},
     	{ref: 'clienteSelectButton', selector: 'clientecontactolist button[action=select]'},
-    	{ref: 'nitClienteText', selector: 'pedidoform textfield[name=NitCliente]'}
+    	{ref: 'nitClienteText', selector: 'pedidoform textfield[name=NitCliente]'},
+    	{ref: 'nombreClienteText', selector: 'pedidoform textfield[name=NombreCliente]'}
     	    	
     ],
 
@@ -75,7 +76,7 @@ Ext.define('App.controller.Pedido',{
                 }
             },
             
-            'pedidoform button[action=save]':{
+            'toolbar[name=mainToolbar] button[action=save]':{
             	click: function(button, event, options){
             		var record = this.getPedidoForm().getForm().getFieldValues(true);
             		this.getPedidoStore().getProxy().extraParams={format:'json'};
@@ -85,10 +86,24 @@ Ext.define('App.controller.Pedido',{
             
             'pedidoform button[action=buscarClientePorNit]':{
             	click: function(button, event, options){
-            	
             		var searchText= this.getNitClienteText().getValue();
             		var request={
                 		Nit: searchText,
+						format:'json'
+                	};
+                	
+                	var store = this.getClienteContactoStore();       	  	
+                	store.getProxy().extraParams=request;
+                	store.loadPage(1);
+            		
+            		this.getMainPanel().showClienteSearchWindow();
+            	}
+            },
+            'pedidoform button[action=buscarClientePorNombre]':{
+            	click: function(button, event, options){
+            		var searchText= this.getNombreClienteText().getValue();
+            		var request={
+                		Nombre: searchText,
 						format:'json'
                 	};
                 	

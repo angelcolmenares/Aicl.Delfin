@@ -76,7 +76,7 @@ namespace Aicl.Delfin.BusinessLogic
 				request.FechaEnvio=null;
 				request.FechaAnulado=null;
 				request.FechaCreacion=DateTime.Today;
-				request.FechaActualizacion=request.FechaActualizacion;
+				request.FechaActualizacion=request.FechaCreacion;
 				request.IdAceptadoPor=null;
 				request.IdAnuladoPor=null;
 				request.IdEnviadoPor=null;
@@ -86,13 +86,16 @@ namespace Aicl.Delfin.BusinessLogic
 
 				var contacto = proxy.CheckExistAndActivo<Contacto>(request.IdContacto, f=>f.Nombre);
 				request.NombreContacto= contacto.Nombre;
-				request.CargoContacto= contacto.Cargo;
-				request.CelularContacto= contacto.Celular;
-				request.CodigoPostalContacto= contacto.CodigoPostal;
-				request.DireccionContacto= contacto.Direccion;
-				request.FaxContacto= contacto.Fax;
-				request.MailContacto= contacto.Mail;
-				request.TelefonoContacto=contacto.Telefono;
+				request.NombreDestinatario= contacto.Nombre;
+				request.CargoDestinatario= contacto.Cargo;
+				request.CelularDestinatario= contacto.Celular;
+				request.DireccionDestinatario= contacto.Direccion;
+				request.FaxDestinatario= contacto.Fax;
+				request.MailDestinatario= contacto.Mail;
+				request.TelefonoDestinatario=contacto.Telefono;
+				request.IdCiudadDestinatario=contacto.IdCiudad;
+				request.NombreCiudadDestinatario= contacto.NombreCiudad;
+
 
 				var cliente= proxy.CheckExistAndActivo<Cliente>(contacto.IdCliente, f=>f.Nombre);
 				request.NitCliente=cliente.Nit;

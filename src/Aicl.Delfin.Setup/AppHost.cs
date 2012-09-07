@@ -69,6 +69,7 @@ namespace Aicl.Delfin.Setup
 			CreateAppTables(dbFactory);
 			CreateCiudades(dbFactory);
 			CreateFormasPago(dbFactory);
+			CreateConsecutivos(dbFactory);
 
 			log.InfoFormat("AppHost Configured: " + DateTime.Now);
 		}
@@ -161,6 +162,26 @@ namespace Aicl.Delfin.Setup
 			});
 
 			log.InfoFormat("Crear FormasPago ok");
+		}
+
+		void CreateConsecutivos(IDbConnectionFactory factory)
+        {
+			log.InfoFormat("Creando Consecutivos....");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var crear= appSettings.Get<bool>("CreateConsecutivos", false);
+			if(!crear){
+				log.InfoFormat("Crear Consecutivos NO");
+				return;
+			}
+
+			factory.Exec(dbCmd=>{
+				dbCmd.DeleteAll<Consecutivo>();
+				dbCmd.InsertAll(new Consecutivos());
+			});
+
+			log.InfoFormat("Crear Consecutivos ok");
 		}
 
 

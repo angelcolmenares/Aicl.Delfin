@@ -4,7 +4,7 @@ Ext.define('App.view.pedido.Panel',{
     frame: false,
     ui:'default-framed',
     style: {border: 0, padding: 0},
-    margin: '0 0 0 0',
+    margin: '0 0 0 2',
     width:956,
     layout: 'hbox',
     dockedItems: [{
@@ -20,24 +20,36 @@ Ext.define('App.view.pedido.Panel',{
             width: 300,
             name: 'buscarPedidoText'
         },{
-           tooltip:'Buscar por los criterios indicados..', iconCls:'find',
+           tooltip:'Buscar por los criterios indicados..', iconCls:'open_document',
            action: 'buscarPedido'
+        },{
+           		tooltip:'Guardar',
+      			iconCls:'save_document',
+        		disabled:true,
+        		action:'save'
+        },'-',{
+               	tooltip:'Borrar',
+               	iconCls:'remove',
+               	disabled:true,
+               	action: 'delete'
         }]
 	}],
     items:[{
     	xtype:'panel',
     	layout:'vbox',
+    	style: {border: 0, padding: 0}, ui:'default-framed',
     	items:[{
-        	xtype: 'panel', ui:'default-framed',
-        	style: {border: 0, padding: 0},
-        	width: 946, height:300, 
+        	xtype: 'panel',
+        	ui:'default-framed',
+        	//style: {border: 0, padding: 0},
+        	width: 956, height:230, 
         	items:[{xtype:'pedidoform'}]
     	},{
-        	xtype: 'panel', ui:'default-framed',
+        	xtype: 'panel', ui:'default-framed', layout:'hbox',
         	style: {border: 0, padding: 0},
-        	width: 946, height:300,
+        	width: 956, height:350,
         	items:[
-        		{xtype:'pedidoitemlist'}
+        		{xtype:'pedidoitemlist'},{xtype:'pedidoitemform'}
         	]
     	}]
    	}],
@@ -82,22 +94,6 @@ Ext.define('App.view.pedido.Form', {
     
     initComponent: function() {
         this.items = [{
-    		xtype: 'toolbar',
-    		name:'pedidoToolbar',
-    		colspan:3,
-    		dock: 'top',
-    		items: [{
-           		tooltip:'Guardar',
-      			iconCls:'save_document',
-        		disabled:true,
-        		action:'save'
-           	},'-',{
-               	tooltip:'Borrar',
-               	iconCls:'remove',
-               	disabled:true,
-               	action: 'delete'
-           	}]
-	},{
 		xtype:'fieldset',
 		collapsible: false,
         defaultType: 'textfield',
@@ -156,6 +152,10 @@ Ext.define('App.view.pedido.Form', {
 				}]
 			}]
 		},{
+			name: 'NombreContacto',
+			fieldLabel: 'Contacto',
+			readOnly:true
+		},{
 			xtype: 'formapagocombo',
 			fieldLabel: 'FormaPago',
 			allowBlank: false
@@ -182,26 +182,46 @@ Ext.define('App.view.pedido.Form', {
 		height: 290,
         layout: 'anchor',
 		items:[{
-			name: 'NombreContacto',
-			fieldLabel: 'Nombre'
+			name: 'NombreDestinatario',
+			fieldLabel: 'Destinatario',
+			allowBlank:false
 		},{
-			name: 'CargoContacto',
+			name: 'CargoDestinatario',
 			fieldLabel: 'Cargo'
+		},{			
+			xtype:'fieldset',
+			style: {border: 0, padding: 0},
+			items:[{
+				layout:'hbox',
+				ui:'default-framed',
+				style: {border: 0, padding: 1},
+				items:[{
+					xtype:'textfield',
+					width: 200,
+					name: 'TelefonoDestinatario',
+					fieldLabel: 'Tel-Fax'
+				},{
+					xtype:'textfield',
+					hideLabel:true,
+					name:'FaxDestinatario',
+					width: 94,
+					style:{marginLeft:"4px"}
+				}]
+			}]	
 		},{
-			name: 'TelefonoContacto',
-			fieldLabel: 'Telefono'
+			name: 'CelularDestinatario',
+			fieldLabel: 'Celular'
 		},{
-			name: 'FaxContacto',
-			fieldLabel: 'Fax'
-		},{
-		name: 'CelularContacto',
-		fieldLabel: 'Celular'
-		},{
-			name: 'MailContacto',
+			name: 'MailDestinatario',
 			fieldLabel: 'Mail',
 			vtype: 'email'
 		},{
-			name: 'DireccionContacto',
+			name:'IdCiudadDestinatario',
+			xtype: 'ciudadcombo',
+			fieldLabel: 'Ciudad',
+			allowBlank: false
+		},{
+			name: 'DireccionDestinatario',
 			fieldLabel: 'Direccion'
 		}]		
 	},{
@@ -530,6 +550,112 @@ Ext.define('App.view.clientesearch.Window',{
 });
 
 
+Ext.define('App.view.pedidoitem.Form', {
+    extend: 'Ext.form.Panel',
+    alias : 'widget.pedidoitemform',
+    ui:'default-framed',
+    frame:false,
+    margin: '2 0 0 15px',
+    bodyStyle :'padding:0px 0px 0px 0px',
+    style: {border: 0, padding: 0},
+    autoWidth:true,
+    autoHeight:true,
+    autoScroll:true,
+    fieldDefaults : { msgTarget: 'side', labelWidth: 100,labelAlign: 'right'},
+    defaultType:'textfield',
+    defaults : { anchor: '100%',labelStyle: 'padding-left:4px;'},
+         
+    initComponent: function() {
+    this.items = [{	
+    	xtype: 'toolbar',
+    	name: 'padreToolbar',
+        colspan:2,
+        items: [{
+            tooltip:'Agregar Servicio',
+            iconCls:'add',
+            disabled:true,
+            action: 'new'
+        },{
+         	tooltip:'Guardar',
+      		iconCls:'save_document',
+        	disabled:true,
+        	action:'save'
+        },'-',{
+            tooltip:'Borrar servicio seleccionado',
+            iconCls:'remove',
+            disabled:true,
+            action: 'delete'
+        }]
+    },{
+		xtype: 'hidden',
+		name: 'Id'
+	},
+	{
+		xtype: 'hidden',
+		name: 'IdServicio'
+	},
+	{
+		xtype: 'hidden',
+		name: 'IdProcedimiento'
+	},{
+		name: 'NombreServicio',
+		fieldLabel: 'NombreServicio'
+	},
+	{
+		name: 'DescripcionProcedimiento',
+		fieldLabel: 'Procedimiento'
+	},{
+		name: 'Descripcion',
+		fieldLabel: 'Detalle',
+		maxLength: 256,
+		enforceMaxLength: true
+	},
+	{
+		name: 'Nota',
+		fieldLabel: 'Nota',
+		maxLength: 256,
+		enforceMaxLength: true
+	},{
+		xtype: 'numberfield',
+		allowDecimals: false,
+		name: 'Cantidad',
+		fieldLabel: 'Cantidad',
+		allowBlank: false
+	},
+	{
+		xtype: 'numberfield',
+		name: 'Descuento',
+		fieldLabel: 'Descuento',
+		allowBlank: false
+	},
+	{
+		xtype: 'numberfield',
+		name: 'ValorUnitario',
+		fieldLabel: 'ValorUnitario',
+		allowBlank: false
+	},
+	{
+		xtype: 'numberfield',
+		name: 'PorcentajeIva',
+		fieldLabel: 'PorcentajeIva',
+		allowBlank: false
+	},
+	{
+		xtype: 'numberfield',
+		name: 'ValorBase',
+		fieldLabel: 'ValorBase',
+		allowBlank: false
+	},
+	{
+		xtype: 'numberfield',
+		name: 'ValorIva',
+		fieldLabel: 'ValorIva',
+		allowBlank: false
+	}];
+  
+    this.callParent(arguments);
+    }
+});
 
 
 Ext.define('App.view.pedidoitem.List',{ 
@@ -539,7 +665,7 @@ Ext.define('App.view.pedidoitem.List',{
     frame:false,
     selType : 'rowmodel',
     autoHeight:true,
-    width:430,
+    width:530,
     autoScroll:true,
     viewConfig : { 	stripeRows: true   },
     margin: '2 0 0 0',  
@@ -671,29 +797,6 @@ Ext.define('App.view.pedidoitem.List',{
 });
 
 
-Ext.define('App.view.formapago.ComboBox', {
-	extend:'Ext.ux.form.field.BoxSelect',
-	alias : 'widget.formapagocombo',
-    displayField: 'Descripcion',
-	valueField: 'Id',
-	name:'IdFormaPago',
-    store: 'FormaPago',
-    forceSelection:true,
-    //pageSize: 12,
-    multiSelect:false,
-    queryMode: 'local',
-    queryParam :'Descripcion',
-    triggerOnClick: false,
-    labelTpl: '{Descripcion}',
-    listConfig: {
-        tpl: Ext.create('Ext.XTemplate',
-            '<ul><tpl for=".">',
-                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Descripcion}</li>',
-            '</tpl></ul>'
-    )}
-});
-
-
 Ext.define('App.view.clientecontacto.List',{ 
     extend: 'Ext.grid.Panel',
     alias : 'widget.clientecontactolist', 
@@ -781,6 +884,52 @@ Ext.define('App.view.clientecontacto.List',{
     }]
                 
     this.callParent(arguments);
-    
+  
     }
 });
+
+
+Ext.define('App.view.formapago.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.formapagocombo',
+    displayField: 'Descripcion',
+	valueField: 'Id',
+	name:'IdFormaPago',
+    store: 'FormaPago',
+    forceSelection:true,
+    //pageSize: 12,
+    multiSelect:false,
+    queryMode: 'local',
+    queryParam :'Id',
+    triggerOnClick: false,
+    labelTpl: '{Descripcion}',
+    listConfig: {
+        tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Descripcion}</li>',
+            '</tpl></ul>'
+    )}
+});
+
+
+Ext.define('App.view.ciudad.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.ciudadcombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+    store: 'Ciudad',
+    forceSelection:true,
+    pageSize: 12,
+    multiSelect:false,
+    queryMode: 'remote',
+    queryParam :'Nombre',
+    triggerOnClick: false,
+    labelTpl: '{Nombre} - {Codigo} ',
+    listConfig: {
+        tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre} {Codigo}</li>',
+            '</tpl></ul>'
+    )}
+});
+
