@@ -1,58 +1,14 @@
-Ext.define('App.view.pedido.Panel',{ 
+Ext.define('App.view.pedido.Panel', {
     extend: 'Ext.panel.Panel',
-    alias : 'widget.pedidopanel',
-    frame: false,
-    ui:'default-framed',
-    style: {border: 0, padding: 0},
-    margin: '0 0 0 2',
-    width:956,
-    layout: 'hbox',
-    dockedItems: [{
-    	xtype: 'toolbar',
-    	style: {border: 0, padding: 1},
-    	name:'mainToolbar',
-    	dock: 'top',
-    	items: [{
-            tooltip:'Nuevo', iconCls:'new_document',  disabled:true,
-            action: 'new'
-        },{
-            xtype:'textfield', emptyText:'Consecutivo/NombreCliente',
-            width: 300,
-            name: 'buscarPedidoText'
-        },{
-           tooltip:'Buscar por los criterios indicados..', iconCls:'open_document',
-           action: 'buscarPedido'
-        },{
-           		tooltip:'Guardar',
-      			iconCls:'save_document',
-        		disabled:true,
-        		action:'save'
-        },'-',{
-               	tooltip:'Borrar',
-               	iconCls:'remove',
-               	disabled:true,
-               	action: 'delete'
-        }]
-	}],
-    items:[{
-    	xtype:'panel',
-    	layout:'vbox',
-    	style: {border: 0, padding: 0}, ui:'default-framed',
-    	items:[{
-        	xtype: 'panel',
-        	ui:'default-framed',
-        	//style: {border: 0, padding: 0},
-        	width: 956, height:230, 
-        	items:[{xtype:'pedidoform'}]
-    	},{
-        	xtype: 'panel', ui:'default-framed', layout:'hbox',
-        	style: {border: 0, padding: 0},
-        	width: 956, height:350,
-        	items:[
-        		{xtype:'pedidoitemlist'},{xtype:'pedidoitemform'}
-        	]
-    	}]
-   	}],
+    alias: 'widget.pedidopanel',
+
+
+    style: 'border: 0; padding: 0',
+    ui: 'default-framed',
+    width: 990,
+    frameHeader: false,
+    title: '',
+    
     showSearchWindow:function(){
     	this.searchWindow.show();
     },
@@ -65,213 +21,321 @@ Ext.define('App.view.pedido.Panel',{
     hideClienteSearchWindow:function(){
     	this.clienteSearchWindow.hide();
     },
-   	initComponent: function(){
-   		this.searchWindow=Ext.create('App.view.pedido.SearchWindow');
-   		this.clienteSearchWindow=Ext.create('App.view.clientesearch.Window');
-   		this.callParent(arguments);
-   	}
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    name: 'mainToolbar',
+                    dock: 'top',
+                    style: 'border: 0; padding: 0',
+                    items: [
+                        {
+                            xtype: 'button',
+                            action: 'new',
+                            iconCls: 'new_document',
+                            text: ''
+                        },
+                        {
+                            xtype: 'textfield',
+                            width: 300,
+                            name: 'buscarPedidoText',
+                            hideLabel: true,
+                            emptyText: 'Consecutivo/Cliente'
+                        },
+                        {
+                            xtype: 'button',
+                            name: 'buscarPedido',
+                            action: 'buscarPedido',
+                            iconCls: 'open_document',
+                            text: ''
+                        },
+                        {
+                            xtype: 'button',
+                            action: 'save',
+                            iconCls: 'save_document',
+                            text: ''
+                        },
+                        {
+                            xtype: 'button',
+                            action: 'delete',
+                            iconCls: 'remove',
+                            text: ''
+                        }
+                    ]
+                }
+            ],
+            items: [
+                {
+                    xtype: 'pedidoform'
+                },
+                {xtype:'pedidoitempanel'}
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
 });
 
 
 Ext.define('App.view.pedido.Form', {
     extend: 'Ext.form.Panel',
-    alias : 'widget.pedidoform',
-    ui:'default-framed',
-    style: {border: 0, padding: 0},
-    frame:false,
-    margin: '2 0 0 5px',
-    bodyStyle :'padding:0px 0px 0px 0px',
-    autoWidth:true,
-    autoHeight: true,
-    autoScroll: true,
-	fieldDefaults :{ msgTarget: 'side',  labelWidth: 100, labelAlign: 'right'},
-	defaultType:'textfield',
-	defaults : { anchor: '100%', labelStyle: 'padding-left:4px;' },
+    alias: 'widget.pedidoform',
+
+    ui: 'default-framed',
     layout: {
-            type: 'table',
-            columns: 3
+        align: 'stretch',
+        type: 'hbox'
     },
-    
+    bodyPadding: 10,
+    frameHeader: false,
+    title: '',
+
     initComponent: function() {
-        this.items = [{
-		xtype:'fieldset',
-		collapsible: false,
-        defaultType: 'textfield',
-        defaults: {anchor: '100%', width:340},
-        style: {border: 0, padding: 0},
-		height: 290,
-		margin: '0 0 0 0',
-        layout: 'anchor',
-		items:[{
-			xtype: 'hidden',
-			name: 'Id'
-		},{
-			xtype: 'hidden',
-			name: 'IdContacto'
-		},
-		{
-			xtype:'fieldset',
-			style: {border: 0, padding: 0},
-			items:[{
-				layout:'hbox',
-				ui:'default-framed',
-				style: {border: 0, padding: 0},
-				items:[{
-					xtype:'textfield',
-					width: 310,
-					name: 'NitCliente',
-					fieldLabel: 'Nit'
-				},{
-					xtype:'button',
-					tooltip:'Buscar por Nit', 
-					iconCls:'find',
-           			action: 'buscarClientePorNit',
-					hideLabel:true,
-					style:{marginLeft:"8px"}
-				}]
-			}]
-		},{
-			xtype:'fieldset',
-			style: {border: 0, padding: 0},
-			items:[{
-				layout:'hbox',
-				ui:'default-framed',
-				style: {border: 0, padding: 0},
-				items:[{
-					xtype:'textfield',
-					width: 310,
-					name: 'NombreCliente',
-					fieldLabel: 'Cliente'
-				},{
-					xtype:'button',
-					tooltip:'Buscar por Nit', 
-					iconCls:'find',
-           			action: 'buscarClientePorNombre',
-					hideLabel:true,
-					style:{marginLeft:"8px"}
-				}]
-			}]
-		},{
-			name: 'NombreContacto',
-			fieldLabel: 'Contacto',
-			readOnly:true
-		},{
-			xtype: 'formapagocombo',
-			fieldLabel: 'FormaPago',
-			allowBlank: false
-		},{
-			xtype: 'numberfield',
-			allowDecimals: false,
-			name: 'DiasDeVigencia',
-			fieldLabel: 'DiasDeVigencia',
-			allowBlank: false
-		},{
-			xtype: 'datefield',
-			name: 'VigenteHasta',
-			fieldLabel: 'VigenteHasta',
-			format: 'd.m.Y',
-			readOnly:true
-		}]
-	},{
-		xtype:'fieldset',
-		collapsible: false,
-        defaultType: 'textfield',
-        defaults: {anchor: '100%', width:300},
-        style: {border: 0, padding: 0},
-        margin: '12 0 0 0',
-		height: 290,
-        layout: 'anchor',
-		items:[{
-			name: 'NombreDestinatario',
-			fieldLabel: 'Destinatario',
-			allowBlank:false
-		},{
-			name: 'CargoDestinatario',
-			fieldLabel: 'Cargo'
-		},{			
-			xtype:'fieldset',
-			style: {border: 0, padding: 0},
-			items:[{
-				layout:'hbox',
-				ui:'default-framed',
-				style: {border: 0, padding: 1},
-				items:[{
-					xtype:'textfield',
-					width: 200,
-					name: 'TelefonoDestinatario',
-					fieldLabel: 'Tel-Fax'
-				},{
-					xtype:'textfield',
-					hideLabel:true,
-					name:'FaxDestinatario',
-					width: 94,
-					style:{marginLeft:"4px"}
-				}]
-			}]	
-		},{
-			name: 'CelularDestinatario',
-			fieldLabel: 'Celular'
-		},{
-			name: 'MailDestinatario',
-			fieldLabel: 'Mail',
-			vtype: 'email'
-		},{
-			name:'IdCiudadDestinatario',
-			xtype: 'ciudadcombo',
-			fieldLabel: 'Ciudad',
-			allowBlank: false
-		},{
-			name: 'DireccionDestinatario',
-			fieldLabel: 'Direccion'
-		}]		
-	},{
-		xtype:'fieldset',
-		collapsible: false,
-        defaultType: 'textfield',
-        defaults: {anchor: '100%', width:220},
-		height: 290,
-		style: {border: 0, padding: 0},
-        layout: 'anchor',
-        margin: '12 0 0 0',
-		items:[{
-			xtype: 'numberfield',
-			allowDecimals: false,
-			name: 'Consecutivo',
-			fieldLabel: 'Consecutivo',
-			allowBlank: false
-		},{
-			xtype: 'datefield',
-			name: 'FechaCreacion',
-			fieldLabel: 'Creado',
-			allowBlank: false,
-			format: 'd.m.Y'
-		},{
-			xtype: 'datefield',
-			name: 'FechaActualizacion',
-			fieldLabel: 'Actualizado',
-			allowBlank: false,
-			format: 'd.m.Y'
-		},{
-			xtype: 'datefield',
-			name: 'FechaEnvio',
-			fieldLabel: 'Enviado',
-			format: 'd.m.Y'
-		},{
-			xtype: 'datefield',
-			name: 'FechaAceptacion',
-			fieldLabel: 'Aceptado',
-			format: 'd.m.Y'
-		},{
-			xtype: 'datefield',
-			name: 'FechaAnulado',
-			fieldLabel: 'Anulado',
-			format: 'd.m.Y'
-		}]		
-	}];
-	
-    this.callParent(arguments);
-	}
+        var me = this;
+
+        Ext.applyIf(me, {
+            fieldDefaults: {
+                msgTarget: 'side',
+                labelWidth: 80,
+                labelAlign: 'right'
+            },
+            defaults: {
+                anchor: '100%',
+                width: 350
+            },
+            items: [
+                {
+                    xtype: 'fieldset',
+                    flex: 0,
+                    style: 'border: 0; padding: 0',
+                    title: '',
+                    items: [
+                        {
+                            xtype: 'fieldset',
+                            style: 'border: 0; padding: 0',
+                            layout: {
+                                align: 'stretch',
+                                type: 'hbox'
+                            },
+                            title: '',
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    flex: 1,
+                                    name: 'NitCliente',
+                                    fieldLabel: 'Nit'
+                                },
+                                {
+                                    xtype: 'button',
+                                    flex: 0,
+                                    iconCls: 'find',
+                                    style: 'marginLeft:4px',
+                                    tooltip: 'Buscar por Nit',
+                                    action:'buscarClientePorNit'
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'fieldset',
+                            style: 'border:0; padding:0',
+                            layout: {
+                                align: 'stretch',
+                                type: 'hbox'
+                            },
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    anchor: '100%',
+                                    name:'NombreCliente',
+                                    flex: 1,
+                                    fieldLabel: 'Cliente'
+                                },
+                                {
+                                    xtype: 'button',
+                                    flex: 0,
+                                    iconCls: 'find',
+                                    style: 'marginLeft:4px',
+                                    tooltip: 'Buscar por Nombre',
+                                    action:'buscarClientePorNombre'
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'NombreContacto',
+                            readOnly: true,
+                            fieldLabel: 'Contacto'
+                        },
+                        {
+                            xtype: 'formapagocombo',
+							fieldLabel: 'FormaPago',
+							allowBlank: false,
+							anchor:'100%'
+                        },
+                        {
+                            xtype: 'numberfield',
+                            anchor: '50%',
+                            name: 'DiasDeVigencia',
+                            fieldLabel: 'Vigencia',
+                            allowDecimals: false,
+                            decimalPrecision: 0
+                        },
+                        {
+                            xtype: 'datefield',
+                            anchor: '50%',
+                            name: 'VigenteHasta',
+                            readOnly: true,
+                            fieldLabel: 'Vigente Hasta'
+                        }
+                    ]
+                },
+                {
+                    xtype: 'fieldset',
+                    flex: 0,
+                    margins: '0 0 0 30',
+                    style: 'border:0; padding:0',
+                    defaults: {
+                        anchor: '100%',
+                        width: 350
+                    },
+                    title: '',
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'NombreDestinatario',
+                            fieldLabel: 'Destinatario'
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'CargoDestinatario',
+                            fieldLabel: 'Cargo'
+                        },
+                        {
+                            xtype: 'fieldset',
+                            style: 'border:0;padding:0',
+                            layout: {
+                                align: 'stretch',
+                                type: 'hbox'
+                            },
+                            title: '',
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    anchor: '0',
+                                    name: 'TelefonoDestinatario',
+                                    fieldLabel: 'Tel-Fax'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    anchor: '',
+                                    flex: 1,
+                                    style: 'marginLeft:4px',
+                                    name: 'FaxDestinatario',
+                                    hideLabel: true
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'CelularDestinatario',
+                            fieldLabel: 'Celular'
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'MailDestinatario',
+                            fieldLabel: 'Mail',
+                            vtype: 'email'
+                        },
+                        {
+                            name:'IdCiudadDestinatario',
+							xtype: 'ciudadcombo',
+							fieldLabel: 'Ciudad',
+							allowBlank: false,
+                            anchor: '100%'
+
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'DireccionDestinatario',
+                            fieldLabel: 'Direccion'
+                        }
+                    ]
+                },
+                {
+                    xtype: 'fieldset',
+                    flex: 1,
+                    margins: '0 0 0 40',
+                    style: 'border:0;padding:0',
+                    title: '',
+                    items: [
+                        {
+                            xtype: 'numberfield',
+                            anchor: '100%',
+                            name: 'Consecutivo',
+                            readOnly: true,
+                            fieldLabel: 'Consecutivo'
+                        },
+                        {
+                            xtype: 'datefield',
+                            anchor: '100%',
+                            name: 'FechaCreacion',
+                            readOnly: true,
+                            fieldLabel: 'Creado',
+                            format: 'd.m.Y'
+                        },
+                        {
+                            xtype: 'datefield',
+                            anchor: '100%',
+                            name: 'FechaActualizacion',
+                            readOnly: true,
+                            fieldLabel: 'Actualizado',
+                            format: 'd.m.Y'
+                        },
+                        {
+                            xtype: 'datefield',
+                            anchor: '100%',
+                            name: 'FechaEnvio',
+                            readOnly: true,
+                            fieldLabel: 'Enviado',
+                            format: 'd.m.Y'
+                        },
+                        {
+                            xtype: 'datefield',
+                            anchor: '100%',
+                            name: 'FechaAceptacion',
+                            readOnly: true,
+                            fieldLabel: 'Aceptado',
+                            format: 'd.m.Y'
+                        },
+                        {
+                            xtype: 'datefield',
+                            anchor: '100%',
+                            name: 'FechaAnulado',
+                            readOnly: true,
+                            fieldLabel: 'Anulado',
+                            format: 'd.m.Y'
+                        }
+                    ]
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
 });
+
 
 Ext.define('App.view.pedido.List',{ 
     extend: 'Ext.grid.Panel',
@@ -933,3 +997,398 @@ Ext.define('App.view.ciudad.ComboBox', {
     )}
 });
 
+
+Ext.define('App.view.pedidoitem.Panel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.pedidoitempanel',
+    
+    height: 347,
+    style: 'border: 0; padding: 0',
+    ui: 'default-framed',
+    width: 990,
+    layout: {
+        align: 'stretch',
+        type: 'hbox'
+    },
+    frameHeader: false,
+    title: '',
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            items: [
+                {
+                    xtype: 'panel',
+                    flex: 1,
+                    height: 320,
+                    style: 'border: 0; padding: 0',
+                    ui: 'default-framed',
+                    width: 650,
+                    bodyPadding: '10 2,2,2',
+                    frameHeader: false,
+                    title: '',
+                    items: [
+                        {
+                            xtype: 'itemlist'
+                        },
+                        {
+                            xtype: 'panel',
+                            height: 210,
+                            margin: '5 0 0 0',
+                            ui: 'default-framed',
+                            layout: {
+                                align: 'stretch',
+                                type: 'hbox'
+                            },
+                            bodyPadding: 2,
+                            title: '',
+                            items: [
+                                {
+                                    xtype: 'itemform',
+                                    width: 395
+                                },
+                                {
+                                    xtype: 'itemresumenform',
+                                    flex: 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    frame: false,
+                    margin: '10 0 0 0',
+                    style: '',
+                    ui: 'default-framed',
+                    width: 300,
+                    bodyPadding: 2,
+                    frameHeader: false,
+                    title: '',
+                    items: [
+                        {
+                            xtype: 'procedimientoform'
+                        },
+                        {
+                            xtype: 'pedidoresumenform',
+                            margin: '30 0 0 0'
+                        }
+                    ]
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+
+Ext.define('App.view.item.Form', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.itemform',
+
+    style: 'border: 0; padding: 0',
+    ui: 'default-framed',
+    width: 350,
+    bodyPadding: 2,
+    frameHeader: false,
+    title: '',
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            fieldDefaults: {
+                msgTarget: 'side',
+                labelWidth: 80,
+                labelAlign: 'right'
+            },
+            defaults: {
+                anchor: '100%',
+                labelStyle: 'padding-left:4px;'
+            },
+            items: [
+                {
+                    xtype: 'fieldset',
+                    style: 'border: 0; padding: 0',
+                    layout: {
+                        align: 'stretch',
+                        type: 'hbox'
+                    },
+                    title: '',
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            flex: 1,
+                            name: 'NombreServicio',
+                            fieldLabel: 'Servicio',
+                            emptyText: 'nombre del servicio'
+                        },
+                        {
+                            xtype: 'button',
+                            flex: 0,
+                            style: 'marginLeft:4px',
+                            iconCls: 'find',
+                            tooltip: 'buscar servicio'
+                        }
+                    ]
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'Descripcion',
+                    fieldLabel: 'Detalle'
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'Nota',
+                    fieldLabel: 'Nota'
+                },
+                {
+                    xtype: 'numberfield',
+                    anchor: '50%',
+                    name: 'Cantidad',
+                    fieldLabel: 'Cantidad',
+                    allowDecimals: false,
+                    decimalPrecision: 0
+                },
+                {
+                    xtype: 'numberfield',
+                    anchor: '50%',
+                    name: 'Descuento',
+                    fieldLabel: 'Descuento',
+                    decimalPrecision: 6
+                },
+                {
+                    xtype: 'numberfield',
+                    anchor: '50%',
+                    name: 'DiasEntrega',
+                    fieldLabel: 'Dias Entrega',
+                    allowDecimals: false,
+                    decimalPrecision: 0
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    style: 'border: 0; padding: 0',
+                    ui: 'default-framed',
+                    items: [
+                        {
+                            xtype: 'button',
+                            iconCls: 'new_document',
+                            text: ''
+                        },
+                        {
+                            xtype: 'button',
+                            iconCls: 'save_document',
+                            text: '',
+                            tooltip: 'Guardar'
+                        },
+                        {
+                            xtype: 'button',
+                            iconCls: 'remove',
+                            text: '',
+                            tooltip: 'borrar'
+                        }
+                    ]
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+
+Ext.define('App.view.item.List', {
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.itemlist',
+
+    height: 121,
+    style: 'border: 0; padding: 0',
+    ui: 'default-framed',
+    title: '',
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            columns: [
+                {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'string',
+                    text: 'String'
+                },
+                {
+                    xtype: 'numbercolumn',
+                    dataIndex: 'number',
+                    text: 'Number'
+                },
+                {
+                    xtype: 'datecolumn',
+                    dataIndex: 'date',
+                    text: 'Date'
+                },
+                {
+                    xtype: 'booleancolumn',
+                    width: 114,
+                    dataIndex: 'bool',
+                    text: 'Boolean'
+                }
+            ],
+            viewConfig: {
+
+            }
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+Ext.define('App.view.itemesumen.Form', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.itemresumenform',
+
+    style: 'border: 0; padding: 0',
+    ui: 'default-framed',
+    bodyPadding: '20 10 10 10',
+    frameHeader: false,
+    title: '',
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            fieldDefaults: {
+                msgTarget: 'side',
+                labelWidth: 120,
+                labelAlign: 'right'
+            },
+            items: [
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'ValorBase',
+                    readOnly: true,
+                    fieldLabel: 'Costo Unitario',
+                    labelAlign: 'right'
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'CostoInversion',
+                    readOnly: true,
+                    fieldLabel: 'Costo Inversion'
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'Iva',
+                    readOnly: true,
+                    fieldLabel: 'IVA'
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'TotalItem',
+                    readOnly: true,
+                    fieldLabel: 'Total'
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+
+Ext.define('App.view.procedimiento.Form', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.procedimientoform',
+
+    height: 150,
+    style: 'border: 0; padding: 0',
+    ui: 'default-framed',
+    width: 285,
+    bodyPadding: 0,
+    frameHeader: false,
+    title: 'Procedimiento',
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            items: [
+                {
+                    xtype: 'textareafield',
+                    anchor: '100%',
+                    height: 97,
+                    width: 285,
+                    name: 'DescripcionProcedimiento',
+                    readOnly: true,
+                    hideLabel: true
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+Ext.define('App.view.pedidoresumen.Form', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.pedidoresumenform',
+
+    style: '\'border: 0; padding: 0\'',
+    ui: 'default-framed',
+    width: 285,
+    bodyPadding: '20 20 10 10',
+    frameHeader: false,
+    title: 'Resumen Oferta',
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            fieldDefaults: {
+                msgTarget: 'side',
+                labelWidth: 80,
+                labelAlign: 'right'
+            },
+            items: [
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'SubtotalOferta',
+                    value: 0,
+                    fieldLabel: 'Subtotal',
+                    readOnly:true
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'IvaOferta',
+                    value: 0.00,
+                    fieldLabel: 'Iva',
+                    readOnly:true
+                },
+                {
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    name: 'TotalOferta',
+                    submitValue: false,
+                    value: '0.00',
+                    fieldLabel: 'Total',
+                    readOnly:true
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
