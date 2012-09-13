@@ -21,6 +21,9 @@ namespace Aicl.Delfin.Model.Types
 	[RestService("/Pedido/read","get")]
 	[RestService("/Pedido/update/{Id}","put")]
 	[RestService("/Pedido/destroy/{Id}","delete" )]
+	[RestService("/Pedido/patch/{Id}/enviar","patch" )]
+	[RestService("/Pedido/patch/{Id}/aceptar","patch" )]
+	[RestService("/Pedido/patch/{Id}/anular","patch" )]
 	public class Pedido:IHasId<int>
 	{
 
@@ -106,7 +109,10 @@ namespace Aicl.Delfin.Model.Types
 		public int IdCiudadDestinatario { get; set;}
 
 		[BelongsTo(typeof(Ciudad),"Nombre")]
-		public string NombreCiudadDestinatario {get;set;}
+		public string NombreCiudad {get;set;}
+
+		[BelongsTo(typeof(Ciudad),"Codigo")]
+		public string CodigoCiudad {get;set;}
 
 		[StringLength(128)]
         [Required]

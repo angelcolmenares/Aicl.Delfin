@@ -2,18 +2,15 @@ Ext.define('App.view.pedido.Panel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.pedidopanel',
 
-
     style: 'border: 0; padding: 0',
     ui: 'default-framed',
     width: 990,
-    frameHeader: false,
-    title: '',
     
-    showSearchWindow:function(){
-    	this.searchWindow.show();
+    showPedidoSearchWindow:function(){
+    	this.pedidoSearchWindow.show();
     },
-    hideSearchWindow:function(){
-    	this.searchWindow.hide();
+    hidePedidoSearchWindow:function(){
+    	this.pedidoSearchWindow.hide();
     },
     showClienteSearchWindow:function(){
     	this.clienteSearchWindow.show();
@@ -23,6 +20,9 @@ Ext.define('App.view.pedido.Panel', {
     },
 
     initComponent: function() {
+    	this.pedidoSearchWindow=Ext.create('App.view.pedidosearch.Window');
+	  	this.clienteSearchWindow=Ext.create('App.view.clientesearch.Window');
+    	
         var me = this;
 
         Ext.applyIf(me, {
@@ -36,8 +36,7 @@ Ext.define('App.view.pedido.Panel', {
                         {
                             xtype: 'button',
                             action: 'new',
-                            iconCls: 'new_document',
-                            text: ''
+                            iconCls: 'new_document'
                         },
                         {
                             xtype: 'textfield',
@@ -50,20 +49,30 @@ Ext.define('App.view.pedido.Panel', {
                             xtype: 'button',
                             name: 'buscarPedido',
                             action: 'buscarPedido',
-                            iconCls: 'open_document',
-                            text: ''
+                            iconCls: 'open_document'
                         },
                         {
                             xtype: 'button',
                             action: 'save',
-                            iconCls: 'save_document',
-                            text: ''
+                            iconCls: 'save_document'
                         },
                         {
                             xtype: 'button',
-                            action: 'delete',
-                            iconCls: 'remove',
-                            text: ''
+                            action: 'enviar',
+                            tooltip:'enviar pedido',
+                            iconCls: 'send'
+                        },
+                        {
+                            xtype: 'button',
+                            action: 'aceptar',
+                            tooltip:'Registrar aceptacion del pedido',
+                            iconCls: 'accept'
+                        },
+                        {
+                            xtype: 'button',
+                            action: 'anular',
+                            tooltip:'Anular pedido',
+                            iconCls: 'remove'
                         }
                     ]
                 }
@@ -92,9 +101,7 @@ Ext.define('App.view.pedido.Form', {
         type: 'hbox'
     },
     bodyPadding: 10,
-    frameHeader: false,
-    title: '',
-
+    
     initComponent: function() {
         var me = this;
 
@@ -105,7 +112,6 @@ Ext.define('App.view.pedido.Form', {
                 labelAlign: 'right'
             },
             defaults: {
-                anchor: '100%',
                 width: 350
             },
             items: [
@@ -113,7 +119,6 @@ Ext.define('App.view.pedido.Form', {
                     xtype: 'fieldset',
                     flex: 0,
                     style: 'border: 0; padding: 0',
-                    title: '',
                     items: [
                         {
                             xtype: 'fieldset',
@@ -122,8 +127,13 @@ Ext.define('App.view.pedido.Form', {
                                 align: 'stretch',
                                 type: 'hbox'
                             },
-                            title: '',
-                            items: [
+                            items: [{
+									xtype: 'hidden',
+									name: 'Id'
+								},{
+									xtype: 'hidden',
+									name: 'IdContacto'
+								},
                                 {
                                     xtype: 'textfield',
                                     flex: 1,
@@ -184,7 +194,7 @@ Ext.define('App.view.pedido.Form', {
                             name: 'DiasDeVigencia',
                             fieldLabel: 'Vigencia',
                             allowDecimals: false,
-                            decimalPrecision: 0
+                            value:15
                         },
                         {
                             xtype: 'datefield',
@@ -201,20 +211,16 @@ Ext.define('App.view.pedido.Form', {
                     margins: '0 0 0 30',
                     style: 'border:0; padding:0',
                     defaults: {
-                        anchor: '100%',
                         width: 350
                     },
-                    title: '',
                     items: [
                         {
                             xtype: 'textfield',
-                            anchor: '100%',
                             name: 'NombreDestinatario',
                             fieldLabel: 'Destinatario'
                         },
                         {
                             xtype: 'textfield',
-                            anchor: '100%',
                             name: 'CargoDestinatario',
                             fieldLabel: 'Cargo'
                         },
@@ -225,17 +231,14 @@ Ext.define('App.view.pedido.Form', {
                                 align: 'stretch',
                                 type: 'hbox'
                             },
-                            title: '',
                             items: [
                                 {
                                     xtype: 'textfield',
-                                    anchor: '0',
                                     name: 'TelefonoDestinatario',
                                     fieldLabel: 'Tel-Fax'
                                 },
                                 {
                                     xtype: 'textfield',
-                                    anchor: '',
                                     flex: 1,
                                     style: 'marginLeft:4px',
                                     name: 'FaxDestinatario',
@@ -245,13 +248,11 @@ Ext.define('App.view.pedido.Form', {
                         },
                         {
                             xtype: 'textfield',
-                            anchor: '100%',
                             name: 'CelularDestinatario',
                             fieldLabel: 'Celular'
                         },
                         {
                             xtype: 'textfield',
-                            anchor: '100%',
                             name: 'MailDestinatario',
                             fieldLabel: 'Mail',
                             vtype: 'email'
@@ -260,13 +261,10 @@ Ext.define('App.view.pedido.Form', {
                             name:'IdCiudadDestinatario',
 							xtype: 'ciudadcombo',
 							fieldLabel: 'Ciudad',
-							allowBlank: false,
-                            anchor: '100%'
-
+							allowBlank: false
                         },
                         {
                             xtype: 'textfield',
-                            anchor: '100%',
                             name: 'DireccionDestinatario',
                             fieldLabel: 'Direccion'
                         }
@@ -277,7 +275,6 @@ Ext.define('App.view.pedido.Form', {
                     flex: 1,
                     margins: '0 0 0 40',
                     style: 'border:0;padding:0',
-                    title: '',
                     items: [
                         {
                             xtype: 'numberfield',
@@ -356,212 +353,55 @@ Ext.define('App.view.pedido.List',{
         
             this.columns=[
 	{
-		text: 'Consecutivo',
+		text: 'Cnstv',
+		width:50,
 		dataIndex: 'Consecutivo',
-		flex: 1,
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
+		align: 'center',
+        renderer: function(value, metadata, record, store){
+			return Ext.String.format(
+			'<div class="x-cell-positive" style="text-align:center">{0}</div>',
+			value); 
+		}
 	},
 	{
-		text: 'IdContacto',
-		dataIndex: 'IdContacto',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
+		text: 'Nit',
+		dataIndex: 'NitCliente'
 	},
 	{
-		text: 'FechaCreacion',
-		dataIndex: 'FechaCreacion',
-		sortable: true,
-		renderer: Ext.util.Format.dateRenderer('d.m.Y')
+		text: 'Cliente',
+		width:200,
+		dataIndex: 'NombreCliente'
 	},
 	{
-		text: 'FechaActualizacion',
-		dataIndex: 'FechaActualizacion',
-		sortable: true,
-		renderer: Ext.util.Format.dateRenderer('d.m.Y')
+		text: 'Contacto',
+		dataIndex: 'NombreContacto'
 	},
 	{
-		text: 'FechaEnvio',
+		text: 'Destinatario',
+		dataIndex: 'NombreDestinatario'
+	},
+	{
+		text: 'Envio',
 		dataIndex: 'FechaEnvio',
-		sortable: true,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},
 	{
-		text: 'FechaAceptacion',
+		text: 'Aceptacion',
 		dataIndex: 'FechaAceptacion',
-		sortable: true,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},
 	{
-		text: 'FechaAnulado',
+		text: 'Anulado',
 		dataIndex: 'FechaAnulado',
-		sortable: true,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},
 	{
-		text: 'DiasDeVigencia',
-		dataIndex: 'DiasDeVigencia',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
+		text: 'CreadoPor',
+		dataIndex: 'NombreCreadoPor'
 	},
 	{
-		text: 'VigenteHasta',
-		dataIndex: 'VigenteHasta',
-		sortable: true,
-		renderer: Ext.util.Format.dateRenderer('d.m.Y')
-	},
-	{
-		text: 'IdCreadoPor',
-		dataIndex: 'IdCreadoPor',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'NombreCreadoPor',
-		dataIndex: 'NombreCreadoPor',
-		sortable: true
-	},
-	{
-		text: 'IdEnviadoPor',
-		dataIndex: 'IdEnviadoPor',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'NombreEnviadoPor',
-		dataIndex: 'NombreEnviadoPor',
-		sortable: true
-	},
-	{
-		text: 'IdAceptadoPor',
-		dataIndex: 'IdAceptadoPor',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'NombreAceptadoPor',
-		dataIndex: 'NombreAceptadoPor',
-		sortable: true
-	},
-	{
-		text: 'IdAnuladoPor',
-		dataIndex: 'IdAnuladoPor',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'NombreAnuladoPor',
-		dataIndex: 'NombreAnuladoPor',
-		sortable: true
-	},
-	{
-		text: 'IdFormaPago',
-		dataIndex: 'IdFormaPago',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'DescripcionFormaPago',
-		dataIndex: 'DescripcionFormaPago',
-		sortable: true
-	},
-	{
-		text: 'NombreContacto',
-		dataIndex: 'NombreContacto',
-		sortable: true
-	},
-	{
-		text: 'CargoContacto',
-		dataIndex: 'CargoContacto',
-		sortable: true
-	},
-	{
-		text: 'TelefonoContacto',
-		dataIndex: 'TelefonoContacto',
-		sortable: true
-	},
-	{
-		text: 'FaxContacto',
-		dataIndex: 'FaxContacto',
-		sortable: true
-	},
-	{
-		text: 'CelularContacto',
-		dataIndex: 'CelularContacto',
-		sortable: true
-	},
-	{
-		text: 'MailContacto',
-		dataIndex: 'MailContacto',
-		sortable: true
-	},
-	{
-		text: 'DireccionContacto',
-		dataIndex: 'DireccionContacto',
-		sortable: true
-	},
-	{
-		text: 'CodigoPostalContacto',
-		dataIndex: 'CodigoPostalContacto',
-		sortable: true
-	},
-	{
-		text: 'NitCliente',
-		dataIndex: 'NitCliente',
-		sortable: true
-	},
-	{
-		text: 'NombreCliente',
-		dataIndex: 'NombreCliente',
-		sortable: true
+		text: 'FormaPago',
+		dataIndex: 'DescripcionFormaPago'
 	}
 ];
 
@@ -583,15 +423,15 @@ Ext.define('App.view.pedido.List',{
 });
 
 
-Ext.define('App.view.pedido.SearchWindow',{
+Ext.define('App.view.pedidosearch.Window',{
 	extend: 'Ext.Window',
     alias : 'widget.pedidosearchwindow',
 	closable: true,
     closeAction: 'hide',
-    y:25,
-    x:25,
+    y:22,
+    x:22,
     autoHeight:true,
-    width: 400,
+    width: 950,
     modal: false,
     items:[{
     	xtype:'pedidolist'
@@ -613,252 +453,6 @@ Ext.define('App.view.clientesearch.Window',{
     }]
 });
 
-
-Ext.define('App.view.pedidoitem.Form', {
-    extend: 'Ext.form.Panel',
-    alias : 'widget.pedidoitemform',
-    ui:'default-framed',
-    frame:false,
-    margin: '2 0 0 15px',
-    bodyStyle :'padding:0px 0px 0px 0px',
-    style: {border: 0, padding: 0},
-    autoWidth:true,
-    autoHeight:true,
-    autoScroll:true,
-    fieldDefaults : { msgTarget: 'side', labelWidth: 100,labelAlign: 'right'},
-    defaultType:'textfield',
-    defaults : { anchor: '100%',labelStyle: 'padding-left:4px;'},
-         
-    initComponent: function() {
-    this.items = [{	
-    	xtype: 'toolbar',
-    	name: 'padreToolbar',
-        colspan:2,
-        items: [{
-            tooltip:'Agregar Servicio',
-            iconCls:'add',
-            disabled:true,
-            action: 'new'
-        },{
-         	tooltip:'Guardar',
-      		iconCls:'save_document',
-        	disabled:true,
-        	action:'save'
-        },'-',{
-            tooltip:'Borrar servicio seleccionado',
-            iconCls:'remove',
-            disabled:true,
-            action: 'delete'
-        }]
-    },{
-		xtype: 'hidden',
-		name: 'Id'
-	},
-	{
-		xtype: 'hidden',
-		name: 'IdServicio'
-	},
-	{
-		xtype: 'hidden',
-		name: 'IdProcedimiento'
-	},{
-		name: 'NombreServicio',
-		fieldLabel: 'NombreServicio'
-	},
-	{
-		name: 'DescripcionProcedimiento',
-		fieldLabel: 'Procedimiento'
-	},{
-		name: 'Descripcion',
-		fieldLabel: 'Detalle',
-		maxLength: 256,
-		enforceMaxLength: true
-	},
-	{
-		name: 'Nota',
-		fieldLabel: 'Nota',
-		maxLength: 256,
-		enforceMaxLength: true
-	},{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'Cantidad',
-		fieldLabel: 'Cantidad',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'Descuento',
-		fieldLabel: 'Descuento',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'ValorUnitario',
-		fieldLabel: 'ValorUnitario',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'PorcentajeIva',
-		fieldLabel: 'PorcentajeIva',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'ValorBase',
-		fieldLabel: 'ValorBase',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'ValorIva',
-		fieldLabel: 'ValorIva',
-		allowBlank: false
-	}];
-  
-    this.callParent(arguments);
-    }
-});
-
-
-Ext.define('App.view.pedidoitem.List',{ 
-    extend: 'Ext.grid.Panel',
-    alias : 'widget.pedidoitemlist',
-    title: 'Items',
-    frame:false,
-    selType : 'rowmodel',
-    autoHeight:true,
-    width:530,
-    autoScroll:true,
-    viewConfig : { 	stripeRows: true   },
-    margin: '2 0 0 0',  
-    initComponent: function() {	
-    this.store ='PedidoItem';     
-            this.columns=[
-	{
-		text: 'IdServicio',
-		dataIndex: 'IdServicio',
-		flex: 1,
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdProcedimiento',
-		dataIndex: 'IdProcedimiento',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'Cantidad',
-		dataIndex: 'Cantidad',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'Descripcion',
-		dataIndex: 'Descripcion',
-		sortable: true
-	},
-	{
-		text: 'Nota',
-		dataIndex: 'Nota',
-		sortable: true
-	},
-	{
-		text: 'NombreServicio',
-		dataIndex: 'NombreServicio',
-		sortable: true
-	},
-	{
-		text: 'DescripcionProcedimiento',
-		dataIndex: 'DescripcionProcedimiento',
-		sortable: true
-	},
-	{
-		text: 'Descuento',
-		dataIndex: 'Descuento',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'ValorUnitario',
-		dataIndex: 'ValorUnitario',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'PorcentajeIva',
-		dataIndex: 'PorcentajeIva',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'ValorBase',
-		dataIndex: 'ValorBase',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'ValorIva',
-		dataIndex: 'ValorIva',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
-        	}
-        }
-	}
-];
-
-             
-    this.callParent(arguments);
-    }
-});
 
 
 Ext.define('App.view.clientecontacto.List',{ 
@@ -940,7 +534,7 @@ Ext.define('App.view.clientecontacto.List',{
         xtype: 'toolbar',
         items: [{
             text:'Seleccionar',
-     		tooltip:'Seleccionar infante',
+     		tooltip:'Seleccionar Cliente',
       		iconCls:'select',
     		disabled:true,
     		action:'select'
@@ -964,7 +558,7 @@ Ext.define('App.view.formapago.ComboBox', {
     //pageSize: 12,
     multiSelect:false,
     queryMode: 'local',
-    queryParam :'Id',
+    queryParam :'Descripcion',
     triggerOnClick: false,
     labelTpl: '{Descripcion}',
     listConfig: {
@@ -1030,7 +624,7 @@ Ext.define('App.view.pedidoitem.Panel', {
                     title: '',
                     items: [
                         {
-                            xtype: 'itemlist'
+                            xtype: 'pedidoitemlist'
                         },
                         {
                             xtype: 'panel',
@@ -1116,7 +710,6 @@ Ext.define('App.view.item.Form', {
                         align: 'stretch',
                         type: 'hbox'
                     },
-                    title: '',
                     items: [
                         {
                             xtype: 'textfield',
@@ -1157,17 +750,16 @@ Ext.define('App.view.item.Form', {
                 {
                     xtype: 'numberfield',
                     anchor: '50%',
-                    name: 'Descuento',
-                    fieldLabel: 'Descuento',
-                    decimalPrecision: 6
-                },
-                {
-                    xtype: 'numberfield',
-                    anchor: '50%',
                     name: 'DiasEntrega',
                     fieldLabel: 'Dias Entrega',
                     allowDecimals: false,
                     decimalPrecision: 0
+                },{
+                    xtype: 'numberfield',
+                    anchor: '50%',
+                    name: 'Descuento',
+                    fieldLabel: 'Descuento %',
+                    decimalPrecision: 6
                 }
             ],
             dockedItems: [
@@ -1204,41 +796,96 @@ Ext.define('App.view.item.Form', {
 
 });
 
-Ext.define('App.view.item.List', {
+Ext.define('App.view.pedidoitem.List', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.itemlist',
+    alias: 'widget.pedidoitemlist',
 
     height: 121,
     style: 'border: 0; padding: 0',
     ui: 'default-framed',
-    title: '',
-
+ 
     initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
             columns: [
-                {
-                    xtype: 'gridcolumn',
-                    dataIndex: 'string',
-                    text: 'String'
-                },
-                {
-                    xtype: 'numbercolumn',
-                    dataIndex: 'number',
-                    text: 'Number'
-                },
-                {
-                    xtype: 'datecolumn',
-                    dataIndex: 'date',
-                    text: 'Date'
-                },
-                {
-                    xtype: 'booleancolumn',
-                    width: 114,
-                    dataIndex: 'bool',
-                    text: 'Boolean'
-                }
+    {
+		text: 'Servicio',
+		dataIndex: 'NombreServicio',
+		width:300,
+		renderer: function(value, metadata, record, store){   	
+            return Ext.String.format( '<p style="white-space:normal;color:black;">{0}<br />{1}<br />{2}</p>',
+            value,
+            record.get('Descripcion'),
+            record.get('Nota')?'Nota:' +record.get('Nota'):''
+            );
+        }
+	},           	
+	{
+		text: 'Ctd',
+		width:40,
+		dataIndex: 'Cantidad',
+		renderer: function(value, metadata, record, store){
+			return Ext.String.format(
+			'<div class="x-cell-positive" style="text-align:center">{0}</div>',
+			value); 
+		}
+	},
+	{
+		text: 'Dto %',
+		width:40,
+		dataIndex: 'Descuento',
+		renderer: function(value, metadata, record, store){
+           	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        }
+	},
+	{
+		text: 'Iva %',
+		width:40,
+		dataIndex: 'PorcentajeIva',
+		renderer: function(value, metadata, record, store){
+           	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        }
+	},
+	{
+		text: 'Dias',
+		width:40,
+		dataIndex: 'DiasEntrega',
+		renderer: function(value, metadata, record, store){
+           	return Ext.String.format(
+			'<div class="x-cell-positive" style="text-align:center">{0}</div>',
+			value);
+        }
+	},
+	{
+		text: 'Unitario',
+		dataIndex: 'CostoUnitario',
+		renderer: function(value, metadata, record, store){
+           	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        }
+	},
+	{
+		text: 'Inversion',
+		dataIndex: 'CostoInversion',
+		renderer: function(value, metadata, record, store){
+           	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        }
+	},
+	{
+		text: 'Iva',
+		dataIndex: 'ValorIva',
+		renderer: function(value, metadata, record, store){
+           	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        }
+	},
+	{
+		text: 'Total',
+		dataIndex: 'TotalItem',
+		renderer: function(value, metadata, record, store){
+           	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        }
+	}
+
             ],
             viewConfig: {
 
@@ -1249,7 +896,7 @@ Ext.define('App.view.item.List', {
     }
 
 });
-Ext.define('App.view.itemesumen.Form', {
+Ext.define('App.view.itemresumen.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.itemresumenform',
 
@@ -1272,10 +919,9 @@ Ext.define('App.view.itemesumen.Form', {
                 {
                     xtype: 'textfield',
                     anchor: '100%',
-                    name: 'ValorBase',
+                    name: 'CostoUnitario',
                     readOnly: true,
-                    fieldLabel: 'Costo Unitario',
-                    labelAlign: 'right'
+                    fieldLabel: 'Costo Unitario'
                 },
                 {
                     xtype: 'textfield',
@@ -1287,7 +933,7 @@ Ext.define('App.view.itemesumen.Form', {
                 {
                     xtype: 'textfield',
                     anchor: '100%',
-                    name: 'Iva',
+                    name: 'ValorIva',
                     readOnly: true,
                     fieldLabel: 'IVA'
                 },

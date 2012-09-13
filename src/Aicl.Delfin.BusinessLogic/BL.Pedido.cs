@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System;
 using ServiceStack.ServiceInterface;
 using ServiceStack.Common;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -19,12 +20,15 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+
             return factory.Execute(proxy=>{
 
 				long? totalCount=null;
 
 				var paginador= new Paginador(httpRequest);
             	
+				var visitor = ReadExtensions.CreateExpression<Pedido>();
+
                 var predicate = PredicateBuilder.True<Pedido>();
 
 				if(request.Consecutivo!=default(int))
@@ -33,14 +37,20 @@ namespace Aicl.Delfin.BusinessLogic
 				}
 				else
 				{
-					if(!request.NombreCliente.IsNullOrEmpty())
-						predicate= q=>q.NombreCliente.StartsWith(request.NombreCliente);
+					visitor.OrderByDescending(f=>f.Consecutivo);
 
-					if(!request.NitCliente.IsNullOrEmpty())
+					if(!request.NombreCliente.IsNullOrEmpty()){
+						predicate= q=>q.NombreCliente.StartsWith(request.NombreCliente);
+						visitor.OrderBy(f=>f.NombreCliente);
+					}
+
+					if(!request.NitCliente.IsNullOrEmpty()){
 						predicate= predicate.AndAlso(q=>q.NitCliente.StartsWith(request.NitCliente));
+						visitor.OrderBy(f=>f.NitCliente);
+					}
 				}
 
-                var visitor = ReadExtensions.CreateExpression<Pedido>();
+                
 				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
@@ -55,6 +65,7 @@ namespace Aicl.Delfin.BusinessLogic
                 	Data=proxy.Get(visitor),
                 	TotalCount=totalCount
             	};
+
             });
   
         }
@@ -86,16 +97,10 @@ namespace Aicl.Delfin.BusinessLogic
 
 				var contacto = proxy.CheckExistAndActivo<Contacto>(request.IdContacto, f=>f.Nombre);
 				request.NombreContacto= contacto.Nombre;
-				request.NombreDestinatario= contacto.Nombre;
-				request.CargoDestinatario= contacto.Cargo;
-				request.CelularDestinatario= contacto.Celular;
-				request.DireccionDestinatario= contacto.Direccion;
-				request.FaxDestinatario= contacto.Fax;
-				request.MailDestinatario= contacto.Mail;
-				request.TelefonoDestinatario=contacto.Telefono;
-				request.IdCiudadDestinatario=contacto.IdCiudad;
-				request.NombreCiudadDestinatario= contacto.NombreCiudad;
 
+				var ciudad = CheckCiudad(proxy, request);
+				request.NombreCiudad= ciudad.Nombre;
+				request.CodigoCiudad= ciudad.Codigo;
 
 				var cliente= proxy.CheckExistAndActivo<Cliente>(contacto.IdCliente, f=>f.Nombre);
 				request.NitCliente=cliente.Nit;
@@ -127,7 +132,61 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
-				proxy.Update(request);
+				using (proxy.AcquireLock(request.GetLockKey(), BL.LockSeconds))
+                {
+					var old = proxy.FirstOrDefaultById<Pedido>(request.Id);
+
+					if( old==default(Pedido)){
+						throw HttpError.NotFound(string.Format("No existe Pedido con Id: '{0}'", request.Id));
+					}
+
+					if(old.FechaEnvio.HasValue){
+						throw HttpError.Unauthorized(string.Format("Pedido '{0}' Id:'{1} No puede ser Actualizado. Estado:Enviado ", request.Consecutivo, request.Id));
+					}
+
+					if(old.FechaAnulado.HasValue){
+						throw HttpError.Unauthorized(string.Format("Pedido '{0}' Id:'{1} No puede ser Actualizado. Estado:Anulado ", request.Consecutivo, request.Id));
+					}
+
+					request.FechaActualizacion= DateTime.Today;
+
+					if(request.IdCiudadDestinatario!=default(int) &&
+						request.IdCiudadDestinatario!=old.IdCiudadDestinatario){
+
+						var ciudad = CheckCiudad(proxy, request);
+						request.NombreCiudad= ciudad.Nombre;
+						request.CodigoCiudad= ciudad.Codigo;
+					}
+
+
+					if(request.IdFormaPago!=default(int) &&
+					   request.IdFormaPago!=old.IdFormaPago)
+					{
+						var fp = proxy.CheckExistAndActivo<FormaPago>(request.IdFormaPago, f=>f.Descripcion);
+						request.DescripcionFormaPago= fp.Descripcion;
+					}
+
+					if(request.IdContacto!=default(int) &&
+					   request.IdContacto!=old.IdContacto)
+					{
+						var contacto = proxy.CheckExistAndActivo<Contacto>(request.IdContacto, f=>f.Nombre);
+						request.NombreContacto= contacto.Nombre;
+
+						var cliente= proxy.CheckExistAndActivo<Cliente>(contacto.IdCliente, f=>f.Nombre);
+						request.NitCliente=cliente.Nit;
+						request.NombreCliente= cliente.Nombre;
+					}
+
+					proxy.Update(request,ev=>ev.Update(f=> 
+					    new {
+							f.CargoDestinatario, f.CelularDestinatario, f.DiasDeVigencia,
+							f.DireccionDestinatario, f.FaxDestinatario, f.IdCiudadDestinatario,f.IdContacto,
+							f.IdFormaPago,f.MailDestinatario, f.NitCliente, f.NombreDestinatario,f.TelefonoDestinatario,
+							f.FechaActualizacion
+						}).Where(q=>q.Id==request.Id)
+					);
+
+				}
 			});
 
 			List<Pedido> data = new List<Pedido>();
@@ -144,8 +203,65 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+			throw HttpError.Unauthorized("Operacion Borrar no autorizada para Pedidos");
+		}
+		#endregion Delete
+
+		#region Patch
+        public static Response<Pedido> Patch(this Pedido request,
+		                                              Factory factory,
+		                                              IHttpRequest httpRequest)
+        {
+			List<string> actions = new List<string>(new string[]{"ENVIAR","ACEPTAR","ANULAR"});
+
+			var action= httpRequest.PathInfo.Substring(httpRequest.PathInfo.LastIndexOf("/")+1).ToUpper();
+
+			if(actions.IndexOf(action)<0)
+				throw HttpError.Unauthorized(string.Format("Operacion: '{0}' no autorizada en Pedidos", action));
+
 			factory.Execute(proxy=>{
-				proxy.Delete<Pedido>(q=>q.Id==request.Id);
+
+				using (proxy.AcquireLock(request.GetLockKey(), BL.LockSeconds))
+                {
+
+					var old = proxy.FirstOrDefaultById<Pedido>(request.Id);
+
+					if( old==default(Pedido)){
+						throw HttpError.NotFound(string.Format("No existe Pedido con Id: '{0}'", request.Id));
+					}
+
+					if(old.FechaAnulado.HasValue){
+						throw HttpError.Unauthorized(string.Format("Operacion:'{0}' No permitida. Pedido '{1}' Id:'{2} se encuentra anulado",action, request.Consecutivo, request.Id));
+					}
+
+					request.PopulateWith(old);
+
+					if(action=="ENVIAR")
+					{
+						if(old.FechaEnvio.HasValue)
+							throw HttpError.Conflict("Pedido ya se encuentra en estado Enviado");
+						request.FechaEnvio=DateTime.Today;
+					}
+					else if (action=="ACEPTAR")
+					{
+						if(old.FechaAceptacion.HasValue)
+							throw HttpError.Conflict("Pedido ya se encuentra en estado Aceptado");
+
+						if(!old.FechaEnvio.HasValue)
+							throw HttpError.Conflict("El Pedido primero debe ser enviado");
+
+						request.FechaAceptacion=DateTime.Today;
+					}
+					else
+					{
+						request.FechaAnulado= DateTime.Today;
+					}
+
+					proxy.Update(request, ev=>ev.Update(
+						f=> new {f.FechaEnvio,f.FechaAceptacion,f.FechaAnulado, f.VigenteHasta})
+					             .Where(q=>q.Id==request.Id));
+				}
+
 			});
 
 			List<Pedido> data = new List<Pedido>();
@@ -155,28 +271,19 @@ namespace Aicl.Delfin.BusinessLogic
 				Data=data
 			};	
 		}
-		#endregion Delete
+		#endregion Patch
+
+            
+
+		static Ciudad CheckCiudad(DALProxy proxy,  Pedido request)
+		{
+			if(request.IdCiudadDestinatario==0)
+					throw HttpError.Unauthorized("Debe Indicar la ciudad Destino");
+			var ciudad = proxy.FirstOrDefaultById<Ciudad>(request.IdCiudadDestinatario);
+				if(ciudad==default(Ciudad))
+					throw HttpError.NotFound(string.Format("No existe Ciudad con Id: '{0}'", request.IdCiudadDestinatario));
+			return ciudad;
+		}
 
 	}
 }
-
-/*
-
-var fp = proxy.FirstOrDefaultById<FormaPago>(request.IdFormaPago);
-				if(fp==default(FormaPago))
-					throw HttpError.NotFound(string.Format("No existe FormaPago con Id: '{0}'", request.IdFormaPago));
-
-				if(!fp.Activo)
-					throw HttpError.Unauthorized(string.Format("FormaPago :'{0}-{1}' se encuentra inactiva", request.IdFormaPago,fp.Descripcion));
-
-				request.DescripcionFormaPago= fp.Descripcion;
-
-				var contacto = proxy.FirstOrDefaultById<Contacto>(request.IdContacto);
-
-				if(contacto==default(Contacto))
-					throw HttpError.NotFound(string.Format("No existe Contacto con Id: '{0}'", request.IdContacto));
-
-				if (!contacto.Activo)
-					throw HttpError.Unauthorized(string.Format("Contacto :'{0}-{1}' se encuentra inactivo",
-					                                           request.IdContacto, contacto.Nombre));
-*/					                                           

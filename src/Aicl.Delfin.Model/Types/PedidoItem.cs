@@ -46,13 +46,24 @@ namespace Aicl.Delfin.Model.Types
 		public decimal PorcentajeIva {get; set;}
 
 		[DecimalLength(18,2)]
-		public decimal ValorBase {get; set;	}
+		public decimal ValorUnitario{get;set;}  //incluye IVA
+
+		public int DiasEntrega { get; set;}
 
 		[Ignore]
 		[DecimalLength(18,2)]
-		public decimal ValorUnitario{
+		public decimal CostoUnitario { 
+			get {
+				return CostoInversion/Cantidad;
+			}
+		}
+
+
+		[Ignore]
+		[DecimalLength(18,2)]
+		public decimal CostoInversion{
 			get{
-				return Math.Floor(ValorBase*(1.00m+PorcentajeIva/100.00m));
+				return Math.Ceiling(TotalItem/(1+PorcentajeIva/100.0m));
 			}
 		}
 
@@ -60,8 +71,21 @@ namespace Aicl.Delfin.Model.Types
 		[DecimalLength(18,2)]
 		public decimal ValorIva {
 			get{
-				return ValorUnitario-ValorBase;
+				return TotalItem-CostoInversion;
 			}
 		}
+
+
+		[Ignore]
+		[DecimalLength(18,2)]
+		public decimal TotalItem{
+			get{
+				return ValorUnitario*Cantidad - (ValorUnitario*Cantidad*Descuento/100.00m);
+			}
+		}
+
+
+
+
 	}
 }

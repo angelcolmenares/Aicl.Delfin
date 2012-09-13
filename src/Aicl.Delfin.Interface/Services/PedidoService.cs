@@ -51,6 +51,17 @@ namespace Aicl.Delfin.Interface
 			}
 		}
 
+
+		public override object OnPatch (Pedido request)
+		{
+			try{
+				return request.Patch(Factory, RequestContext.Get<IHttpRequest>());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<Pedido>>(e,"PatchPedidoError");
+			}
+		}
+
 	}
 }
 

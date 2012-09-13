@@ -30,7 +30,7 @@ namespace Aicl.Delfin.Model.Types
         public string Descripcion {get;set;}
 
 		[DecimalLength(18,2)]
-		public decimal ValorUnitario {get; set;}
+		public decimal ValorUnitario {get; set;} // incluye el iva
 
 		[DecimalLength(5,2)]
 		public decimal PorcentajeIva {get; set;}
@@ -42,7 +42,7 @@ namespace Aicl.Delfin.Model.Types
 		[DecimalLength(18,2)]
 		public decimal ValorBase {
 			get {
-				return Math.Ceiling(ValorUnitario/(1.00m+PorcentajeIva/100.00m));
+				return Math.Ceiling(ValorUnitario/(1.00m+(PorcentajeIva/100.00m)));
 			}
 		}
 

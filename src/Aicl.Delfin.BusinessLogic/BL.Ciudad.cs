@@ -23,14 +23,20 @@ namespace Aicl.Delfin.BusinessLogic
 
 				var paginador= new Paginador(httpRequest);
 
+				var visitor = ReadExtensions.CreateExpression<Ciudad>();
+
                 var predicate = PredicateBuilder.True<Ciudad>();
+
+				if(request.Id!=default(int))
+					predicate= q=>q.Id==request.Id;
 
 				if(!request.Nombre.IsNullOrEmpty()) 
 				{
 	                predicate= q=>q.Nombre.StartsWith(request.Nombre) ;
+					visitor.OrderBy(r=>r.Nombre);
 				}
 
-                var visitor = ReadExtensions.CreateExpression<Ciudad>();
+                
 				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
@@ -40,8 +46,8 @@ namespace Aicl.Delfin.BusinessLogic
                     int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
-                                
-                visitor.OrderBy(r=>r.Nombre);
+                               
+                
                 
 				return new Response<Ciudad>(){
                 	Data=proxy.Get(visitor),

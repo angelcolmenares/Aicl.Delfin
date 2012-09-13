@@ -4,6 +4,9 @@ using System.Linq.Expressions;
 using System;
 using ServiceStack.Common.Web;
 using ServiceStack.Common.Utils;
+using ServiceStack.DesignPatterns.Model;
+
+
 namespace Aicl.Delfin.BusinessLogic
 {
     public static partial class BL
@@ -17,6 +20,9 @@ namespace Aicl.Delfin.BusinessLogic
 			where T : IHasActivo, new()
 		
 		{
+			if (id==default(int))
+				throw HttpError.Unauthorized(string.Format("Debe Indicar el Id para: '{0}",typeof(T).Name));
+
 			var record = proxy.FirstOrDefaultById<T>(id);
 				if(record==null)
 				throw HttpError.NotFound(string.Format("No existe '{0}' con Id: '{1}'", typeof(T).Name, id));
@@ -50,6 +56,11 @@ namespace Aicl.Delfin.BusinessLogic
 			var pi = ReflectionUtils.GetPropertyInfo(typeof(T), fn);
 			return pi.GetValue(record, new object[]{});
 
+		}
+
+		public static string GetLockKey<T>(this T request) where T : IHasId<int>
+		{
+			return string.Format("urn:lock:{0}:Id:{1}",typeof(T).Name, request.Id); 
 		}
 
     }

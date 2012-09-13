@@ -386,7 +386,7 @@
 
 Ext.define('Aicl.data.Store',{
 	extend: 'Ext.data.Store',
-	 initComponent:function() {
+	initComponent:function() {
         // call parent init component
         Aicl.data.Store.superclass.initComponent.apply(this, arguments);
          // add custom events
@@ -454,7 +454,7 @@ Ext.data.Store.implement({
 			var sr = this.getById(parseInt( record.Id) );
 			sr.beginEdit();
 			for( var r in record){
-				if( keys.indexOf(r)>0 )
+				if(keys.indexOf(r)>0)
 					sr.set(r, record[r])
 			}
 			sr.endEdit(); 
@@ -2441,148 +2441,220 @@ Ext.define('App.model.FormaPago',{
 Ext.define('App.model.Pedido',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
-	fields:[{
-		name: 'Id',
-		type: 'int'
-	},{
-		name: 'Consecutivo',
-		type: 'int'
-	},{
-		name: 'IdContacto',
-		type: 'int'
-	},{
-		name: 'FechaCreacion',
-		type: 'date',
-		convert: function(v){return Aicl.Util.convertToDate(v);}
-	},{
-		name: 'FechaActualizacion',
-		type: 'date',
-		convert: function(v){return Aicl.Util.convertToDate(v);}
-	},{
-		name: 'FechaEnvio',
-		type: 'date',
-		convert: function(v){return Aicl.Util.convertToDate(v);}
-	},{
-		name: 'FechaAceptacion',
-		type: 'date',
-		convert: function(v){return Aicl.Util.convertToDate(v);}
-	},{
-		name: 'FechaAnulado',
-		type: 'date',
-		convert: function(v){return Aicl.Util.convertToDate(v);}
-	},{
-		name: 'DiasDeVigencia',
-		type: 'int'
-	},{
-		name: 'VigenteHasta',
-		type: 'date',
-		convert: function(v){return Aicl.Util.convertToDate(v);}
-	},{
-		name: 'IdCreadoPor',
-		type: 'int'
-	},{
-		name: 'NombreCreadoPor',
-		type: 'string'
-	},{
-		name: 'IdEnviadoPor',
-		type: 'int'
-	},{
-		name: 'NombreEnviadoPor',
-		type: 'string'
-	},{
-		name: 'IdAceptadoPor',
-		type: 'int'
-	},{
-		name: 'NombreAceptadoPor',
-		type: 'string'
-	},{
-		name: 'IdAnuladoPor',
-		type: 'int'
-	},{
-		name: 'NombreAnuladoPor',
-		type: 'string'
-	},{
-		name: 'IdFormaPago',
-		type: 'int'
-	},{
-		name: 'DescripcionFormaPago',
-		type: 'string'
-	},{
-		name: 'NombreContacto',
-		type: 'string'
-	},{
-		name: 'CargoContacto',
-		type: 'string'
-	},{
-		name: 'TelefonoContacto',
-		type: 'string'
-	},{
-		name: 'FaxContacto',
-		type: 'string'
-	},{
-		name: 'CelularContacto',
-		type: 'string'
-	},{
-		name: 'MailContacto',
-		type: 'string'
-	},{
-		name: 'DireccionContacto',
-		type: 'string'
-	},{
-		name: 'CodigoPostalContacto',
-		type: 'string'
-	},{
-		name: 'NitCliente',
-		type: 'string'
-	},{
-		name: 'NombreCliente',
-		type: 'string'
-	}]
+	fields: 
+	[
+		{
+			name: 'Id',
+			type: 'int'
+		},
+		{
+			name: 'Consecutivo',
+			type: 'int'
+		},
+		{
+			name: 'IdContacto',
+			type: 'int'
+		},
+		{
+			name: 'FechaCreacion',
+			type: 'date',
+			convert: function(v){return Aicl.Util.convertToDate(v);}
+		},
+		{
+			name: 'FechaActualizacion',
+			type: 'date',
+			convert: function(v){return Aicl.Util.convertToDate(v);}
+		},
+		{
+			name: 'FechaEnvio',
+			type: 'date',
+			convert: function(v){return Aicl.Util.convertToDate(v);}
+		},
+		{
+			name: 'FechaAceptacion',
+			type: 'date',
+			convert: function(v){return Aicl.Util.convertToDate(v);}
+		},
+		{
+			name: 'FechaAnulado',
+			type: 'date',
+			convert: function(v){return Aicl.Util.convertToDate(v);}
+		},
+		{
+			name: 'DiasDeVigencia',
+			type: 'int'
+		},
+		{
+			name: 'VigenteHasta',
+			type: 'date',
+			convert: function(v){return Aicl.Util.convertToDate(v);}
+		},
+		{
+			name: 'IdCreadoPor',
+			type: 'int'
+		},
+		{
+			name: 'NombreCreadoPor',
+			type: 'string'
+		},
+		{
+			name: 'IdEnviadoPor',
+			type: 'int'
+		},
+		{
+			name: 'NombreEnviadoPor',
+			type: 'string'
+		},
+		{
+			name: 'IdAceptadoPor',
+			type: 'int'
+		},
+		{
+			name: 'NombreAceptadoPor',
+			type: 'string'
+		},
+		{
+			name: 'IdAnuladoPor',
+			type: 'int'
+		},
+		{
+			name: 'NombreAnuladoPor',
+			type: 'string'
+		},
+		{
+			name: 'IdFormaPago',
+			type: 'int'
+		},
+		{
+			name: 'DescripcionFormaPago',
+			type: 'string'
+		},
+		{
+			name: 'NombreContacto',
+			type: 'string'
+		},
+		{
+			name: 'NitCliente',
+			type: 'string'
+		},
+		{
+			name: 'NombreCliente',
+			type: 'string'
+		},
+		{
+			name: 'IdCiudadDestinatario',
+			type: 'int'
+		},
+		{
+			name: 'NombreCiudad',
+			type: 'string'
+		},
+		{
+			name: 'CodigoCiudad',
+			type: 'string'
+		},
+		{
+			name: 'NombreDestinatario',
+			type: 'string'
+		},
+		{
+			name: 'CargoDestinatario',
+			type: 'string'
+		},
+		{
+			name: 'TelefonoDestinatario',
+			type: 'string'
+		},
+		{
+			name: 'FaxDestinatario',
+			type: 'string'
+		},
+		{
+			name: 'CelularDestinatario',
+			type: 'string'
+		},
+		{
+			name: 'MailDestinatario',
+			type: 'string'
+		},
+		{
+			name: 'DireccionDestinatario',
+			type: 'string'
+		}
+	]
 });
+
 
 Ext.define('App.model.PedidoItem',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
-	fields:[{
-		name: 'Id',
-		type: 'int'
-	},{
-		name: 'IdServicio',
-		type: 'int'
-	},{
-		name: 'IdProcedimiento',
-		type: 'int'
-	},{
-		name: 'Cantidad',
-		type: 'int'
-	},{
-		name: 'Descripcion',
-		type: 'string'
-	},{
-		name: 'Nota',
-		type: 'string'
-	},{
-		name: 'NombreServicio',
-		type: 'string'
-	},{
-		name: 'DescripcionProcedimiento',
-		type: 'string'
-	},{
-		name: 'Descuento',
-		type: 'number'
-	},{
-		name: 'ValorUnitario',
-		type: 'number'
-	},{
-		name: 'PorcentajeIva',
-		type: 'number'
-	},{
-		name: 'ValorBase',
-		type: 'number'
-	},{
-		name: 'ValorIva',
-		type: 'number'
-	}]
+	fields: 
+	[
+		{
+			name: 'Id',
+			type: 'int'
+		},
+		{
+			name: 'IdServicio',
+			type: 'int'
+		},
+		{
+			name: 'IdProcedimiento',
+			type: 'int'
+		},
+		{
+			name: 'Cantidad',
+			type: 'int'
+		},
+		{
+			name: 'Descripcion',
+			type: 'string'
+		},
+		{
+			name: 'Nota',
+			type: 'string'
+		},
+		{
+			name: 'NombreServicio',
+			type: 'string'
+		},
+		{
+			name: 'DescripcionProcedimiento',
+			type: 'string'
+		},
+		{
+			name: 'Descuento',
+			type: 'number'
+		},
+		{
+			name: 'PorcentajeIva',
+			type: 'number'
+		},
+		{
+			name: 'ValorUnitario',
+			type: 'number'
+		},
+		{
+			name: 'DiasEntrega',
+			type: 'int'
+		},
+		{
+			name: 'CostoUnitario',
+			type: 'number'
+		},
+		{
+			name: 'CostoInversion',
+			type: 'number'
+		},
+		{
+			name: 'ValorIva',
+			type: 'number'
+		},
+		{
+			name: 'TotalItem',
+			type: 'number'
+		}
+	]
 });
 
 Ext.define('App.model.Procedimiento',{
@@ -2711,8 +2783,58 @@ Ext.define('App.store.FormaPago',{
 Ext.define('App.store.Pedido',{
 	extend: 'Aicl.data.RemoteStore',
 	model: 'App.model.Pedido',
+	initComponent:function() {
+        App.store.Pedido.superclass.initComponent.apply(this, arguments);
+        this.addEvents('enviado', 'aceptado');
+    },
 	constructor: function(config){config=config||{};config.storeId=config.storeId||'Pedido';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
 });
+
+
+App.store.Pedido.implement({
+	/**
+     * enviar el registro
+     * @param {Ext.data.Model} field
+     * @return {void} 
+     */
+	enviar:function(field){
+		
+		var me= this;
+		this.patch(field, 'enviar',
+		{
+			callback:function(result, success){
+				var record;
+				if (success) 
+					record =me.updateLocal(result.Data[0]);
+				else
+					record= Ext.create( me.model.getName(),{});
+				me.fireEvent('enviado', me, record, success);
+			}
+		});
+	},
+	
+	/**
+     * aceptar el registro
+     * @param {Ext.data.Model} field
+     */
+	aceptar:function(field){
+		var me= this;
+		this.patch(field, 'aceptar',
+		{
+			callback:function(result, success){
+				var record;
+				if (success){
+					var data= result.Data[0];
+					record= me.updateLocal(data);
+				}
+				else
+					record= Ext.create( me.model.getName(),{});
+				me.fireEvent('aceptado', me, record, success);
+			}
+		});
+	}    
+});
+
 
 Ext.define('App.store.PedidoItem',{
 	extend: 'Aicl.data.Store',

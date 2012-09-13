@@ -148,8 +148,6 @@ pre.code{
 	background-image:url(icons/silk/folder-open.gif) !important;
 }
 
-
-
 .asentar{
 	background-image:url(icons/silk/arrow_right.png) !important;
 }
@@ -158,8 +156,12 @@ pre.code{
 	background-image:url(icons/silk/arrow_undo.png) !important;
 }
 
-.aceptar{
+.accept{
 	background-image:url(icons/fam/accept.png) !important;
+}
+
+.send{
+	background-image:url(icons/silk/email.png) !important;
 }
 
 #module{
