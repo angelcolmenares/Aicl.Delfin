@@ -77,6 +77,7 @@ namespace Aicl.Delfin.BusinessLogic
 				var procedimiento = proxy.CheckExistAndActivo<Procedimiento>(request.IdProcedimiento, f=>f.Nombre);
 				request.ValorUnitario=procedimiento.ValorUnitario;
 				request.PorcentajeIva=procedimiento.PorcentajeIva;
+				request.DescripcionProcedimiento=procedimiento.Descripcion;
 				proxy.Create(request);
 
 			});

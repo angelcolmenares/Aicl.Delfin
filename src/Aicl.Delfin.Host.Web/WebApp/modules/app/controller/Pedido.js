@@ -26,7 +26,8 @@ Ext.define('App.controller.Pedido',{
     	{ref: 'nombreServicioText', selector:'pedidoitemform textfield[name=NombreServicio]'},
     	{ref: 'descripcionProcedimientoText', selector:'serviciosearchwindow textfield[name=DescripcionProcedimiento]'},
     	{ref: 'servicioList', selector:'serviciolist'},
-    	{ref: 'descripcionProcedimientoTextArea', selector: 'procedimientoform textareafield[name=DescripcionProcedimiento]'}
+    	{ref: 'descripcionProcedimientoTextArea', selector: 'procedimientoform textareafield[name=DescripcionProcedimiento]'},
+    	{ref: 'pedidoResumenForm', selector:'pedidoresumenform'}
     	    	    	
     ],
 
@@ -53,6 +54,8 @@ Ext.define('App.controller.Pedido',{
         			}
         			else{
         				this.getPedidoItemForm().getForm().reset();
+        				this.getItemResumenForm().getForm().reset()
+        				this.getDescripcionProcedimientoTextArea().setValue('');
         			}
                 }
             },
@@ -132,7 +135,9 @@ Ext.define('App.controller.Pedido',{
             
             'toolbar[name=mainToolbar] button[action=new]':{
             	click:function(button, event, options){
+            		this.getPedidoResumenForm().getForm().reset();
                 	this.getPedidoForm().getForm().reset();
+                	this.getPedidoItemStore().removeAll();
                 	var fp = this.getFormaPagoStore().getAt(0);
                 	if(fp) this.getFormaPagoCombo().setValue(fp.getId());
                 				
@@ -219,11 +224,28 @@ Ext.define('App.controller.Pedido',{
             
             'pedidoitemform button[action=save]':{
             	click: function(button, event, options){
-            		var record = this.getPedidoItemForm().getForm().getFieldValues(false);
-            		console.log('pedidoitem save record, form ', record, this.getPedidoItemForm().getForm());
+            		var pif =  this.getPedidoItemForm().getForm();
+            		pif.setValues({
+    					IdPedido: this.getPedidoForm().getForm().findField('Id').getValue()
+    				});
+            		var record = pif.getFieldValues(false);
             		this.getPedidoItemStore().getProxy().extraParams={format:'json'};
             		this.getPedidoItemStore().save(record);
             	}
+            },
+            
+            'pedidoitemform button[action=remove]': {
+                click: function(button, event, options){
+                	var grid = this.getPedidoItemList();
+                	var record = grid.getSelectionModel().getSelection()[0];
+        			this.getPedidoItemStore().remove(record);
+                }
+            },
+            
+            'pedidoitemform button[action=new]': {
+                click: function(button, event, options){
+                	this.getPedidoItemList().getSelectionModel().deselectAll();
+                }
             }
         })
     },
@@ -270,6 +292,7 @@ Ext.define('App.controller.Pedido',{
     	
     	this.getPedidoStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];
+    		console.log('pedidostore wrie record, action', record,operation.action );
             if (operation.action != 'destroy') {
             	this.pedidoLoadRecord(record);
             }            
@@ -299,14 +322,45 @@ Ext.define('App.controller.Pedido',{
     		
     	}, this);
     	
+    	this.getPedidoItemStore().on('write', function(store, operation, eOpts ){
+    		var record =  operation.getRecords()[0];
+            if (operation.action != 'destroy') {
+            	this.getPedidoItemList().getSelectionModel().select(record,true,true);
+            	this.pedidoItemLoadRecord(record);
+            }       
+            this.pedidoDoTotales(store);
+    	}, this);
+    	
+    	this.getPedidoItemStore().on('load', function(store , records, success, eOpts){
+    		if(success) this.pedidoDoTotales(store);       
+            
+    	}, this);
+    	
+    },
+    
+    pedidoDoTotales:function(store){
+    	var subtotalOferta =0, ivaOferta=0, totalOferta=0; 
+    	store.each(function(rec){
+    		subtotalOferta+= rec.get('CostoInversion');
+    		ivaOferta+= rec.get('ValorIva');
+    		totalOferta+=rec.get('TotalItem');	
+    	});
+    	
+    	this.getPedidoResumenForm().getForm().setValues({
+    		SubtotalOferta:Aicl.Util.formatNumber(subtotalOferta),
+    		IvaOferta: Aicl.Util.formatNumber(ivaOferta),
+    		TotalOferta: Aicl.Util.formatNumber(totalOferta)
+    	});
+    	
     },
     
     pedidoLoadRecord:function(record){
     	this.ciudadAddLocal(record,"IdCiudadDestinatario");
         this.getPedidoForm().getForm().loadRecord(record);
+        console.log('pedidoLoadRecord form',this.getPedidoForm().getForm() );
     },
-        
     
+        
     pedidoLoadItems:function(record){
     	this.getPedidoItemStore().load({params:{IdPedido: record.getId()}});
 	    this.getPedidoItemList().determineScrollbars();
@@ -314,6 +368,8 @@ Ext.define('App.controller.Pedido',{
     
     pedidoItemLoadRecord:function(record){
         this.getPedidoItemForm().getForm().loadRecord(record);
+        this.getItemResumenForm().getForm().loadRecord(record);
+        this.getDescripcionProcedimientoTextArea().setValue(record.get('DescripcionProcedimiento'));
     },
     
     
@@ -339,13 +395,10 @@ Ext.define('App.controller.Pedido',{
     },
     
     servicioLoadRecord:function(record){
-    	console.log('servicioLoadRecord', record, this.getPedidoItemForm().getForm());
-    	var pif =  this.getPedidoItemForm().getForm();
-    	
+    	console.log('servicioLoadRecord Id Pedido', this.getPedidoForm().getForm().findField('Id').getValue());
+    	var pif =  this.getPedidoItemForm().getForm();   	
     	var irf = this.getItemResumenForm().getForm();
-    	
     	pif.setValues({
-    		IdPedido: this.getPedidoForm().getForm().findField('Id').getValue(),
     		IdServicio: record.get('IdServicio'),
     		IdProcedimiento: record.get('IdProcedimiento'),
     		NombreServicio: record.get('NombreServicio'),
