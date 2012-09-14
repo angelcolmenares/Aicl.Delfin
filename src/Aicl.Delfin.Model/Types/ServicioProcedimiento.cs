@@ -2,15 +2,17 @@ using System;
 using ServiceStack.DataAnnotations;
 using ServiceStack.ServiceHost;
 using System.ComponentModel.DataAnnotations;
+using ServiceStack.DesignPatterns.Model;
 
 namespace Aicl.Delfin.Model.Types
 {
 	[JoinTo(typeof(Procedimiento),"IdProcedimiento","Id",Order=0)]
+	[JoinTo(typeof(Servicio),"IdServicio","Id", Order=1)]
 	[RestService("/ServicioProcedimiento/create","post")]
 	[RestService("/ServicioProcedimiento/read","get")]
 	[RestService("/ServicioProcedimiento/update/{Id}/{Activo}","put" )]
 	[RestService("/ServicioProcedimiento/destroy/{Id}","delete" )]
-	public class ServicioProcedimiento:IHasActivo
+	public class ServicioProcedimiento:IHasId<int>
 	{
 		public ServicioProcedimiento ()
 		{
@@ -23,7 +25,13 @@ namespace Aicl.Delfin.Model.Types
 
 		public int IdProcedimiento {get; set;}
 
-		public bool Activo {get;set;}
+		#region Servicio
+		[BelongsTo(typeof(Servicio),"Nombre")]
+		public string NombreServicio {get;set;}
+
+		[BelongsTo(typeof(Servicio),"Activo")]
+		public bool ActivoServicio {get; set;}
+		#endregion Servicio
 
 		#region Procedimiento
 		[BelongsTo(typeof(Procedimiento),"Nombre")]

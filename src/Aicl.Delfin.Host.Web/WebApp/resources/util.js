@@ -429,7 +429,7 @@ Ext.define('Aicl.data.RemoteStore',{
 	extend: 'Aicl.data.Store',
 	constructor: function(config){
 		config=config||{};
-		config.pageSize= 12;
+		config.pageSize= config.pageSize||12;
     	config.remoteSort=true;
     	config.proxy= config.proxy || Aicl.Util.createRestProxy({
     		storeId:config.storeId,
@@ -2595,6 +2595,10 @@ Ext.define('App.model.PedidoItem',{
 			type: 'int'
 		},
 		{
+			name: 'IdPedido',
+			type: 'int'
+		},
+		{
 			name: 'IdServicio',
 			type: 'int'
 		},
@@ -2715,7 +2719,10 @@ Ext.define('App.model.ServicioProcedimiento',{
 		name: 'IdProcedimiento',
 		type: 'int'
 	},{
-		name: 'Activo',
+		name: 'NombreServicio',
+		type: 'string'
+	},{
+		name: 'ActivoServicio',
 		type: 'boolean'
 	},{
 		name: 'NombreProcedimiento',
@@ -2856,8 +2863,13 @@ Ext.define('App.store.Servicio',{
 });
 
 Ext.define('App.store.ServicioProcedimiento',{
-	extend: 'Aicl.data.Store',
+	extend: 'Aicl.data.RemoteStore',
 	model: 'App.model.ServicioProcedimiento',
-	constructor: function(config){config=config||{};config.storeId=config.storeId||'ServicioProcedimiento';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'ServicioProcedimiento';
+		config.pageSize=config.pageSize||10;
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
 });
 // fin stores

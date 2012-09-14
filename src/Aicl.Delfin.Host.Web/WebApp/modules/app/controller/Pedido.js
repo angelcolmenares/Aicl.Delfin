@@ -1,6 +1,6 @@
 Ext.define('App.controller.Pedido',{
 	extend: 'Ext.app.Controller',
-    stores: ['Pedido', 'PedidoItem','FormaPago','ClienteContacto','Ciudad'],  
+    stores: ['Pedido', 'PedidoItem','FormaPago','ClienteContacto','Ciudad','ServicioProcedimiento'],  
     views:  ['pedido.Panel' ],
     refs:[
     	{ref: 'mainPanel', selector: 'pedidopanel' },
@@ -11,14 +11,23 @@ Ext.define('App.controller.Pedido',{
     	
     	{ref: 'pedidoList',    	 selector: 'pedidolist' },
     	{ref: 'pedidoForm',    	 selector: 'pedidoform' },
+    	{ref: 'pedidoItemForm',    	 selector: 'pedidoitemform' },
+    	{ref: 'pedidoItemList',    	 selector: 'pedidoitemlist' },
+    	{ref: 'itemResumenForm',    	 selector: 'itemresumenform' },
     	{ref: 'pedidoSelectButton', selector: 'pedidolist button[action=select]'},
     	{ref: 'clienteSelectButton', selector: 'clientecontactolist button[action=select]'},
     	{ref: 'nitClienteText', selector: 'pedidoform textfield[name=NitCliente]'},
     	{ref: 'nombreClienteText', selector: 'pedidoform textfield[name=NombreCliente]'},
     	
     	{ref: 'clienteList',    	 selector: 'clientecontactolist' },
-    	{ref: 'formaPagoCombo',    	 selector: 'formapagocombo' }
-    	    	
+    	{ref: 'formaPagoCombo',    	 selector: 'formapagocombo' },
+    	
+    	{ref: 'servicioSelectButton', selector: 'serviciosearchwindow button[action=select]'},
+    	{ref: 'nombreServicioText', selector:'pedidoitemform textfield[name=NombreServicio]'},
+    	{ref: 'descripcionProcedimientoText', selector:'serviciosearchwindow textfield[name=DescripcionProcedimiento]'},
+    	{ref: 'servicioList', selector:'serviciolist'},
+    	{ref: 'descripcionProcedimientoTextArea', selector: 'procedimientoform textareafield[name=DescripcionProcedimiento]'}
+    	    	    	
     ],
 
     init: function(application) {
@@ -27,11 +36,24 @@ Ext.define('App.controller.Pedido',{
         	
         	'pedidolist': { 
                 selectionchange: function( sm,  selections,  eOpts){
+                	
                 	var disableSelectButton=true;
                 	if (selections.length){
     					disableSelectButton=false;   		
         			}
         			this.getPedidoSelectButton().setDisabled(disableSelectButton);
+               	
+                }
+            },
+            
+            'pedidoitemlist': { 
+                selectionchange: function( sm,  selections,  eOpts){
+                	if (selections.length){
+    					this.pedidoItemLoadRecord(selections[0])   		
+        			}
+        			else{
+        				this.getPedidoItemForm().getForm().reset();
+        			}
                 }
             },
             
@@ -45,14 +67,21 @@ Ext.define('App.controller.Pedido',{
                 }
         		
         	},
-                 	
-        	
-            'pedidoitemlist': { 
-                selectionchange: function( sm,  selections,  eOpts){
-                	
-                }
-            },
             
+        	'serviciolist':{
+        		selectionchange: function( sm,  selections,  eOpts){
+        			this.getDescripcionProcedimientoText().setValue(''); 
+                	var disableSelectButton=true;
+                	if (selections.length){
+    					disableSelectButton=false;
+    					this.getDescripcionProcedimientoText().
+    						setValue(selections[0].get('DescripcionProcedimiento') );
+        			}
+        			this.getServicioSelectButton().setDisabled(disableSelectButton);
+                }
+        		
+        	}, 
+        	            
         	'pedidopanel button[action=buscarPedido]': {
                 click: function(button, event, options){
                 	var searchText= this.getBuscarPedidoText().getValue();
@@ -81,6 +110,7 @@ Ext.define('App.controller.Pedido',{
                 	this.getMainPanel().hidePedidoSearchWindow();
                 	var record= this.getPedidoList().getSelectionModel().getSelection()[0];
                 	this.pedidoLoadRecord(record);
+                	this.pedidoLoadItems(record);
                 }
             },
             
@@ -89,6 +119,14 @@ Ext.define('App.controller.Pedido',{
                 	this.getMainPanel().hideClienteSearchWindow();
                 	var record= this.getClienteList().getSelectionModel().getSelection()[0];
                 	this.clienteLoadRecord(record);
+                }
+            },
+            
+            'serviciosearchwindow button[action=select]': {
+                click: function(button, event, options){
+                	this.getMainPanel().hideServicioSearchWindow();
+                	var record= this.getServicioList().getSelectionModel().getSelection()[0];
+                	this.servicioLoadRecord(record);
                 }
             },
             
@@ -103,7 +141,7 @@ Ext.define('App.controller.Pedido',{
             
             'toolbar[name=mainToolbar] button[action=save]':{
             	click: function(button, event, options){
-            		var record = this.getPedidoForm().getForm().getFieldValues(true);
+            		var record = this.getPedidoForm().getForm().getFieldValues(false);
             		this.getPedidoStore().getProxy().extraParams={format:'json'};
             		this.getPedidoStore().save(record);
             	}
@@ -162,6 +200,30 @@ Ext.define('App.controller.Pedido',{
             		
             		this.getMainPanel().showClienteSearchWindow();
             	}
+            },
+            
+            'pedidoitemform button[action=buscarServicio]':{
+            	click: function(button, event, options){
+            		var searchText= this.getNombreServicioText().getValue();
+            		var request={
+                		NombreServicio: searchText,
+						format:'json'
+                	};
+                	
+                	var store = this.getServicioProcedimientoStore();       	  	
+                	store.getProxy().extraParams=request;
+                	store.loadPage(1);
+            		this.getMainPanel().showServicioSearchWindow();
+            	}
+            },
+            
+            'pedidoitemform button[action=save]':{
+            	click: function(button, event, options){
+            		var record = this.getPedidoItemForm().getForm().getFieldValues(false);
+            		console.log('pedidoitem save record, form ', record, this.getPedidoItemForm().getForm());
+            		this.getPedidoItemStore().getProxy().extraParams={format:'json'};
+            		this.getPedidoItemStore().save(record);
+            	}
             }
         })
     },
@@ -198,6 +260,7 @@ Ext.define('App.controller.Pedido',{
     		if(records.length==1){
     			var record = records[0];
     			this.pedidoLoadRecord(record);
+    			this.pedidoLoadItems(record);
     			return;
     		}
     		
@@ -207,7 +270,7 @@ Ext.define('App.controller.Pedido',{
     	
     	this.getPedidoStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];
-            if (operation.action == 'create') {
+            if (operation.action != 'destroy') {
             	this.pedidoLoadRecord(record);
             }            
     	}, this);
@@ -242,6 +305,17 @@ Ext.define('App.controller.Pedido',{
     	this.ciudadAddLocal(record,"IdCiudadDestinatario");
         this.getPedidoForm().getForm().loadRecord(record);
     },
+        
+    
+    pedidoLoadItems:function(record){
+    	this.getPedidoItemStore().load({params:{IdPedido: record.getId()}});
+	    this.getPedidoItemList().determineScrollbars();
+    },
+    
+    pedidoItemLoadRecord:function(record){
+        this.getPedidoItemForm().getForm().loadRecord(record);
+    },
+    
     
     clienteLoadRecord:function(record){    	    	                  
     	console.log('clienteLoadRecord', record, this.getPedidoForm().getForm());
@@ -262,6 +336,27 @@ Ext.define('App.controller.Pedido',{
     		DireccionDestinatario: record.get('DireccionContacto')
     	});
     	
+    },
+    
+    servicioLoadRecord:function(record){
+    	console.log('servicioLoadRecord', record, this.getPedidoItemForm().getForm());
+    	var pif =  this.getPedidoItemForm().getForm();
+    	
+    	var irf = this.getItemResumenForm().getForm();
+    	
+    	pif.setValues({
+    		IdPedido: this.getPedidoForm().getForm().findField('Id').getValue(),
+    		IdServicio: record.get('IdServicio'),
+    		IdProcedimiento: record.get('IdProcedimiento'),
+    		NombreServicio: record.get('NombreServicio'),
+    		Descripcion: record.get('NombreProcedimiento')
+    	});
+    	    	
+    	irf.setValues({
+    		CostoUnitario: record.get('ValorBaseProcedimiento')
+    	});
+    	
+    	this.getDescripcionProcedimientoTextArea().setValue(record.get('DescripcionProcedimiento'));
     },
     
     ciudadAddLocal:function(record, id){

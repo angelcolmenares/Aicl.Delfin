@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using ServiceStack.OrmLite;
+using ServiceStack.Common;
 using ServiceStack.ServiceHost;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
@@ -22,10 +23,48 @@ namespace Aicl.Delfin.BusinessLogic
 
 				var paginador= new Paginador(httpRequest);
             	
-                var predicate = PredicateBuilder.True<ServicioProcedimiento>();
-
                 var visitor = ReadExtensions.CreateExpression<ServicioProcedimiento>();
+
+				var predicate = PredicateBuilder.True<ServicioProcedimiento>();
+
+				if(!request.NombreProcedimiento.IsNullOrEmpty()){
+					predicate= q=>q.NombreProcedimiento.Contains(request.NombreProcedimiento);
+					visitor.OrderBy(f=>f.NombreProcedimiento);
+				}
+
+
+				if(!request.NombreServicio.IsNullOrEmpty()){
+					predicate= q=>q.NombreServicio.Contains(request.NombreServicio);
+					visitor.OrderBy(f=>f.NombreServicio);
+				}
+
+
+				if(request.IdProcedimiento != default(int)){
+					predicate = q=>q.IdProcedimiento==request.IdProcedimiento;
+					visitor.OrderBy(f=>f.NombreServicio);
+				}
+
+
+				if(request.IdServicio!=default(int)){
+					predicate = q=>q.IdServicio==request.IdServicio;
+					visitor.OrderBy(f=>f.NombreProcedimiento);
+				}
+
+				var qs= httpRequest.QueryString["ActivoProcedimiento"];
+				bool activo;
+				if(bool.TryParse(qs,out activo)){
+					predicate= predicate.AndAlso(q=>q.ActivoProcedimiento==activo);
+				}
+
+
+				qs= httpRequest.QueryString["ActivoServicio"];
+				bool activoServicio;
+				if(bool.TryParse(qs,out activoServicio)){
+					predicate= predicate.AndAlso(q=>q.ActivoServicio==activoServicio);
+				}
+
 				visitor.Where(predicate);
+
                 if(paginador.PageNumber.HasValue)
                 {
 					visitor.Select(r=> Sql.Count(r.Id));
@@ -35,6 +74,8 @@ namespace Aicl.Delfin.BusinessLogic
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                 
+
+
 				return new Response<ServicioProcedimiento>(){
                 	Data=proxy.Get(visitor),
                 	TotalCount=totalCount

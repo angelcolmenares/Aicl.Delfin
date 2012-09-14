@@ -21,6 +21,8 @@ namespace Aicl.Delfin.Model.Types
 		[AutoIncrement]
 		public int Id { get; set; }
 
+		public int IdPedido { get; set; }
+
 		public int IdServicio { get; set;}
 
 		public int IdProcedimiento { get; set;}
@@ -28,10 +30,10 @@ namespace Aicl.Delfin.Model.Types
 		public int Cantidad {get; set;}
 
 		[StringLength(256)]
-		public string Descripcion {get;set;} // rango y otras cosas
+		public string Descripcion {get;set;} // NombreProcedimeinto + rango y otras cosas
 
 		[StringLength(256)]
-		public string Nota {get;set;} // rango y otras cosas
+		public string Nota {get;set;} // observaciones...
 
 		[BelongsTo(typeof(Servicio),"Nombre")]
 		public string NombreServicio {get; set;}

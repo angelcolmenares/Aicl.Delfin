@@ -19,9 +19,17 @@ Ext.define('App.view.pedido.Panel', {
     	this.clienteSearchWindow.hide();
     },
 
+    showServicioSearchWindow:function(){
+    	this.servicioSearchWindow.show();
+    },
+    hideServicioSearchWindow:function(){
+    	this.servicioSearchWindow.hide();
+    },
+    
     initComponent: function() {
     	this.pedidoSearchWindow=Ext.create('App.view.pedidosearch.Window');
 	  	this.clienteSearchWindow=Ext.create('App.view.clientesearch.Window');
+	  	this.servicioSearchWindow=Ext.create('App.view.serviciosearch.Window');
     	
         var me = this;
 
@@ -60,7 +68,7 @@ Ext.define('App.view.pedido.Panel', {
                             xtype: 'button',
                             action: 'enviar',
                             tooltip:'enviar pedido',
-                            iconCls: 'send'
+                            iconCls: 'asentar'
                         },
                         {
                             xtype: 'button',
@@ -446,12 +454,67 @@ Ext.define('App.view.clientesearch.Window',{
     y:100,
     x:105,
     autoHeight:true,
-    width: 400,
+    width: 900,
     modal: false,
     items:[{
     	xtype:'clientecontactolist'
     }]
 });
+
+Ext.define('App.view.serviciosearch.Window', {
+    extend: 'Ext.window.Window',
+    alias: 'widget.serviciosearchwindow',
+
+    autoHeight: true,
+    width: 970,
+    layout: {
+        align: 'stretch',
+        type: 'hbox'
+    },
+    closeAction: 'hide',
+    
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            items: [
+                {
+                    xtype: 'serviciolist',
+                    flex: 1
+                },
+                {
+                    xtype: 'textareafield',
+                    flex: 0,
+                    height: 218,
+                    width: 250,
+                    name: 'DescripcionProcedimiento',
+                    fieldLabel: '',
+                    hideLabel: true
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    flex: 1,
+                    dock: 'top',
+                    items: [
+                        {
+                            xtype: 'button',
+                            action: 'select',
+                            iconCls: 'select',
+                            text: 'Seleccionar',
+                            disabled:true
+                        }
+                    ]
+                }
+            ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+
 
 
 
@@ -639,7 +702,7 @@ Ext.define('App.view.pedidoitem.Panel', {
                             title: '',
                             items: [
                                 {
-                                    xtype: 'itemform',
+                                    xtype: 'pedidoitemform',
                                     width: 395
                                 },
                                 {
@@ -666,7 +729,7 @@ Ext.define('App.view.pedidoitem.Panel', {
                         },
                         {
                             xtype: 'pedidoresumenform',
-                            margin: '30 0 0 0'
+                            margin: '20 0 0 0'
                         }
                     ]
                 }
@@ -678,9 +741,9 @@ Ext.define('App.view.pedidoitem.Panel', {
 
 });
 
-Ext.define('App.view.item.Form', {
+Ext.define('App.view.pedidoitem.Form', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.itemform',
+    alias: 'widget.pedidoitemform',
 
     style: 'border: 0; padding: 0',
     ui: 'default-framed',
@@ -710,7 +773,19 @@ Ext.define('App.view.item.Form', {
                         align: 'stretch',
                         type: 'hbox'
                     },
-                    items: [
+                    items: [{
+                    	xtype:'hidden',
+                    	name:'Id'
+                    },{
+                    	xtype:'hidden',
+                    	name:'IdPedido'
+                    },{
+                    	xtype:'hidden',
+                    	name:'IdServicio'
+                    },{
+                    	xtype:'hidden',
+                    	name:'IdProcedimiento'
+                    },
                         {
                             xtype: 'textfield',
                             flex: 1,
@@ -723,6 +798,7 @@ Ext.define('App.view.item.Form', {
                             flex: 0,
                             style: 'marginLeft:4px',
                             iconCls: 'find',
+                            action:'buscarServicio',
                             tooltip: 'buscar servicio'
                         }
                     ]
@@ -745,7 +821,7 @@ Ext.define('App.view.item.Form', {
                     name: 'Cantidad',
                     fieldLabel: 'Cantidad',
                     allowDecimals: false,
-                    decimalPrecision: 0
+                    value:1
                 },
                 {
                     xtype: 'numberfield',
@@ -753,18 +829,20 @@ Ext.define('App.view.item.Form', {
                     name: 'DiasEntrega',
                     fieldLabel: 'Dias Entrega',
                     allowDecimals: false,
-                    decimalPrecision: 0
+                    value:8
                 },{
                     xtype: 'numberfield',
                     anchor: '50%',
                     name: 'Descuento',
                     fieldLabel: 'Descuento %',
-                    decimalPrecision: 6
+                    decimalPrecision: 6,
+                    value:0
                 }
             ],
             dockedItems: [
                 {
                     xtype: 'toolbar',
+                    name:'itemToolbar',
                     dock: 'top',
                     style: 'border: 0; padding: 0',
                     ui: 'default-framed',
@@ -772,19 +850,20 @@ Ext.define('App.view.item.Form', {
                         {
                             xtype: 'button',
                             iconCls: 'new_document',
-                            text: ''
+                            action:'new',
+                            tooltip:'Nuevo Item'
                         },
                         {
                             xtype: 'button',
                             iconCls: 'save_document',
-                            text: '',
+                            action:'save',
                             tooltip: 'Guardar'
                         },
                         {
                             xtype: 'button',
                             iconCls: 'remove',
-                            text: '',
-                            tooltip: 'borrar'
+                            action:'remove',
+                            tooltip: 'borrar item'
                         }
                     ]
                 }
@@ -806,24 +885,25 @@ Ext.define('App.view.pedidoitem.List', {
  
     initComponent: function() {
         var me = this;
+        me.store= 'PedidoItem';
 
         Ext.applyIf(me, {
             columns: [
     {
 		text: 'Servicio',
 		dataIndex: 'NombreServicio',
-		width:300,
+		width:450,
 		renderer: function(value, metadata, record, store){   	
-            return Ext.String.format( '<p style="white-space:normal;color:black;">{0}<br />{1}<br />{2}</p>',
+            return Ext.String.format( '<p style="white-space:normal;color:black;">{0}. {1}.{2}</p>',
             value,
             record.get('Descripcion'),
-            record.get('Nota')?'Nota:' +record.get('Nota'):''
+            record.get('Nota')?'<br />Nota:' +record.get('Nota'):''
             );
         }
 	},           	
 	{
 		text: 'Ctd',
-		width:40,
+		width:35,
 		dataIndex: 'Cantidad',
 		renderer: function(value, metadata, record, store){
 			return Ext.String.format(
@@ -860,12 +940,16 @@ Ext.define('App.view.pedidoitem.List', {
 	{
 		text: 'Unitario',
 		dataIndex: 'CostoUnitario',
+		align:'center',
+		width:75,
 		renderer: function(value, metadata, record, store){
            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
         }
 	},
 	{
 		text: 'Inversion',
+		align:'center',
+		width:80,
 		dataIndex: 'CostoInversion',
 		renderer: function(value, metadata, record, store){
            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -874,6 +958,8 @@ Ext.define('App.view.pedidoitem.List', {
 	{
 		text: 'Iva',
 		dataIndex: 'ValorIva',
+		align:'center',
+		width:70,
 		renderer: function(value, metadata, record, store){
            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
         }
@@ -881,6 +967,8 @@ Ext.define('App.view.pedidoitem.List', {
 	{
 		text: 'Total',
 		dataIndex: 'TotalItem',
+		align:'center',
+		width:80,
 		renderer: function(value, metadata, record, store){
            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
         }
@@ -956,7 +1044,7 @@ Ext.define('App.view.procedimiento.Form', {
     extend: 'Ext.form.Panel',
     alias: 'widget.procedimientoform',
 
-    height: 150,
+    height: 180,
     style: 'border: 0; padding: 0',
     ui: 'default-framed',
     width: 285,
@@ -972,7 +1060,7 @@ Ext.define('App.view.procedimiento.Form', {
                 {
                     xtype: 'textareafield',
                     anchor: '100%',
-                    height: 97,
+                    height: 155,
                     width: 285,
                     name: 'DescripcionProcedimiento',
                     readOnly: true,
@@ -992,7 +1080,7 @@ Ext.define('App.view.pedidoresumen.Form', {
     style: '\'border: 0; padding: 0\'',
     ui: 'default-framed',
     width: 285,
-    bodyPadding: '20 20 10 10',
+    bodyPadding: '10 20 5 10',
     frameHeader: false,
     title: 'Resumen Oferta',
 
@@ -1032,6 +1120,78 @@ Ext.define('App.view.pedidoresumen.Form', {
                     readOnly:true
                 }
             ]
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+
+
+Ext.define('App.view.servicio.List', {
+    extend: 'Ext.grid.Panel',
+    alias: 'widget.serviciolist',
+
+
+    initComponent: function() {
+        var me = this;
+        
+        me.store= 'ServicioProcedimiento';	
+    	me.bbar= Ext.create('Ext.PagingToolbar', {
+            store: me.store,
+            displayInfo: true,
+            displayMsg: 'Pedidos del {0} al {1} de {2}',
+            emptyMsg: "No hay Pedidos para Mostrar"
+    	});
+
+        Ext.applyIf(me, {
+            columns: [
+                {
+                    xtype: 'gridcolumn',
+                    width: 265,
+                    sortable: false,
+                    dataIndex: 'NombreServicio',
+                    text: 'Servicio',
+                    renderer: function(value, metadata, record, store){   	
+			            return Ext.String.format('<p style="white-space:normal;color:black;">{0}</p>',
+			            value);
+			        }
+                },
+                {
+                    xtype: 'gridcolumn',
+                    width: 215,
+                    dataIndex: 'NombreProcedimiento',
+                    text: 'Procedimiento',
+                    renderer: function(value, metadata, record, store){   	
+			            return Ext.String.format('<p style="white-space:normal;color:black;">{0}</p>',
+			            value);
+			        }
+                },
+                {
+                    xtype: 'numbercolumn',
+                    dataIndex: 'ValorBaseProcedimiento',
+                    align: 'right',
+                    width:75,
+                    text: 'ValorBase'
+                },
+                {
+                    xtype: 'numbercolumn',
+                    width: 65,
+                    dataIndex: 'ValorIvaProcedimiento',
+                    align: 'right',
+                    text: 'Iva($)'
+                },
+                {
+                    xtype: 'numbercolumn',
+                    dataIndex: 'ValorUnitarioProcedimiento',
+                    flex: 1,
+                    align: 'right',
+                    text: 'Total'
+                }
+            ],
+            viewConfig: {
+
+            }
         });
 
         me.callParent(arguments);
