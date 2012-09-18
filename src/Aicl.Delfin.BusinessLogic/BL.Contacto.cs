@@ -8,6 +8,7 @@ using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Mono.Linq.Expressions;
 using System.Collections.Generic;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -25,11 +26,16 @@ namespace Aicl.Delfin.BusinessLogic
 				var paginador= new Paginador(httpRequest);
             	var queryString= httpRequest.QueryString;
 
+				var visitor = ReadExtensions.CreateExpression<Contacto>();
                 var predicate = PredicateBuilder.True<Contacto>();
 
-				if(!request.Nombre.IsNullOrEmpty()) 
+				if(request.IdCliente!=default(int))
+					predicate= q=>q.IdCliente==request.IdCliente;
+
+				else if(!request.Nombre.IsNullOrEmpty()) 
 				{
 	                predicate= q=>q.Nombre.StartsWith(request.Nombre) ;
+					visitor.OrderBy(r=>r.Nombre);
 				}
 
 
@@ -39,7 +45,7 @@ namespace Aicl.Delfin.BusinessLogic
 					predicate= predicate.AndAlso(q=>q.Activo==activo);
 				}
 
-                var visitor = ReadExtensions.CreateExpression<Contacto>();
+                
 				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
@@ -50,7 +56,7 @@ namespace Aicl.Delfin.BusinessLogic
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                                 
-                visitor.OrderBy(r=>r.Nombre);
+                
                 
 				return new Response<Contacto>(){
                 	Data=proxy.Get(visitor),
@@ -67,6 +73,9 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+			if(request.IdCliente==default(int))
+				throw HttpError.Unauthorized("Debe Indicar el IdCliente");
+
 			factory.Execute(proxy=>{
 				proxy.Create(request);
 			});

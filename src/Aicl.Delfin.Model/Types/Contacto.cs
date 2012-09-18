@@ -57,6 +57,9 @@ namespace Aicl.Delfin.Model.Types
 
 		[BelongsTo(typeof(Ciudad),"Nombre")]
 		public string NombreCiudad {get;set;}
+
+		[BelongsTo(typeof(Ciudad),"Codigo")]
+		public string CodigoCiudad {get;set;}
 		#endregion Ciudad
 
 

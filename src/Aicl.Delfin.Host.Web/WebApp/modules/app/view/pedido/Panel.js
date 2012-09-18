@@ -879,7 +879,7 @@ Ext.define('App.view.pedidoitem.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.pedidoitemlist',
 
-    height: 130,
+    height: 121,
     style: 'border: 0; padding: 0',
     ui: 'default-framed',
  

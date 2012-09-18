@@ -92,8 +92,8 @@ Ext.define('App.controller.Pedido',{
                 	
                 	consecutivo=parseInt(searchText);
                 	if(isNaN(consecutivo)){
-                		consecutivo=0,
-                		nombre=searchText
+                		consecutivo=0;
+                		nombre=searchText;
                 		
                 	}	
                 	var request={
