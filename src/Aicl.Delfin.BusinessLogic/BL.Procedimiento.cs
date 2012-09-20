@@ -1,3 +1,4 @@
+using ServiceStack.Common;
 using System.Linq.Expressions;
 using ServiceStack.OrmLite;
 using ServiceStack.ServiceHost;
@@ -22,9 +23,22 @@ namespace Aicl.Delfin.BusinessLogic
 
 				var paginador= new Paginador(httpRequest);
             	
+				var visitor = ReadExtensions.CreateExpression<Procedimiento>();
                 var predicate = PredicateBuilder.True<Procedimiento>();
 
-                var visitor = ReadExtensions.CreateExpression<Procedimiento>();
+				if(!request.Nombre.IsNullOrEmpty()){
+					predicate= q=>q.Nombre.Contains(request.Nombre);
+					visitor.OrderBy(f=>f.Nombre);
+				}
+                
+				var qs= httpRequest.QueryString["Activo"];
+				bool activo;
+				if(bool.TryParse(qs,out activo)){
+					predicate= predicate.AndAlso(q=>q.Activo==activo);
+				}
+
+
+
 				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
@@ -35,6 +49,8 @@ namespace Aicl.Delfin.BusinessLogic
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                 
+
+
 				return new Response<Procedimiento>(){
                 	Data=proxy.Get(visitor),
                 	TotalCount=totalCount

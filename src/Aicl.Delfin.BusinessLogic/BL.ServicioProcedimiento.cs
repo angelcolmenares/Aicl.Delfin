@@ -92,7 +92,19 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+				//var servicio= proxy.FirstOrDefaultById<Servicio>(request.IdServicio);
+				var servicio= proxy.CheckExistAndActivo<Servicio>(request.IdServicio, f=>f.Nombre);
+
+				var procedimiento= proxy.CheckExistAndActivo<Procedimiento>(request.IdProcedimiento, f=>f.Nombre);
 				proxy.Create(request);
+				request.NombreServicio= servicio.Nombre;
+				request.ActivoServicio=servicio.Activo;
+				request.NombreProcedimiento=procedimiento.Nombre;
+				request.DescripcionProcedimiento= procedimiento.Descripcion;
+				request.PorcentajeIvaProcedimiento= procedimiento.PorcentajeIva;
+				request.ValorUnitarioProcedimiento= procedimiento.ValorUnitario;
+				request.ActivoProcedimiento= procedimiento.Activo;
+
 			});
 
 			List<ServicioProcedimiento> data = new List<ServicioProcedimiento>();
