@@ -50,6 +50,9 @@
     <Reference Include="Mono.Linq.Expressions">
       <HintPath>..\..\lib\Mono.Linq.Expressions.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack">
+      <HintPath>..\..\lib\ServiceStack.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +70,7 @@
     <Compile Include="BL.ServicioProcedimiento.cs" />
     <Compile Include="BL.Consecutivo.cs" />
     <Compile Include="BL.ClienteContacto.cs" />
+    <Compile Include="BL.MailPedido.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

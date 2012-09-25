@@ -17,7 +17,7 @@ Ext.define('App.view.procedimiento.Window', {
     extend: 'Ext.window.Window',
     alias: 'widget.procedimientowindow',
 
-    width: 800,
+    width: 970,
     closeAction: 'hide',
     title: 'Procedimientos',
 

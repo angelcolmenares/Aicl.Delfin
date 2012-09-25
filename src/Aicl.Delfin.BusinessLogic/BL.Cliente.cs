@@ -29,7 +29,7 @@ namespace Aicl.Delfin.BusinessLogic
 
 				if(!request.Nombre.IsNullOrEmpty()) 
 				{
-	                predicate= q=>q.Nombre.StartsWith(request.Nombre) ;
+	                predicate= q=>q.Nombre.Contains(request.Nombre) ;
 				}
 
 				if(!request.Nit.IsNullOrEmpty()) 

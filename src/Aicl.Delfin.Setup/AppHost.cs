@@ -71,6 +71,9 @@ namespace Aicl.Delfin.Setup
 			CreateFormasPago(dbFactory);
 			CreateConsecutivos(dbFactory);
 
+			var user= CrearDemoUser();
+			if (user!=default(UserAuth))CreateRoles(dbFactory, user);
+
 			log.InfoFormat("AppHost Configured: " + DateTime.Now);
 		}
 		
@@ -372,6 +375,152 @@ namespace Aicl.Delfin.Setup
 
             return cu;
 		}
+
+
+		UserAuth CrearDemoUser(){
+
+			log.InfoFormat("Creando DemoUser");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var crear= appSettings.Get<bool>("CreateDemoUser", false);
+			if(!crear){
+				log.InfoFormat("Crear DemoUser NO");
+				return default(UserAuth);
+			};
+
+
+			var dbFactory = new OrmLiteConnectionFactory(ConfigUtils.GetConnectionString("UserAuth")) ;
+			
+			OrmLiteAuthRepository authRepo = new OrmLiteAuthRepository(
+				dbFactory
+			);
+
+			string userName = "demo";
+			string password = "12345678";
+		
+			List<string> permissions= new List<string>(
+			new string[]{	
+		
+			});
+			            
+
+            var userAuth=authRepo.GetUserAuthByUserName(userName);
+
+			if ( userAuth== default(UserAuth) ){
+                log.InfoFormat("creando usuario:'{0}'", userName);
+				List<string> roles= new List<string>();
+				roles.Add("Demo");
+			    string hash;
+			    string salt;
+			    new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
+			    authRepo.CreateUserAuth(new UserAuth {
+				    DisplayName = userName,
+			        Email = "angel.ignacio.colmenares@gmail.com",
+			        UserName = userName,
+			        FirstName = "",
+			        LastName = "",
+			        PasswordHash = hash,
+			        Salt = salt,
+					Roles =roles,
+					Permissions=permissions
+			    }, password);
+                log.InfoFormat("Usuario:'{0}' creado", userName);
+                userAuth= authRepo.GetUserAuthByUserName(userName);
+			}
+			           
+			return userAuth;
+
+		}
+
+
+		void CreateRoles(IDbConnectionFactory factory, UserAuth user)
+        {
+			log.InfoFormat("Creando Roles");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var crear= appSettings.Get<bool>("CreateRoles", false);
+			if(!crear){
+				log.InfoFormat("Crear Roles NO");
+				return;
+			};
+
+			string roleName="Gestion Pedidos";
+
+			factory.Exec(dbCmd=>{
+				var role= dbCmd.FirstOrDefault<AuthRole>(q=>q.Name== roleName);
+				if(role==default(AuthRole)){
+					role = new AuthRole {
+						Name=roleName,
+						Directory="pedido",
+						Title="Pedidos",
+						ShowOrder="01"
+					};
+					dbCmd.Insert(role);
+					role.Id=Convert.ToInt32(dbCmd.GetLastInsertId());
+				}
+				log.InfoFormat("Role {0} id {1}", roleName, role.Id );
+				var aur= dbCmd.FirstOrDefault<AuthRoleUser>( q=> q.UserId==user.Id && q.AuthRoleId==role.Id);
+
+				if(aur==default(AuthRoleUser)){
+					aur= new AuthRoleUser{
+						AuthRoleId=role.Id,
+						UserId= user.Id
+					};
+					dbCmd.Insert(aur);
+				};
+
+				roleName="Gestion Clientes";
+				role= dbCmd.FirstOrDefault<AuthRole>(q=>q.Name== roleName);
+				if(role==default(AuthRole)){
+					role = new AuthRole {
+						Name=roleName,
+						Directory="cliente",
+						Title="Clientes",
+						ShowOrder="02"
+					};
+					dbCmd.Insert(role);
+					role.Id=Convert.ToInt32(dbCmd.GetLastInsertId());
+				}
+				log.InfoFormat("Role {0} id {1}", roleName, role.Id );
+				aur= dbCmd.FirstOrDefault<AuthRoleUser>( q=> q.UserId==user.Id && q.AuthRoleId==role.Id);
+				if(aur==default(AuthRoleUser)){
+					aur= new AuthRoleUser{
+						AuthRoleId=role.Id,
+						UserId= user.Id
+					};
+					dbCmd.Insert(aur);
+				};
+
+				roleName="Gestion Servicios";
+				role= dbCmd.FirstOrDefault<AuthRole>(q=>q.Name== roleName);
+				if(role==default(AuthRole)){
+					role = new AuthRole {
+						Name=roleName,
+						Directory="servicio",
+						Title="Servicios",
+						ShowOrder="03"
+					};
+					dbCmd.Insert(role);
+					role.Id=Convert.ToInt32(dbCmd.GetLastInsertId());
+				}
+				log.InfoFormat("Role {0} id {1}", roleName, role.Id );
+				aur= dbCmd.FirstOrDefault<AuthRoleUser>( q=> q.UserId==user.Id && q.AuthRoleId==role.Id);
+				if(aur==default(AuthRoleUser)){
+					aur= new AuthRoleUser{
+						AuthRoleId=role.Id,
+						UserId= user.Id
+					};
+					dbCmd.Insert(aur);
+				};
+
+
+			});
+
+
+		}
+
 		
 	}
 

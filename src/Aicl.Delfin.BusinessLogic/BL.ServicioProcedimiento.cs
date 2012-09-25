@@ -32,23 +32,22 @@ namespace Aicl.Delfin.BusinessLogic
 					visitor.OrderBy(f=>f.NombreProcedimiento);
 				}
 
-
 				if(!request.NombreServicio.IsNullOrEmpty()){
 					predicate= q=>q.NombreServicio.Contains(request.NombreServicio);
 					visitor.OrderBy(f=>f.NombreServicio);
 				}
-
 
 				if(request.IdProcedimiento != default(int)){
 					predicate = q=>q.IdProcedimiento==request.IdProcedimiento;
 					visitor.OrderBy(f=>f.NombreServicio);
 				}
 
-
 				if(request.IdServicio!=default(int)){
 					predicate = q=>q.IdServicio==request.IdServicio;
 					visitor.OrderBy(f=>f.NombreProcedimiento);
 				}
+
+				if (visitor.OrderByExpression.IsNullOrEmpty()) visitor.OrderBy(f=>f.NombreServicio);
 
 				var qs= httpRequest.QueryString["ActivoProcedimiento"];
 				bool activo;
