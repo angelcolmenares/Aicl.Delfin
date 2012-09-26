@@ -15,6 +15,8 @@ using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceInterface;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.MySql;
+using ServiceStack.Common;
+using ServiceStack.Text;
 
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.DataAccess;
@@ -53,12 +55,13 @@ namespace Aicl.Delfin.Setup
 			
 			IDbConnectionFactory dbFactory = new OrmLiteConnectionFactory(
 				ConfigUtils.GetConnectionString("ApplicationDb"));
-			
-			container.Register<Factory>(
-				new Factory(){
-					DbFactory=dbFactory
-				}
-			);		
+
+
+			var factory = new Factory(){
+				DbFactory=dbFactory
+			};
+
+			container.Register<Factory>(factory);		
 
             log.InfoFormat("Configurando sistema de autenticacion");
 			var cu = ConfigureAuth(container);
@@ -73,6 +76,8 @@ namespace Aicl.Delfin.Setup
 
 			var user= CrearDemoUser();
 			if (user!=default(UserAuth))CreateRoles(dbFactory, user);
+
+			CreateEmpresa(factory);
 
 			log.InfoFormat("AppHost Configured: " + DateTime.Now);
 		}
@@ -519,6 +524,54 @@ namespace Aicl.Delfin.Setup
 			});
 
 
+		}
+
+		void CreateEmpresa(Factory factory)
+        {
+			log.InfoFormat("Creando Empresa....");
+
+			var appSettings = new ConfigurationResourceManager();
+
+			var crear= appSettings.Get<bool>("CreateEmpresa", false);
+			if(!crear){
+				log.InfoFormat("Crear Empresa NO");
+				return;
+			}
+
+			factory.Execute(proxy=>{
+				var empresa = proxy.GetEmpresa();
+				if(empresa==default(Empresa))
+				{
+					string ser =appSettings.Get<string>("Empresa",string.Empty);
+					Console.WriteLine("ser {0}",ser);
+					if( ser.IsNullOrEmpty()){
+						empresa = new Empresa{
+							Nit="00", 
+							Nombre="Demo Empresa",
+							Alias="demo delfin", 
+							Direccion="SiempreViva",
+							MailServerEnableSsl=true,
+							MailServerPort=587,
+							MailServerUrl="smtp.mailgun.org",
+							MailServerUser="demo@aicl.mailgun.org"
+						};
+					}
+					else{
+						empresa=JsonSerializer.DeserializeFromString<Empresa>(ser);
+					}	
+
+				}
+				Console.WriteLine("Digita la clave para el servicio de correo[{0}]",empresa.MailServerPassword);
+				var claveCorreo = Console.ReadLine();
+				empresa.MailServerPassword=  claveCorreo.IsNullOrEmpty()?empresa.MailServerPassword:claveCorreo;
+				if(empresa.Id==default(int))
+					proxy.PostEmpresa(empresa);
+				else
+					proxy.PutEmpresa(empresa);
+
+			});
+
+			log.InfoFormat("Crear Empresa ok");
 		}
 
 		

@@ -68,24 +68,29 @@ namespace Aicl.Delfin.Host.Web
                                    
             string cacheHost= appSettings.Get("REDISTOGO_URL","localhost:6379").Replace("redis://redistogo-appharbor:","").Replace("/","");
 
-            var p = new BasicRedisClientManager(new string[]{cacheHost});
+            var redisClientManager = new BasicRedisClientManager(new string[]{cacheHost});
             
 			OrmLiteConfig.DialectProvider= MySqlDialectProvider.Instance;
             
             IDbConnectionFactory dbFactory = new OrmLiteConnectionFactory(
                 ConfigUtils.GetConnectionString("ApplicationDb"));
-                        
+            
+			var factory = new Factory(){
+                DbFactory=dbFactory,
+                RedisClientsManager = redisClientManager
+			};
+
+			var empresa = factory.Execute(proxy=>{
+				return proxy.GetEmpresa();
+			});
+
+			var mailer = new Mailer(empresa);
+
             container.Register(appSettings);
-            
-            container.Register<Factory>(
-                new Factory(){
-                    DbFactory=dbFactory,
-                    RedisClientsManager = p
-                }
-            );
-            
+            container.Register<Factory>(factory);
+			container.Register(mailer);
             //container.Register<ICacheClient>(new MemoryCacheClient { FlushOnDispose = false });
-            container.Register<IRedisClientsManager>(c => p);
+            container.Register<IRedisClientsManager>(c => redisClientManager);
                         
             Plugins.Add(new AuthFeature(
                  () => new AuthUserSession(), // or Use your own typed Custom AuthUserSession type

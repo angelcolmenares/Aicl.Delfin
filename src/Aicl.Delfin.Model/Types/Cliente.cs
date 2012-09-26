@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using ServiceStack.DataAnnotations;
-using ServiceStack.DesignPatterns.Model;
 using ServiceStack.ServiceHost;
 
 namespace Aicl.Delfin.Model.Types

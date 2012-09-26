@@ -6,8 +6,13 @@ namespace Aicl.Delfin.Interface
 	{
 		
 		public AppConfig(IResourceManager resources)
-		{			
+		{
+
+				
 		}
+
+
+
 				
 	}
 }
