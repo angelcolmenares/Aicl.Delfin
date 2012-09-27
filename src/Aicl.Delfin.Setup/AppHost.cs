@@ -329,10 +329,10 @@ namespace Aicl.Delfin.Setup
 			    string salt;
 			    new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
 			    authRepo.CreateUserAuth(new UserAuth {
-				    DisplayName = userName,
+				    DisplayName = "Admin Delfin",
 			        Email = userName+"@mail.com",
 			        UserName = userName,
-			        FirstName = "",
+			        FirstName = "Administrador de la Aplicacion",
 			        LastName = "",
 			        PasswordHash = hash,
 			        Salt = salt,
@@ -365,8 +365,8 @@ namespace Aicl.Delfin.Setup
 				    DisplayName = "Alfredo Ramon",
 			        Email = "alfredoramon@colmetrik.com",
 			        UserName = userName,
-			        FirstName = "Alfredo",
-			        LastName = "Ramon",
+			        FirstName = "Director Administrativo y Comercial",
+			        LastName = "",
 			        PasswordHash = hash,
 			        Salt = salt,
 					Roles =roles,
@@ -420,10 +420,10 @@ namespace Aicl.Delfin.Setup
 			    string salt;
 			    new SaltedHash().GetHashAndSaltString(password, out hash, out salt);
 			    authRepo.CreateUserAuth(new UserAuth {
-				    DisplayName = userName,
+				    DisplayName ="Demo Delfin" ,
 			        Email = "angel.ignacio.colmenares@gmail.com",
 			        UserName = userName,
-			        FirstName = "",
+			        FirstName = "Demo Cotizador",
 			        LastName = "",
 			        PasswordHash = hash,
 			        Salt = salt,

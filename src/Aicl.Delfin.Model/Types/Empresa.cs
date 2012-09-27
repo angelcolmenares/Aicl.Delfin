@@ -21,22 +21,45 @@ namespace Aicl.Delfin.Model.Types
 
 		[StringLength(64)]
         [Required]
-        [Index(true)]
         public string Nombre {get;set;}
 
 		[StringLength(64)]
-        [Index(true)]
         public string Alias {get;set;}
+
+		[StringLength(64)]
+        public string Lema {get;set;}
 
 		[StringLength(16)]
         [Required]
-        [Index(true)]
         public string Nit {get;set;}
 
 		[StringLength(128)]
         [Required]
-        [Index(true)]
         public string Direccion {get;set;}
+
+		[StringLength(128)]
+        [Required]
+        public string DireccionAntigua {get;set;}
+
+		[StringLength(32)]
+        [Required]
+        public string Ciudad {get;set;}
+
+		[StringLength(32)]
+        [Required]
+        public string Pais {get;set;}
+
+		[StringLength(32)]
+        public string Telefono {get;set;}
+
+		[StringLength(16)]
+        public string Fax {get;set;}
+
+		[StringLength(128)]
+        public string Mail {get;set;}
+
+		[StringLength(64)]
+        public string Web {get;set;}
 
 		[StringLength(32)]
 		public string MailServerUrl { get; set;}

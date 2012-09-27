@@ -1,12 +1,14 @@
 using Aicl.Delfin.Model.Types;
 using ServiceStack.Common.Web;
 using ServiceStack.Common;
+using ServiceStack.Configuration;
 
 namespace Aicl.Delfin.DataAccess
 {
 	public static class DALProxyExtensions
 	{
-		static string cryptoKey="8esjais863deDae";
+
+		static readonly string CryptoKey = ConfigUtils.GetAppSetting("CRIPTO_KEY","8esjais863deDae");
 
 		public static Consecutivo GetNext(this DALProxy proxy, string documento, int? incremento=1){
 
@@ -32,7 +34,7 @@ namespace Aicl.Delfin.DataAccess
 				if (!empresa.MailServerPassword.IsNullOrEmpty()){
 					empresa.MailServerPassword=
 						Cryptor.Desencriptar(empresa.MailServerPassword,
-						                     cryptoKey);
+						                     CryptoKey);
 				}
 			}
 
@@ -45,7 +47,7 @@ namespace Aicl.Delfin.DataAccess
 			if(!empresa.MailServerPassword.IsNullOrEmpty()){
 				empresa.MailServerPassword=
 						Cryptor.Encriptar(empresa.MailServerPassword,
-						                     cryptoKey);
+						                     CryptoKey);
 			}
 			proxy.Create(empresa);
 		}
@@ -55,7 +57,7 @@ namespace Aicl.Delfin.DataAccess
 			if(!empresa.MailServerPassword.IsNullOrEmpty()){
 				empresa.MailServerPassword=
 						Cryptor.Encriptar(empresa.MailServerPassword,
-						                     cryptoKey);
+						                     CryptoKey);
 			}
 			proxy.Update(empresa, ev=> ev.Where(q=>q.Id==empresa.Id));
 		}
