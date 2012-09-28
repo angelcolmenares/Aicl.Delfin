@@ -1,18 +1,14 @@
+using System.Web;
 using System.Linq;
-using System.Linq.Expressions;
-using ServiceStack.OrmLite;
 using ServiceStack.ServiceHost;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
-using Mono.Linq.Expressions;
 using System.Collections.Generic;
 using System;
 using ServiceStack.ServiceInterface;
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
-using ServiceStack.Markdown;
-using System.Text;
 using Aicl.Delfin.Report;
 using System.Net.Mail;
 using ServiceStack.ServiceInterface.Auth;
@@ -48,7 +44,7 @@ namespace Aicl.Delfin.BusinessLogic
 
 				var oferta = new Oferta();
 				var userSession = httpRequest.GetSession();   // el de esta session...
-				IAuthSession user= null;  // el que lo envio !!!
+				IAuthSession user= new AuthUserSession();  // el que lo envio !!!
 
 				if(userSession.Id!=pedido.IdEnviadoPor.ToString()){
 					var userAuth= proxy.FirstOrDefault<UserAuth>(q=>q.Id==pedido.IdEnviadoPor);
@@ -57,18 +53,21 @@ namespace Aicl.Delfin.BusinessLogic
 							DisplayName="indefinido",
 							LastName="indefinido"
 						};
-						user.PopulateWith(userAuth);
+
 					}
+					user.PopulateWith(userAuth);
 				}
 				else{
 					user.PopulateWith(userSession);
 				}
 
-				var empresa = proxy.GetEmpresa();
+				var empresa = proxy.GetEmpresa(); 
 
 				var html = oferta.ConstruirHtmlReport(empresa,
 				                                      user,
-				                                      pedido,items,request.TextoInicial);
+				                                      pedido,
+				                                      items,
+				                                      HttpUtility.UrlDecode(request.TextoInicial,System.Text.Encoding.Default));
 
 				MailMessage message = new MailMessage();
 				message.Subject=  !request.Asunto.IsNullOrEmpty()?

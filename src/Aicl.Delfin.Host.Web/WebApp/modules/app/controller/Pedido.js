@@ -466,7 +466,14 @@ Ext.define('App.controller.Pedido',{
     },
     
     urlencode:function(str) {
-    	return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
-	}
+    	//return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
+    	return encodeURI(str);
+	},
  	
+	urldecode:function(str) {
+    	//return unescape(str.replace(/\+/g, ' '));
+		return decodeURI(str);
+	}
+
+	
 });
