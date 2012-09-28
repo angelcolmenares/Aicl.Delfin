@@ -85,5 +85,9 @@
       <Project>{C0319E77-DA72-47AD-A64F-5E25C634DC4B}</Project>
       <Name>Aicl.Delfin.DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Aicl.Delfin.Report\Aicl.Delfin.Report.csproj">
+      <Project>{0DC75AD8-D24F-41B9-9449-153B20A7A124}</Project>
+      <Name>Aicl.Delfin.Report</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

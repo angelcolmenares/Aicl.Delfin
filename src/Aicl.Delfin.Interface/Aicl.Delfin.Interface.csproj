@@ -74,7 +74,6 @@
     <Compile Include="Services\ClienteContactoService.cs" />
     <Compile Include="Services\ServicioProcedimientoService.cs" />
     <Compile Include="Services\MailPedidoService.cs" />
-    <Compile Include="Mailer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

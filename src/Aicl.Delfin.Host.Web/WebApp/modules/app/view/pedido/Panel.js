@@ -26,10 +26,18 @@ Ext.define('App.view.pedido.Panel', {
     	this.servicioSearchWindow.hide();
     },
     
+    showPedidoMailWindow:function(){
+    	this.pedidoMailWindow.show();
+    },
+    hidePedidoMailWindow:function(){
+    	this.pedidoMailWindow.hide();
+    },
+    
     initComponent: function() {
     	this.pedidoSearchWindow=Ext.create('App.view.pedidosearch.Window');
 	  	this.clienteSearchWindow=Ext.create('App.view.clientesearch.Window');
 	  	this.servicioSearchWindow=Ext.create('App.view.serviciosearch.Window');
+	  	this.pedidoMailWindow=Ext.create('App.view.pedidomail.Window');
     	
         var me = this;
 
@@ -69,6 +77,11 @@ Ext.define('App.view.pedido.Panel', {
                             action: 'enviar',
                             tooltip:'enviar pedido',
                             iconCls: 'asentar'
+                        },{
+                            xtype: 'button',
+                            action: 'mail',
+                            tooltip:'enviar pedido por mail',
+                            iconCls: 'mail'
                         },
                         {
                             xtype: 'button',
@@ -1192,6 +1205,71 @@ Ext.define('App.view.servicio.List', {
             viewConfig: {
 
             }
+        });
+
+        me.callParent(arguments);
+    }
+
+});
+
+
+Ext.define('App.view.pedidomail.Window', {
+    extend: 'Ext.window.Window',
+    alias: 'widget.pedidomailwindow',
+
+    autoHeight: true,
+    width: 796,
+    closeAction: 'hide',
+    modal:true,
+
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            items: [
+                {
+                    xtype: 'form',
+                    name: 'PedidoMailForm',
+                    bodyPadding: 10,
+                    items: [
+                        {
+                            xtype: 'hiddenfield',
+                            name: 'Consecutivo',
+                            fieldLabel: 'Label'
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'Asunto',
+                            fieldLabel: 'Asunto',
+                            labelAlign: 'right'
+                        },
+                        {
+                            xtype: 'htmleditor',
+                            anchor: '100%',
+                            height: 250,
+                            style: 'background-color: white;',
+                            name: 'TextoInicial',
+                            value: '',
+                            hideLabel: true
+                        }
+                    ]
+                }
+            ],
+            dockedItems: [
+                {
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    name: 'MailToolbar',
+                    items: [
+                        {
+                            xtype: 'button',
+                            action: 'send',
+                            text: 'Enviar'
+                        }
+                    ]
+                }
+            ]
         });
 
         me.callParent(arguments);

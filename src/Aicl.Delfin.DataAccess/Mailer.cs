@@ -4,7 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using Aicl.Delfin.Model.Types;
 
-namespace Aicl.Delfin.Interface
+namespace Aicl.Delfin.DataAccess
 {
 	public class Mailer
 	{		
@@ -30,9 +30,7 @@ namespace Aicl.Delfin.Interface
 		public void Send(MailMessage message){
 			SmtpServer.Send(message);
 		}
-		
-		
-		
+				
 	}
 }
 

@@ -96,6 +96,9 @@ namespace Aicl.Delfin.Model.Types
 		#region Contacto
 		[BelongsTo(typeof(Contacto),"Nombre")]
 		public string NombreContacto {get;set;}
+
+		[BelongsTo(typeof(Contacto),"Mail")]
+		public string MailContacto {get;set;}
 		#endregion Contacto
 
 		#region Cliente
@@ -136,7 +139,6 @@ namespace Aicl.Delfin.Model.Types
 
 		[StringLength(256)]
         public string DireccionDestinatario {get;set;}
-
 
 	}
 }

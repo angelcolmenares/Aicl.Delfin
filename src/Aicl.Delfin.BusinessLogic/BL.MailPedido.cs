@@ -13,6 +13,9 @@ using ServiceStack.Common;
 using ServiceStack.Common.Web;
 using ServiceStack.Markdown;
 using System.Text;
+using Aicl.Delfin.Report;
+using System.Net.Mail;
+using ServiceStack.ServiceInterface.Auth;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -21,7 +24,8 @@ namespace Aicl.Delfin.BusinessLogic
 		#region Get
         public static MailPedidoResponse Get(this MailPedido request,
 		                                              Factory factory,
-		                                              IHttpRequest httpRequest)
+		                                              IHttpRequest httpRequest,
+		                                     Mailer mailService)
         {
 
 			factory.Execute(proxy=>{
@@ -33,15 +37,67 @@ namespace Aicl.Delfin.BusinessLogic
 
 				if(!pedido.FechaEnvio.HasValue)
 				{
-					//throw HttpError.Unauthorized(
-						//string.Format("Oferta con Consecutivo:'{0}' No esta en estado ENVIADA", request.Consecutivo));
+					throw HttpError.Unauthorized(
+						string.Format("Oferta con Consecutivo:'{0}' No esta en estado ENVIADA", request.Consecutivo));
 				}
 
 
 				List<PedidoItem> items=
 					proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
 
-				Console.WriteLine(ItemsTable(items));
+
+				var oferta = new Oferta();
+				var userSession = httpRequest.GetSession();   // el de esta session...
+				IAuthSession user= null;  // el que lo envio !!!
+
+				if(userSession.Id!=pedido.IdEnviadoPor.ToString()){
+					var userAuth= proxy.FirstOrDefault<UserAuth>(q=>q.Id==pedido.IdEnviadoPor);
+					if(userAuth==default(UserAuth)){
+						userAuth = new UserAuth(){
+							DisplayName="indefinido",
+							LastName="indefinido"
+						};
+						user.PopulateWith(userAuth);
+					}
+				}
+				else{
+					user.PopulateWith(userSession);
+				}
+
+				var empresa = proxy.GetEmpresa();
+
+				var html = oferta.ConstruirHtmlReport(empresa,
+				                                      user,
+				                                      pedido,items,request.TextoInicial);
+
+				MailMessage message = new MailMessage();
+				message.Subject=  !request.Asunto.IsNullOrEmpty()?
+					request.Asunto:
+						string.Format("Envio Oferta No:{0}", pedido.Consecutivo.ToString().PadLeft(8,'0'));
+
+				message.ReplyToList.Add(userSession.Email);
+				message.From= new MailAddress(userSession.Email);
+				message.To.Add(pedido.MailContacto);
+
+				if(! pedido.MailDestinatario.IsNullOrEmpty() &&
+				   (pedido.MailContacto.Trim().ToUpper()!=pedido.MailDestinatario.Trim().ToUpper()) ){
+					message.CC.Add(pedido.MailDestinatario);
+				}
+
+				message.Bcc.Add(userSession.Email);
+
+				if(!empresa.ApplicationMailBox.IsNullOrEmpty()){
+					message.Bcc.Add(empresa.ApplicationMailBox);
+				}
+
+				if(!empresa.ResponsableOfertasMail.IsNullOrEmpty()){
+					message.Bcc.Add(empresa.ResponsableOfertasMail);
+				}
+
+				message.Body= html;
+				message.IsBodyHtml=true;
+
+				mailService.Send(message);
 
 			});
 
@@ -54,55 +110,6 @@ namespace Aicl.Delfin.BusinessLogic
 		}
 		#endregion Get
 
-		public static MvcHtmlString ItemsTable(List<PedidoItem> items)
-		{
-
-			var sb = new StringBuilder(@"<head>
- <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"" />
-</head>
-");
-			var grupos = from p in items
-				group p by p.NombreServicio ;
-
-			foreach(var grupo in grupos){
-				sb.AppendFormat("<fieldset>\n\t<legend>Servicio:{0}</legend>\n", grupo.Key);
-				sb.AppendFormat("\t<table style=\"margin: 0.5em; border-collapse: collapse;\">\n\t\t<thead>\n\t\t\t<tr>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Descripcion</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Tiempo<br />Entrega</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Cantidad</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Precio<br />Unitario<br />$</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Descuento<br />%</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Precio<br />Con<br />Descuento<br />$</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Iva</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Procedimiento</th>");
-				sb.Append("\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n");
-				foreach(var item in grupo){
-					sb.Append("\t\t\t<tr>");
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: left;\">{0}</p></td>",
-					                string.Concat(item.Descripcion,
-					              item.Nota.IsNullOrEmpty()?"": "<br /><b>Nota:"+item.Nota+"</b>" ));
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: center;\">{0}</p></td>",
-					                string.Format("{0} días hábiles",item.DiasEntrega));
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: center;\">{0}</p></td>",
-					                item.Cantidad);
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: right;\">{0}</p></td>",
-					               string.Format("{0:##,000.00}", item.CostoUnitario));
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: center;\">{0}</p></td>",
-					                string.Format("{0:##,0.00}",item.Descuento));
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: right;\">{0}</p></td>",
-					               string.Format("{0:##,0.00}", item.CostoInversion));
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: right;\">{0}</p></td>",
-					               string.Format("{0:##,0.00}", item.ValorIva));
-					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid; width: 50%\"><p style=\"text-align:justify; font-size:85%;\">{0}</p></td>",
-					                item.DescripcionProcedimiento);
-					sb.Append("\n\t\t\t</tr>");
-				}
-				sb.AppendFormat("\n\t\t</tbody>\n\t</table>\n");
-				sb.Append("</fieldset>");
-			}
-
-			return MvcHtmlString.Create(sb.ToString());
-		}
 
 
 	}

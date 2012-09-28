@@ -61,6 +61,21 @@ namespace Aicl.Delfin.Model.Types
 		[StringLength(64)]
         public string Web {get;set;}
 
+		[StringLength(128)]
+		public string CuentaBancaria {get;set;}
+
+		[StringLength(64)]
+		public string ResponsableOfertasNombre {get;set;}
+
+		[StringLength(128)]
+		public string ResponsableOfertasMail {get;set;}
+
+		[StringLength(16)]
+		public string ResponsableOfertasCelular {get;set;}
+
+		[StringLength(64)]
+		public string ResponsableOfertasCargo {get;set;}
+
 		[StringLength(32)]
 		public string MailServerUrl { get; set;}
 
@@ -75,16 +90,10 @@ namespace Aicl.Delfin.Model.Types
 		public bool  MailServerEnableSsl { get; set;}
 
 		[StringLength(64)]
-		public string ResponsableOfertasNombre {get;set;}
+		public string ApplicationHost{get;set;}
+
 
 		[StringLength(128)]
-		public string ResponsableOfertasMail {get;set;}
-
-		[StringLength(16)]
-		public string ResponsableOfertasCelular {get;set;}
-
-		[StringLength(64)]
-		public string ResponsableOfertasCargo {get;set;}
-
+		public string ApplicationMailBox{get;set;}
 	}
 }

@@ -5,6 +5,7 @@ using System.Text;
 using Aicl.Delfin.Model.Types;
 using System.Collections.Generic;
 using ServiceStack.Common;
+using ServiceStack.ServiceInterface.Auth;
 
 namespace Aicl.Delfin.Report
 {
@@ -22,17 +23,86 @@ namespace Aicl.Delfin.Report
 */
 		public Oferta (){}
 
-		public string ConstruirHtmlReport(Empresa empresa, Pedido pedido, List<PedidoItem> items){
-			return ConstruirEncabezado(empresa, pedido)+ 
+		public string ConstruirHtmlReport(Empresa empresa, IAuthSession user,
+		                                  Pedido pedido, List<PedidoItem> items,
+		                                  string textoInicial=default(string)){
+			return ConstruirEncabezado(empresa, pedido, textoInicial)+ 
+				ConstruirTablaCliente(pedido)+
 				ItemsToTable(items)+
 					ConstruirResumen(items)+
-					ConstruirCondiciones(empresa);
+					ConstruirCondiciones(empresa,user);
 		}
 
 		public string ItemsToTable(List<PedidoItem> items)
 		{
 			var mvc = ConstruirListaDeItems(items);
 			return mvc.ToHtmlString();
+		}
+
+		public string ConstruirTablaCliente(Pedido pedido){
+			return string.Format(@"<table border=""0"" cellpadding=""1"" cellspacing=""1"" style=""width: 100%; "">
+			<tbody>
+				<tr>
+					<td style=""width: 50%; "">
+						{0}
+					</td>
+					<td style=""width: 50%; "">
+						{1}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+", ConstruirSolicitadoPor(pedido), ConstruirDestinatario(pedido));
+
+		}
+
+		public string ConstruirSolicitadoPor(Pedido pedido){
+			var filas = new List<Fila>(
+				new Fila[]{
+				new Fila{Value=pedido.NombreCliente},
+				new Fila{Value=pedido.NitCliente},
+				new Fila{Value=pedido.NombreContacto},
+				new Fila{Value=pedido.MailContacto}
+			});
+
+			return string.Format(@"						<fieldset style=""height: 220px;"">
+							<legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"">Solicitada Por: </legend>
+							<table style=""margin: 0.5em; border-collapse: collapse; width: 100%; "">
+								<tbody>
+									{0}
+								</tbody>
+							</table>
+						</fieldset>",
+			                     ConstruirFilasSolicitadoPor(filas));
+		}
+
+
+		public string ConstruirDestinatario(Pedido pedido){
+			var filas = new List<Fila>(
+				new Fila[]{
+				new Fila{Value=pedido.NombreDestinatario},
+				new Fila{Value=pedido.CargoDestinatario},
+				new Fila{Value=pedido.DireccionDestinatario},
+				new Fila{Value=pedido.NombreCiudad},
+				new Fila{Value=
+					string.Format("{0}{1}",
+					              pedido.TelefonoDestinatario,
+					              (!pedido.TelefonoDestinatario.IsNullOrEmpty() && !pedido.FaxDestinatario.IsNullOrEmpty())?
+					              "-"+pedido.FaxDestinatario:
+					              pedido.FaxDestinatario)},
+				new Fila{Value=pedido.CelularDestinatario},
+				new Fila{Value=pedido.MailDestinatario}
+			});
+
+			return string.Format(@"						<fieldset style=""height: 220px;"">
+							<legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"">Destinatario: </legend>
+							<table style=""margin: 0.5em; border-collapse: collapse; width: 100%; "">
+								<tbody>
+									{0}
+								</tbody>
+							</table>
+						</fieldset>",
+			                     ConstruirFilasSolicitadoPor(filas));
 		}
 
 		public string ConstruirResumen(List<PedidoItem> items){
@@ -63,11 +133,10 @@ namespace Aicl.Delfin.Report
     <p style=""font-weight: bold"">Nota : El precio no incluye gastos de envio</p>
 </fieldset>",ConstruirFilasResumen(filas));
 
-
-
 		}
 
-		public string ConstruirEncabezado(Empresa empresa, Pedido pedido)
+		public string ConstruirEncabezado(Empresa empresa, Pedido pedido, 
+		                                  string textoInicial=default(string))
 		{
 			var filas = new List<Fila>(
 				new Fila[]{
@@ -84,7 +153,7 @@ namespace Aicl.Delfin.Report
 			return string.Format(@"<head>
  <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"" />
 </head>
-    
+    {0}
 	<table style=""margin-top: 0.5em; margin-right: 0.5em; margin-bottom: 0.5em; margin-left: 0.5em; border-collapse: collapse; padding-top: 0.3em; padding-right: 0.3em; padding-bottom: 0.3em; padding-left: 0.3em; width: 100%; "">
 		<tbody>
 			<tr>
@@ -93,8 +162,8 @@ namespace Aicl.Delfin.Report
 						<tbody>
 							<tr>
 								<td style=""width: 30%; "">
-									<p><img alt="""" src=""resources/logo.jpg"" title="""" /></p>
-									<p>	NIT:{0}</p>
+									<p><img alt=""{1}"" src=""{2}"" title="""" /></p>
+									<p>	NIT:{3}</p>
 								</td>
 								<td style=""width: 70%; ""></td>
 							</tr>
@@ -104,7 +173,7 @@ namespace Aicl.Delfin.Report
 				<td style=""width: 50%;padding: .3em; "">
 					<table cellpadding=""1"" cellspacing=""1"" style=""width: 100%; "">
 						<tbody>
-							{1}
+							{4}
 						</tbody>
 					</table>
 				</td>
@@ -112,7 +181,12 @@ namespace Aicl.Delfin.Report
 		</tbody>
 	</table>
 <br />
-",empresa.Nit, filasHtml);
+",
+			                     textoInicial.IsNullOrEmpty()?"":"<p>"+textoInicial+"</p>",
+			                     empresa.Nombre,
+			                     empresa.ApplicationHost.IsNullOrEmpty()?"resources/logo.jpg": empresa.ApplicationHost+"/resources/logo.jpg",
+			                     empresa.Nit, 
+			                     filasHtml);
 		}
 
 		MvcHtmlString ConstruirListaDeItems(List<PedidoItem> items)
@@ -185,15 +259,25 @@ namespace Aicl.Delfin.Report
 		</tr>",fila.Label, fila.Value);
 		
 			}
-			
+		
 			return html.ToString();
-
 		}
 
+		string ConstruirFilasSolicitadoPor(List<Fila> filas){
+			StringBuilder html= new StringBuilder();
+			foreach(var fila in filas){
+				html.AppendFormat(@"<tr>
+	<td style=""width: 0%; ""></td>
+	<td style=""padding: .35em; "">{0}</td>
+</tr>
+",fila.Value);
+			}
+			return html.ToString();
+		}
 
-		public string ConstruirCondiciones(Empresa empresa){
+		public string ConstruirCondiciones(Empresa empresa, IAuthSession user){
 			StringBuilder html = new StringBuilder();
-			html.Append(@"<fieldset>
+			html.AppendFormat(@"<fieldset>
 			<legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"">Condiciones</legend>
 			
 			<p>
@@ -202,7 +286,7 @@ namespace Aicl.Delfin.Report
 				<li>
 					Comunicaci&oacute;n escrita (Carta, Orden de Compra, Orden de Servicio u Orden de Trabajo)</li>
 				<li>
-					Soporte de Pago ( via fax o e-mail): &nbsp;Consignaci&oacute;n en la Cuenta Corriente No. 04915730 del Banco de Bogota</li>
+					Soporte de Pago ( via fax o e-mail): &nbsp;Consignaci&oacute;n en la {0}</li>
 			</ul>
 			<p>
 				La comunicaci&oacute;n debe contener la siguiente informacion:</p>
@@ -212,7 +296,7 @@ namespace Aicl.Delfin.Report
 				<li>
 					N&uacute;mero de la presente oferta.</li>
 				<li>
-					C&oacute;digo o N&uacute;mero de Identificaci&oacute;n del equipo (en caso de que no tenga este c&oacute;digo, este ser&aacute; asignado por Colmetrik Ltda.)</li>
+					C&oacute;digo o N&uacute;mero de Identificaci&oacute;n del equipo (en caso de que no tenga este c&oacute;digo, este ser&aacute; asignado por {1})</li>
 				<li>
 					Direcci&oacute;n exacta (donde estan ubicados los equipos) - Informaci&oacute;n para el certificado.</li>
 				<li>
@@ -224,16 +308,15 @@ namespace Aicl.Delfin.Report
 				Tambien se da por entendida la aceptaci&oacute;n por parte del cliente si est&eacute; da una autorizaci&oacute;n verbal (telef&oacute;nica), o trae el instrumento para calibrar o realiza el pago correspodiente.</p>
 			<p>
 				Si tiene alguna inquietud comun&iacute;quese con nosotros. No se emiten juicios profesionales sobre los resultados de la calibracion.</p>
-			<p>
-				Milena Gracia Barreto</p>
-			<p>
-				Asistente Comercial</p>
-			<p>
-				venta@colmetrik.com</p>
+			<br />
+			<p>{2}</p>
+			<p>{3}</p>
+			<p>{4}</p>
 		</fieldset>
-		<p>
-			Calle 72 No. 55-54 Piso 3. Tel: (571) 5476161-3108231 Telefax:(571) 5491573 www.colmetrik.com e-mail:colmetrik@colmentrik.com Bogot&aacute; D.C.-Colombia Direccion antigua : Calle 72 NO 43-50 Piso 3.</p>
-");
+	<p>{5} Tel:{6} Telefax:{7} {8} e-mail:{9} {10}-{11}</p>
+	<p> Direccion antigua: {12}</p>
+", empresa.CuentaBancaria, empresa.Nombre, user.DisplayName, user.LastName, user.Email,
+			                  empresa.Direccion,empresa.Telefono, empresa.Fax, empresa.Web,empresa.Mail, empresa.Ciudad, empresa.Pais, empresa.DireccionAntigua);
 			return html.ToString();
 		}
 

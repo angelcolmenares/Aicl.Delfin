@@ -14,6 +14,7 @@ Ext.define('App.controller.Pedido',{
     	{ref: 'pedidoItemForm',    	 selector: 'pedidoitemform' },
     	{ref: 'pedidoItemList',    	 selector: 'pedidoitemlist' },
     	{ref: 'itemResumenForm',    	 selector: 'itemresumenform' },
+    	{ref: 'pedidoMailForm',    	 selector: 'pedidomailwindow form[name=PedidoMailForm]' },
     	{ref: 'pedidoSelectButton', selector: 'pedidolist button[action=select]'},
     	{ref: 'clienteSelectButton', selector: 'clientecontactolist button[action=select]'},
     	{ref: 'nitClienteText', selector: 'pedidoform textfield[name=NitCliente]'},
@@ -107,6 +108,24 @@ Ext.define('App.controller.Pedido',{
                 	store.loadPage(1);
                 }
             },
+            'pedidopanel button[action=mail]': {
+                click: function(button, event, options){
+                	
+                	var pf = this.getPedidoForm().getForm();
+                	
+                	var record={
+                		Consecutivo:pf.findField('Consecutivo').getValue(),
+                		Asunto:Ext.String.format('Oferta No. {0} - Colmetrik Ltda', 
+                			Ext.String.leftPad(pf.findField('Consecutivo').getValue(),8,'0')),
+                		TextoInicial:Ext.String.format('Señores:<br />{0}<br />Atn:{1}<br /><br />De acuerdo con su solicitud enviamos nuestra oferta.<br />',
+                			pf.findField('NombreCliente').getValue(), pf.findField('NombreContacto').getValue() )
+                	};
+                	
+                	this.getPedidoMailForm().getForm().setValues(record);
+                	this.getMainPanel().showPedidoMailWindow();
+                	
+                }
+            },
             
             'pedidolist button[action=select]': {
                 click: function(button, event, options){
@@ -116,6 +135,29 @@ Ext.define('App.controller.Pedido',{
                 	this.pedidoLoadItems(record);
                 }
             },
+            
+            'pedidomailwindow button[action=send]': {
+                click: function(button, event, options){
+                	var mp = this.getMainPanel();
+                	var urlencode= this.urlencode;
+                	var record = this.getPedidoMailForm().getForm().getFieldValues(false);
+                	record.TextoInicial= urlencode( record.TextoInicial);
+                	
+                	Aicl.Util.executeRestRequest({
+						url : Aicl.Util.getUrlApi()+'/Pedido/mail/'+record.Consecutivo,
+						method : 'get',
+						success : function(result) {
+							Aicl.Util.msg('Listo', 'Oferta enviada por mail');
+						},
+						callback:function(result, success){
+							mp.hidePedidoMailWindow();
+						},
+						params : record
+					});
+                	
+                }
+            },
+            
             
             'clientecontactolist button[action=select]': {
                 click: function(button, event, options){
@@ -421,7 +463,10 @@ Ext.define('App.controller.Pedido',{
 				Codigo: record.get('CodigoCiudad')
 			})
 		};
-    }
+    },
     
+    urlencode:function(str) {
+    	return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
+	}
  	
 });

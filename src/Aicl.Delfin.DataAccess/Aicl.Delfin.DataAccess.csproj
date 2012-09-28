@@ -62,6 +62,7 @@
     <Compile Include="OrmLiteExtensions.cs" />
     <Compile Include="DALProxyExtensions.cs" />
     <Compile Include="Cryptor.cs" />
+    <Compile Include="Mailer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

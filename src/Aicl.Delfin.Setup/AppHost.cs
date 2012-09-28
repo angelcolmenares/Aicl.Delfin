@@ -332,8 +332,8 @@ namespace Aicl.Delfin.Setup
 				    DisplayName = "Admin Delfin",
 			        Email = userName+"@mail.com",
 			        UserName = userName,
-			        FirstName = "Administrador de la Aplicacion",
-			        LastName = "",
+			        FirstName = "",
+			        LastName = "Administrador de la Aplicacion",
 			        PasswordHash = hash,
 			        Salt = salt,
 					Roles =roles,
@@ -365,8 +365,8 @@ namespace Aicl.Delfin.Setup
 				    DisplayName = "Alfredo Ramon",
 			        Email = "alfredoramon@colmetrik.com",
 			        UserName = userName,
-			        FirstName = "Director Administrativo y Comercial",
-			        LastName = "",
+			        FirstName = "",
+			        LastName = "Director Administrativo y Comercial",
 			        PasswordHash = hash,
 			        Salt = salt,
 					Roles =roles,
@@ -423,8 +423,8 @@ namespace Aicl.Delfin.Setup
 				    DisplayName ="Demo Delfin" ,
 			        Email = "angel.ignacio.colmenares@gmail.com",
 			        UserName = userName,
-			        FirstName = "Demo Cotizador",
-			        LastName = "",
+			        FirstName = "",
+			        LastName = "Demo Cotizador",
 			        PasswordHash = hash,
 			        Salt = salt,
 					Roles =roles,
@@ -451,7 +451,7 @@ namespace Aicl.Delfin.Setup
 				return;
 			};
 
-			string roleName="Gestion Pedidos";
+			string roleName="Gestion Ofertas";
 
 			factory.Exec(dbCmd=>{
 				var role= dbCmd.FirstOrDefault<AuthRole>(q=>q.Name== roleName);
@@ -459,7 +459,7 @@ namespace Aicl.Delfin.Setup
 					role = new AuthRole {
 						Name=roleName,
 						Directory="pedido",
-						Title="Pedidos",
+						Title="Ofertas",
 						ShowOrder="01"
 					};
 					dbCmd.Insert(role);
@@ -543,7 +543,6 @@ namespace Aicl.Delfin.Setup
 				if(empresa==default(Empresa))
 				{
 					string ser =appSettings.Get<string>("Empresa",string.Empty);
-					Console.WriteLine("ser {0}",ser);
 					if( ser.IsNullOrEmpty()){
 						empresa = new Empresa{
 							Nit="00", 
@@ -553,7 +552,10 @@ namespace Aicl.Delfin.Setup
 							MailServerEnableSsl=true,
 							MailServerPort=587,
 							MailServerUrl="smtp.mailgun.org",
-							MailServerUser="demo@aicl.mailgun.org"
+							MailServerUser="demo@aicl.mailgun.org",
+							ApplicationMailBox="demo@aicl.mailgun.org",
+							ApplicationHost="http://localhost:8080"
+
 						};
 					}
 					else{

@@ -219,6 +219,8 @@ namespace Aicl.Delfin.BusinessLogic
 			if(actions.IndexOf(action)<0)
 				throw HttpError.Unauthorized(string.Format("Operacion: '{0}' no autorizada en Pedidos", action));
 
+			var session = httpRequest.GetSession();
+
 			factory.Execute(proxy=>{
 
 				using (proxy.AcquireLock(request.GetLockKey(), BL.LockSeconds))
@@ -241,6 +243,7 @@ namespace Aicl.Delfin.BusinessLogic
 						if(old.FechaEnvio.HasValue)
 							throw HttpError.Conflict("Pedido ya se encuentra en estado Enviado");
 						request.FechaEnvio=DateTime.Today;
+						request.IdEnviadoPor= int.Parse(session.UserAuthId);
 					}
 					else if (action=="ACEPTAR")
 					{
@@ -251,15 +254,19 @@ namespace Aicl.Delfin.BusinessLogic
 							throw HttpError.Conflict("El Pedido primero debe ser enviado");
 
 						request.FechaAceptacion=DateTime.Today;
+						request.IdAceptadoPor= int.Parse(session.UserAuthId);
 					}
 					else
 					{
 						request.FechaAnulado= DateTime.Today;
+						request.IdAnuladoPor= int.Parse(session.UserAuthId);
 					}
 
 					proxy.Update(request, ev=>ev.Update(
-						f=> new {f.FechaEnvio,f.FechaAceptacion,f.FechaAnulado, f.VigenteHasta})
-					             .Where(q=>q.Id==request.Id));
+						f=> new {
+						f.FechaEnvio,f.FechaAceptacion,f.FechaAnulado, f.VigenteHasta,
+						f.IdAceptadoPor, f.IdAnuladoPor, f.IdEnviadoPor
+					}).Where(q=>q.Id==request.Id));
 				}
 
 			});
