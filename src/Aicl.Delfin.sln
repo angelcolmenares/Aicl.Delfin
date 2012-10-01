@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Interface", "Ai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Host.Web", "Aicl.Delfin.Host.Web\Aicl.Delfin.Host.Web.csproj", "{B0D07483-B16A-4AE8-92B9-B7EE01CEE11F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Setup", "Aicl.Delfin.Setup\Aicl.Delfin.Setup.csproj", "{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.BusinessLogic", "Aicl.Delfin.BusinessLogic\Aicl.Delfin.BusinessLogic.csproj", "{D707DF47-5A41-407B-87F5-6003ED961B3A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Report", "Aicl.Delfin.Report\Aicl.Delfin.Report.csproj", "{0DC75AD8-D24F-41B9-9449-153B20A7A124}"
@@ -47,10 +45,6 @@ Global
 		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Debug|x86.Build.0 = Debug|Any CPU
 		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Release|x86.ActiveCfg = Release|Any CPU
 		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Release|x86.Build.0 = Release|Any CPU
-		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Debug|x86.ActiveCfg = Debug|x86
-		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Debug|x86.Build.0 = Debug|x86
-		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Release|x86.ActiveCfg = Release|x86
-		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Release|x86.Build.0 = Release|x86
 		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Debug|x86.Build.0 = Debug|Any CPU
 		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Release|x86.ActiveCfg = Release|Any CPU
