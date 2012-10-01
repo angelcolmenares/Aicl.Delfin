@@ -45,7 +45,7 @@ namespace Aicl.Delfin.BusinessLogic
 					visitor.Select(r=> Sql.Count(r.Id));
 					totalCount= proxy.Count(visitor);
 					visitor.Select();
-                    int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
+                    int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.ResponsePageSize;
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                 

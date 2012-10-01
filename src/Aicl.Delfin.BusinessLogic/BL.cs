@@ -11,7 +11,7 @@ namespace Aicl.Delfin.BusinessLogic
 {
     public static partial class BL
     {
-        public static readonly int PageSize=10;
+        public static readonly int ResponsePageSize=10;
 		public static readonly string Cotizacion="Cotizacion";
 		public static readonly double LockSeconds=5;
 

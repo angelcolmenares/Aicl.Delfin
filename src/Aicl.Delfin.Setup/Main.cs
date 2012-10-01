@@ -3,7 +3,7 @@ using ServiceStack.Configuration;
 
 namespace Aicl.Delfin.Setup
 {
-	class MainClass
+	public static class MainClass
 	{
 		static readonly string ListeningOn = ConfigUtils.GetAppSetting("ListeningOn");
 		

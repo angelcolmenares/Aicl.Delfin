@@ -75,6 +75,7 @@
     <Content Include="Global.asax" />
     <Content Include="web.config" />
     <Content Include="Default.aspx" />
+    <Content Include="resources\logo.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -113,5 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="resources\" />
   </ItemGroup>
 </Project>

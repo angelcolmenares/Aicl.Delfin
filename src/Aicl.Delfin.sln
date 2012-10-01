@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Model", "Aicl.Delfin.Model\Aicl.Delfin.Model.csproj", "{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.DataAccess", "Aicl.Delfin.DataAccess\Aicl.Delfin.DataAccess.csproj", "{C0319E77-DA72-47AD-A64F-5E25C634DC4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Interface", "Aicl.Delfin.Interface\Aicl.Delfin.Interface.csproj", "{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Host.Web", "Aicl.Delfin.Host.Web\Aicl.Delfin.Host.Web.csproj", "{B0D07483-B16A-4AE8-92B9-B7EE01CEE11F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Setup", "Aicl.Delfin.Setup\Aicl.Delfin.Setup.csproj", "{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.BusinessLogic", "Aicl.Delfin.BusinessLogic\Aicl.Delfin.BusinessLogic.csproj", "{D707DF47-5A41-407B-87F5-6003ED961B3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Report", "Aicl.Delfin.Report\Aicl.Delfin.Report.csproj", "{0DC75AD8-D24F-41B9-9449-153B20A7A124}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.TestOfertaReport", "varios\Aicl.Delfin.TestOfertaReport\Aicl.Delfin.TestOfertaReport.csproj", "{3051FA19-7136-47D1-AE84-6DB9E39826DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Debug|x86.Build.0 = Debug|Any CPU
+		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Release|x86.ActiveCfg = Release|Any CPU
+		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Release|x86.Build.0 = Release|Any CPU
+		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Debug|x86.ActiveCfg = Debug|x86
+		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Debug|x86.Build.0 = Debug|x86
+		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Release|x86.ActiveCfg = Release|x86
+		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Release|x86.Build.0 = Release|x86
+		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Debug|x86.Build.0 = Debug|Any CPU
+		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Release|x86.Build.0 = Release|Any CPU
+		{B0D07483-B16A-4AE8-92B9-B7EE01CEE11F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B0D07483-B16A-4AE8-92B9-B7EE01CEE11F}.Debug|x86.Build.0 = Debug|Any CPU
+		{B0D07483-B16A-4AE8-92B9-B7EE01CEE11F}.Release|x86.ActiveCfg = Release|Any CPU
+		{B0D07483-B16A-4AE8-92B9-B7EE01CEE11F}.Release|x86.Build.0 = Release|Any CPU
+		{C0319E77-DA72-47AD-A64F-5E25C634DC4B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C0319E77-DA72-47AD-A64F-5E25C634DC4B}.Debug|x86.Build.0 = Debug|Any CPU
+		{C0319E77-DA72-47AD-A64F-5E25C634DC4B}.Release|x86.ActiveCfg = Release|Any CPU
+		{C0319E77-DA72-47AD-A64F-5E25C634DC4B}.Release|x86.Build.0 = Release|Any CPU
+		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Debug|x86.Build.0 = Debug|Any CPU
+		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Release|x86.ActiveCfg = Release|Any CPU
+		{D707DF47-5A41-407B-87F5-6003ED961B3A}.Release|x86.Build.0 = Release|Any CPU
+		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Debug|x86.ActiveCfg = Debug|x86
+		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Debug|x86.Build.0 = Debug|x86
+		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Release|x86.ActiveCfg = Release|x86
+		{DDCCAE05-5A85-4E49-9A91-1F5DDAAB2B64}.Release|x86.Build.0 = Release|x86
+		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Debug|x86.Build.0 = Debug|Any CPU
+		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Release|x86.ActiveCfg = Release|Any CPU
+		{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}.Release|x86.Build.0 = Release|Any CPU
+		{78B81B64-DC50-49F5-80D3-C54438BC8336}.Debug|x86.ActiveCfg = Debug|x86
+		{78B81B64-DC50-49F5-80D3-C54438BC8336}.Debug|x86.Build.0 = Debug|x86
+		{78B81B64-DC50-49F5-80D3-C54438BC8336}.Release|x86.ActiveCfg = Release|x86
+		{78B81B64-DC50-49F5-80D3-C54438BC8336}.Release|x86.Build.0 = Release|x86
+		{E4981EAA-AAAF-447D-B26A-3108D5DFE38F}.Debug|x86.ActiveCfg = Debug|x86
+		{E4981EAA-AAAF-447D-B26A-3108D5DFE38F}.Debug|x86.Build.0 = Debug|x86
+		{E4981EAA-AAAF-447D-B26A-3108D5DFE38F}.Release|x86.ActiveCfg = Release|x86
+		{E4981EAA-AAAF-447D-B26A-3108D5DFE38F}.Release|x86.Build.0 = Release|x86
+		{2E93AB30-20E5-42B7-95C4-1FA8DBE5310A}.Debug|x86.ActiveCfg = Debug|x86
+		{2E93AB30-20E5-42B7-95C4-1FA8DBE5310A}.Debug|x86.Build.0 = Debug|x86
+		{2E93AB30-20E5-42B7-95C4-1FA8DBE5310A}.Release|x86.ActiveCfg = Release|x86
+		{2E93AB30-20E5-42B7-95C4-1FA8DBE5310A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Aicl.Delfin.Host.Web\Aicl.Delfin.Host.Web.csproj
+	EndGlobalSection
+EndGlobal

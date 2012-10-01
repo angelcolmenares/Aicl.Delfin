@@ -12,15 +12,6 @@ namespace Aicl.Delfin.Report
 	public class Oferta
 	{
 
-		/*
-		string pageTemplate =
-@"@model System.Collections.Generic.List<Aicl.Delfin.Model.Types.PedidoItem>
-<head>
- <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"" />
-</head>
-    @PItem.ItemsTable(Model)
-";
-*/
 		public Oferta (){}
 
 		public string ConstruirHtmlReport(Empresa empresa, IAuthSession user,
