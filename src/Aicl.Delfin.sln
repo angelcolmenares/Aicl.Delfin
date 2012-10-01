@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.BusinessLogic",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.Report", "Aicl.Delfin.Report\Aicl.Delfin.Report.csproj", "{0DC75AD8-D24F-41B9-9449-153B20A7A124}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Delfin.TestOfertaReport", "varios\Aicl.Delfin.TestOfertaReport\Aicl.Delfin.TestOfertaReport.csproj", "{3051FA19-7136-47D1-AE84-6DB9E39826DE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -25,10 +23,6 @@ Global
 		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Debug|x86.Build.0 = Debug|Any CPU
 		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Release|x86.ActiveCfg = Release|Any CPU
 		{0DC75AD8-D24F-41B9-9449-153B20A7A124}.Release|x86.Build.0 = Release|Any CPU
-		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Debug|x86.ActiveCfg = Debug|x86
-		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Debug|x86.Build.0 = Debug|x86
-		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Release|x86.ActiveCfg = Release|x86
-		{3051FA19-7136-47D1-AE84-6DB9E39826DE}.Release|x86.Build.0 = Release|x86
 		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Debug|x86.Build.0 = Debug|Any CPU
 		{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}.Release|x86.ActiveCfg = Release|Any CPU
