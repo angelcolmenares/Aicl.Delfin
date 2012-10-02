@@ -53,17 +53,22 @@ namespace Aicl.Delfin.Report
 				new Fila{Value=pedido.NombreCliente},
 				new Fila{Value=pedido.NitCliente},
 				new Fila{Value=pedido.NombreContacto},
-				new Fila{Value=pedido.MailContacto}
+				new Fila{Value=pedido.MailContacto},
+				new Fila{Value="&nbsp;"},
+				new Fila{Value="&nbsp;"},
+				new Fila{Value=" &nbsp;"}
 			});
 
-			return string.Format(@"						<fieldset style=""height: 220px;"">
-							<legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"">Solicitada Por: </legend>
-							<table style=""margin: 0.5em; border-collapse: collapse; width: 100%; "">
-								<tbody>
+			return string.Format(@"							<table style=""margin: 0.5em; border-collapse: collapse; width: 100%; height: 200px; "">
+																<thead>
+																	<tr>
+																		<th colspan=""2"" style=""padding: .3em; border: 1px #ccc solid;"">Solicitado por:</th>
+																	</tr>
+																</thead>	
+								<tbody style=""margin: 0.5em; border-collapse: collapse;  border: 1px #ccc solid; "">
 									{0}
 								</tbody>
-							</table>
-						</fieldset>",
+							</table>",
 			                     ConstruirFilasSolicitadoPor(filas));
 		}
 
@@ -85,14 +90,16 @@ namespace Aicl.Delfin.Report
 				new Fila{Value=pedido.MailDestinatario}
 			});
 
-			return string.Format(@"						<fieldset style=""height: 220px;"">
-							<legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"">Destinatario: </legend>
-							<table style=""margin: 0.5em; border-collapse: collapse; width: 100%; "">
-								<tbody>
+			return string.Format(@"						<table style=""margin: 0.5em; border-collapse: collapse; width: 100%;height: 200px; "">
+																<thead>
+																	<tr>
+																		<th colspan=""2"" style=""padding: .3em; border: 1px #ccc solid;"">Destinatario:</th>
+																	</tr>
+																</thead>	
+								<tbody style=""margin: 0.5em; border-collapse: collapse;  border: 1px #ccc solid; "">
 									{0}
 								</tbody>
-							</table>
-						</fieldset>",
+							</table>",
 			                     ConstruirFilasSolicitadoPor(filas));
 		}
 
@@ -114,15 +121,19 @@ namespace Aicl.Delfin.Report
 				new Fila{Label="Total:", Value= string.Format("$ {0:##,0.00}",valores.Subtotal+ valores.Iva)},
 			});
 
-			return string.Format(@"<fieldset style=""width:40%"">
-    <legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"" >Resumen Oferta</legend>
-    <table style=""margin: 0.5em; border-collapse: collapse;"">
-    <tbody>
+			return string.Format(@"
+    <table cellpadding=""1"" cellspacing=""1""  style=""margin: 0.5em; border-collapse: collapse; width:40% "">
+		<thead>
+			<tr>
+				<th colspan=""2"" style=""padding: .3em; border: 1px #ccc solid;"">Resumen Oferta:</th>
+			</tr>
+		</thead>	
+    <tbody style=""margin: 0.5em; border-collapse: collapse;  border: 1px #ccc solid; "">
         {0}
     </tbody>
     </table>
-    <p style=""font-weight: bold"">Nota : El precio no incluye gastos de envio</p>
-</fieldset>",ConstruirFilasResumen(filas));
+    <p style=""font-weight: bold"">Nota : El precio no incluye gastos de envio</p>",
+			                     ConstruirFilasResumen(filas));
 
 		}
 
@@ -145,24 +156,23 @@ namespace Aicl.Delfin.Report
  <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"" />
 </head>
     {0}
-	<table style=""margin-top: 0.5em; margin-right: 0.5em; margin-bottom: 0.5em; margin-left: 0.5em; border-collapse: collapse; padding-top: 0.3em; padding-right: 0.3em; padding-bottom: 0.3em; padding-left: 0.3em; width: 100%; "">
+	<table style=""border-collapse: collapse; width: 100%; "">
 		<tbody>
 			<tr>
-				<td style=""width: 50%;"">
+				<td style=""width: 20%;"">
 					<table border=""0"" cellpadding=""1"" cellspacing=""1"" style=""width: 100%; "">
 						<tbody>
 							<tr>
-								<td style=""width: 30%; "">
-									<p><img alt=""{1}"" src=""{2}"" title="""" /></p>
+								<td>
+									<p><img alt=""{1}"" src=""{2}"" title="""" width=""60%"" /></p>
 									<p>	NIT:{3}</p>
 								</td>
-								<td style=""width: 70%; ""></td>
 							</tr>
 						</tbody>
 					</table>
 				</td>
-				<td style=""width: 50%;padding: .3em; "">
-					<table cellpadding=""1"" cellspacing=""1"" style=""width: 100%; "">
+				<td style=""padding: .3em; "">
+					<table cellpadding=""1"" cellspacing=""1"" style=""border: 1px #ccc solid; "">
 						<tbody>
 							{4}
 						</tbody>
@@ -175,7 +185,7 @@ namespace Aicl.Delfin.Report
 ",
 			                     textoInicial.IsNullOrEmpty()?"":"<p>"+textoInicial+"</p>",
 			                     empresa.Nombre,
-			                     empresa.ApplicationHost.IsNullOrEmpty()?"resources/logo.jpg": empresa.ApplicationHost+"/resources/logo.jpg",
+			                     empresa.ApplicationHost.IsNullOrEmpty()?"resources/logo.png": empresa.ApplicationHost+"/resources/logo.png",
 			                     empresa.Nit, 
 			                     filasHtml);
 		}
@@ -190,16 +200,19 @@ namespace Aicl.Delfin.Report
 				group p by p.NombreServicio ;
 
 			foreach(var grupo in grupos){
-				sb.AppendFormat("<fieldset>\n\t<legend style=\"padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:90%; text-align:left;\" >Servicio:{0}</legend>\n", grupo.Key);
-				sb.AppendFormat("\t<table style=\"margin: 0.5em; border-collapse: collapse;\">\n\t\t<thead>\n\t\t\t<tr>");
+				//sb.AppendFormat("<fieldset>\n\t<legend style=\"padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:90%; text-align:left;\" >Servicio:{0}</legend>\n", grupo.Key);
+				sb.AppendFormat("\t<table style=\"margin: 0.5em; border-collapse: collapse; width: 100%\">\n\t\t<thead>\n\t\t\t<tr>");
+				sb.AppendFormat("<th colspan=\"8\" style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: left;\">Servicio:{0}</p></th>",grupo.Key);
+				sb.Append("\n\t\t\t</tr>");
+				sb.Append("\n\t\t\t<tr>");
 				sb.AppendFormat(th,"Descripcion");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Tiempo<br />Entrega</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Cantidad</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Precio<br />Unitario<br />$</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Descuento<br />%</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Precio<br />Con<br />Descuento<br />$</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Iva</th>");
-				sb.AppendFormat("\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">Procedimiento</th>");
+				sb.AppendFormat(th,"Tiempo<br />Entrega");
+				sb.AppendFormat(th,"Cantidad");
+				sb.AppendFormat(th,"Precio<br />Unitario<br />$");
+				sb.AppendFormat(th,"Descuento<br />%");
+				sb.AppendFormat(th,"Precio<br />Con<br />Descuento<br />$");
+				sb.AppendFormat(th,"Iva");
+				sb.AppendFormat(th,"Procedimiento");
 				sb.Append("\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n");
 				foreach(var item in grupo){
 					sb.Append("\t\t\t<tr>");
@@ -223,7 +236,7 @@ namespace Aicl.Delfin.Report
 					sb.Append("\n\t\t\t</tr>");
 				}
 				sb.AppendFormat("\n\t\t</tbody>\n\t</table>\n");
-				sb.Append("</fieldset>");
+				//sb.Append("</fieldset>");
 			}
 
 			return MvcHtmlString.Create(sb.ToString());
@@ -234,7 +247,7 @@ namespace Aicl.Delfin.Report
 			StringBuilder html = new StringBuilder();
 			foreach( var fila in filas){
 				html.AppendFormat(@"<tr>
-								<td style=""width: 40%; "">{0}</td>
+								<td style=""width: 140px; padding-left:0.3em; "">{0}</td>
 								<td>{1}</td>
 							</tr>", fila.Label, fila.Value);
 			}
@@ -245,8 +258,8 @@ namespace Aicl.Delfin.Report
 			StringBuilder html = new StringBuilder();
 			foreach(var fila in filas){
 				html.AppendFormat(@"<tr>
-	    <td style=""width: 40%; "">{0}</td>
-	    <td style=""padding: .35em; ""><p style=""text-align: right;"">{1}</p></td>
+	    <td style=""width: 35%;padding-left:0.4em; "">{0}</td>
+	    <td style=""padding-right:0.4em""><p style=""text-align: right;"">{1}</p></td>
 		</tr>",fila.Label, fila.Value);
 		
 			}
@@ -268,9 +281,15 @@ namespace Aicl.Delfin.Report
 
 		public string ConstruirCondiciones(Empresa empresa, IAuthSession user){
 			StringBuilder html = new StringBuilder();
-			html.AppendFormat(@"<fieldset>
-			<legend style=""padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:100%; text-align:left;"">Condiciones</legend>
-			
+			html.AppendFormat(@"<table style=""border-collapse: collapse; width: 100%; "">
+									<thead>
+										<tr>
+											<th  style=""padding: .3em; border: 1px #ccc solid;"">Condiciones:</th>
+										</tr>
+									</thead>	
+									<tbody style=""margin: 0.5em; border-collapse: collapse;  border: 1px #ccc solid; "">
+									<tr>
+										<td>			
 			<p>
 				Si esta de acuerdo con la oferta, por favor enviar:</p>
 			<ul>
@@ -303,7 +322,11 @@ namespace Aicl.Delfin.Report
 			<p>{2}</p>
 			<p>{3}</p>
 			<p>{4}</p>
-		</fieldset>
+		</td>
+		</tr>
+		</tbody>
+		</table>
+
 	<p>{5} Tel:{6} Telefax:{7} {8} e-mail:{9} {10}-{11}</p>
 	<p> Direccion antigua: {12}</p>
 ", empresa.CuentaBancaria, empresa.Nombre, user.DisplayName, user.LastName, user.Email,
