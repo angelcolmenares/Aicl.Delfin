@@ -319,7 +319,7 @@ namespace Aicl.Delfin.DataAccess
 			});
 		}
 
-
+		/*
 		public void Update<T>(T request,Expression<Func<T,bool>> predicate=null) 
 			where T: new()
 		{
@@ -337,6 +337,7 @@ namespace Aicl.Delfin.DataAccess
 				else dbCmd.UpdateOnly(request,expression);
 			});
 		}
+		*/
 
 		public void Update<T>(T request, string tableName, SqlExpressionVisitor<T> expression=null )
             where T : new()
@@ -347,6 +348,13 @@ namespace Aicl.Delfin.DataAccess
             sql = sql +( !expression.WhereExpression.IsNullOrEmpty()?  expression.WhereExpression:"" );     
             Execute(dbCmd=>dbCmd.ExecuteSql( sql));  
         }
+
+		public void Update<T>(T request)where T:  new()
+		{
+			Execute(dbCmd=>{
+				dbCmd.Update(request);
+			});
+		}
 
 
 		public void Delete<T>(Expression<Func<T,bool>> predicate) 
