@@ -244,10 +244,11 @@ namespace Aicl.Delfin.DataAccess
             where T: IHasIntUserId, new()
         {
             return Execute((redisClient,dbCmd)=>{
-                var cacheKey = UrnId.Create<T>("UserId", userId.ToString());
+                //var cacheKey = UrnId.Create<T>("UserId", userId.ToString());
                 var visitor = ReadExtensions.CreateExpression<T>();
                 visitor.Where(q=> q.UserId==userId);
-                return dbCmd.Get(redisClient,cacheKey,visitor);
+				return dbCmd.Select<T>(visitor);
+                //return dbCmd.Get(redisClient,cacheKey,visitor);
             });
         }
 
