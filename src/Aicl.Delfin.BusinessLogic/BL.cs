@@ -23,7 +23,7 @@ namespace Aicl.Delfin.BusinessLogic
 			if (id==default(int))
 				throw HttpError.Unauthorized(string.Format("Debe Indicar el Id para: '{0}",typeof(T).Name));
 
-			var record = proxy.FirstOrDefaultById<T>(id);
+			var record = proxy.FirstOrDefault<T>(q=>q.Id==id);
 				if(record==null)
 				throw HttpError.NotFound(string.Format("No existe '{0}' con Id: '{1}'", typeof(T).Name, id));
 

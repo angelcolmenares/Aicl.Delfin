@@ -240,17 +240,19 @@ namespace Aicl.Delfin.DataAccess
             });
         }
 
+		/* causa problemas en .net, pero funciona bien en mono
+		 * el problema esta en el MemberAcces del expressionvisitor!
 		public  List<T> GetByUserIdFromCache<T>(int userId)
             where T: IHasIntUserId, new()
         {
             return Execute((redisClient,dbCmd)=>{
-                //var cacheKey = UrnId.Create<T>("UserId", userId.ToString());
+                var cacheKey = UrnId.Create<T>("UserId", userId.ToString());
                 var visitor = ReadExtensions.CreateExpression<T>();
                 visitor.Where(q=> q.UserId==userId);
-				return dbCmd.Select<T>(visitor);
-                //return dbCmd.Get(redisClient,cacheKey,visitor);
+                return dbCmd.Get(redisClient,cacheKey,visitor);
             });
         }
+        */
 
 
         public  List<T> GetFromCache<T>()
