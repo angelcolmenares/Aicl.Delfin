@@ -80,7 +80,6 @@
     <Content Include="WebApp\index.html" />
     <Content Include="WebApp\intro.html" />
     <Content Include="WebApp\extjs\bootstrap.js" />
-    <Content Include="WebApp\extjs\ext-all-dev.js" />
     <Content Include="WebApp\extjs\ext-all.js" />
     <Content Include="WebApp\extjs\resources\css\ext-all-gray.css" />
     <Content Include="WebApp\extjs\resources\themes\images\gray\boundlist\trigger-arrow.png" />
