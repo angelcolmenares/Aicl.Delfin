@@ -8,7 +8,7 @@ namespace Aicl.Delfin.DataAccess
 	public static class DALProxyExtensions
 	{
 
-		static readonly string CryptoKey = ConfigUtils.GetAppSetting("CRIPTO_KEY","8esjais863deDae");
+		static readonly string CryptoKey = ConfigUtils.GetAppSetting("CRYPTO_KEY","8esjais863deDae");
 
 		public static Consecutivo GetNext(this DALProxy proxy, string documento, int? incremento=1){
 
@@ -28,6 +28,7 @@ namespace Aicl.Delfin.DataAccess
 
 		public static Empresa GetEmpresa(this DALProxy proxy)
 		{
+
 			Empresa empresa = proxy.FirstOrDefault<Empresa>(q=>true);
 
 			if(empresa!=default(Empresa)){
