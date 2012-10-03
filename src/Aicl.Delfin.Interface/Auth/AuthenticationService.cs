@@ -10,6 +10,8 @@ using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Aicl.Delfin.BusinessLogic;
+using ServiceStack.ServiceInterface.ServiceModel;
+using System.Net;
 
 namespace Aicl.Delfin.Interface
 {
@@ -25,7 +27,7 @@ namespace Aicl.Delfin.Interface
 
 		public override object OnGet (Authentication request)
 		{
-
+			try{
             AuthService authService = ResolveService<AuthService>();
             
             object fr= authService.Post(new Auth {
@@ -46,7 +48,7 @@ namespace Aicl.Delfin.Interface
                 throw ex;
             };
             
-            Authorization auth = new Authorization(){
+            Aicl.Delfin.Model.Types.Authorization auth = new Aicl.Delfin.Model.Types.Authorization(){
                 UserId= int.Parse(session.UserAuthId)
             };
             
@@ -61,7 +63,17 @@ namespace Aicl.Delfin.Interface
                 Roles= aur.Roles,
                 Permissions= aur.Permissions
             };
+			}
+			catch(Exception e){
+				return new HttpResult( 
+					 new ResponseStatus(){
+						Message=e.Message,
+						StackTrace=e.StackTrace,
+						ErrorCode="Desastrosos"
+					},
 
+			HttpStatusCode.InternalServerError);
+			}
 		}
 		
 		public override object OnDelete (Authentication request)
