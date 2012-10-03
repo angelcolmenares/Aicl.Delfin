@@ -34,7 +34,7 @@ namespace Aicl.Delfin.BusinessLogic
             
             factory.Execute(proxy=>
             {
-                aur= proxy.GetByUserIdFromCache<AuthRoleUser>(request.UserId);
+				aur=  proxy.Get<AuthRoleUser>(q=>q.UserId==request.UserId); //proxy.GetByUserIdFromCache<AuthRoleUser>(request.UserId);
                 rol= proxy.GetFromCache<AuthRole>();
                 per= proxy.GetFromCache<AuthPermission>();
                 rol_per= proxy.GetFromCache<AuthRolePermission>();
