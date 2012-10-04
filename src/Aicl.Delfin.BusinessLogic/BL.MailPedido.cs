@@ -76,10 +76,14 @@ namespace Aicl.Delfin.BusinessLogic
 
 				message.ReplyToList.Add(userSession.Email);
 				message.From= new MailAddress(userSession.Email);
-				message.To.Add(pedido.MailContacto);
+
+				var mc= !pedido.MailContacto.IsNullOrEmpty()?pedido.MailContacto:userSession.Email;
+
+				message.To.Add(mc);
 
 				if(! pedido.MailDestinatario.IsNullOrEmpty() &&
-				   (pedido.MailContacto.Trim().ToUpper()!=pedido.MailDestinatario.Trim().ToUpper()) ){
+
+				   (mc.Trim().ToUpper()!=pedido.MailDestinatario.Trim().ToUpper()) ){
 					message.CC.Add(pedido.MailDestinatario);
 				}
 

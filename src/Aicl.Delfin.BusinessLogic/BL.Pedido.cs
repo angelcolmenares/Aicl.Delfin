@@ -92,9 +92,7 @@ namespace Aicl.Delfin.BusinessLogic
 				request.IdAnuladoPor=null;
 				request.IdEnviadoPor=null;
 
-				var fp = proxy.FirstOrDefault<FormaPago>(q=>q.Id==request.IdFormaPago);
-
-				//var fp = proxy.CheckExistAndActivo<FormaPago>(request.IdFormaPago, f=>f.Descripcion);
+				var fp = proxy.CheckExistAndActivo<FormaPago>(request.IdFormaPago, f=>f.Descripcion);
 				request.DescripcionFormaPago= fp.Descripcion;
 
 				var contacto = proxy.CheckExistAndActivo<Contacto>(request.IdContacto, f=>f.Nombre);
