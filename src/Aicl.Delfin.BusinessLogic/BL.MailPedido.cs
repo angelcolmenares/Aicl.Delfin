@@ -101,7 +101,7 @@ namespace Aicl.Delfin.BusinessLogic
 				OfertaPdf pdf = new OfertaPdf();
 
 				string logo = Path.Combine("resources".MapServerPath(), "logo.png");
-				string file = Path.Combine("App_Data".MapServerPath(),
+				string file = Path.Combine("outfiles".MapServerPath(),
 				                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
 
 
