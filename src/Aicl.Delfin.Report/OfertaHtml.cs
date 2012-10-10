@@ -9,10 +9,10 @@ using ServiceStack.ServiceInterface.Auth;
 
 namespace Aicl.Delfin.Report
 {
-	public class Oferta
+	public class OfertaHtml
 	{
 
-		public Oferta (){}
+		public OfertaHtml (){}
 
 		public string ConstruirHtmlReport(Empresa empresa, IAuthSession user,
 		                                  Pedido pedido, List<PedidoItem> items,
@@ -50,13 +50,13 @@ namespace Aicl.Delfin.Report
 		public string ConstruirSolicitadoPor(Pedido pedido){
 			var filas = new List<Fila>(
 				new Fila[]{
-				new Fila{Value=pedido.NombreCliente},
-				new Fila{Value=pedido.NitCliente},
-				new Fila{Value=pedido.NombreContacto},
-				new Fila{Value=pedido.MailContacto},
-				new Fila{Value="&nbsp;"},
-				new Fila{Value="&nbsp;"},
-				new Fila{Value=" &nbsp;"}
+				new Fila{Value=pedido.NombreCliente.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.NitCliente.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.NombreContacto.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.MailContacto.ValueOrHtmlSpace()},
+				new Fila{Value=Extensions.HtmlSpace},
+				new Fila{Value=Extensions.HtmlSpace},
+				new Fila{Value=Extensions.HtmlSpace}
 			});
 
 			return string.Format(@"							<table style=""margin: 0.5em; border-collapse: collapse; width: 100%; height: 200px; "">
@@ -76,18 +76,18 @@ namespace Aicl.Delfin.Report
 		public string ConstruirDestinatario(Pedido pedido){
 			var filas = new List<Fila>(
 				new Fila[]{
-				new Fila{Value=pedido.NombreDestinatario},
-				new Fila{Value=pedido.CargoDestinatario},
-				new Fila{Value=pedido.DireccionDestinatario},
-				new Fila{Value=pedido.NombreCiudad},
+				new Fila{Value=pedido.NombreDestinatario.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.CargoDestinatario.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.DireccionDestinatario.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.NombreCiudad.ValueOrHtmlSpace()},
 				new Fila{Value=
-					string.Format("{0}{1}",
+					(string.Format("{0}{1}",
 					              pedido.TelefonoDestinatario,
 					              (!pedido.TelefonoDestinatario.IsNullOrEmpty() && !pedido.FaxDestinatario.IsNullOrEmpty())?
 					              "-"+pedido.FaxDestinatario:
-					              pedido.FaxDestinatario)},
-				new Fila{Value=pedido.CelularDestinatario},
-				new Fila{Value=pedido.MailDestinatario}
+					              pedido.FaxDestinatario)).ValueOrHtmlSpace()},
+				new Fila{Value=pedido.CelularDestinatario.ValueOrHtmlSpace()},
+				new Fila{Value=pedido.MailDestinatario.ValueOrHtmlSpace()}
 			});
 
 			return string.Format(@"						<table style=""margin: 0.5em; border-collapse: collapse; width: 100%;height: 200px; "">
@@ -310,7 +310,7 @@ namespace Aicl.Delfin.Report
 				<li>
 					Direcci&oacute;n exacta (donde estan ubicados los equipos) - Informaci&oacute;n para el certificado.</li>
 				<li>
-					Nombres de las personas encargadas de los equipos o departamenteo de metrolog&iacute;a para comunicarnos en caso de necesidad.</li>
+					Nombres de las personas encargadas de los equipos o departamento de metrolog&iacute;a para comunicarnos en caso de necesidad.</li>
 				<li>
 					Al enviar los equipos favor anexar copia de esta oferta.</li>
 			</ul>

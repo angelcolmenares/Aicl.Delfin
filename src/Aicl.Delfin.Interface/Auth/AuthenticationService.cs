@@ -27,7 +27,7 @@ namespace Aicl.Delfin.Interface
 
 		public override object OnGet (Authentication request)
 		{
-			try{
+			//try{
             AuthService authService = ResolveService<AuthService>();
             
             object fr= authService.Post(new Auth {
@@ -63,7 +63,7 @@ namespace Aicl.Delfin.Interface
                 Roles= aur.Roles,
                 Permissions= aur.Permissions
             };
-			}
+			/*}
 			catch(Exception e){
 				return new HttpResult( 
 					 new ResponseStatus(){
@@ -73,7 +73,7 @@ namespace Aicl.Delfin.Interface
 					},
 
 			HttpStatusCode.InternalServerError);
-			}
+			}*/
 		}
 		
 		public override object OnDelete (Authentication request)

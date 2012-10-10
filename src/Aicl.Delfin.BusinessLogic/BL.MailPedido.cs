@@ -12,6 +12,7 @@ using ServiceStack.Common.Web;
 using Aicl.Delfin.Report;
 using System.Net.Mail;
 using ServiceStack.ServiceInterface.Auth;
+using System.IO;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -42,7 +43,7 @@ namespace Aicl.Delfin.BusinessLogic
 					proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
 
 
-				var oferta = new Oferta();
+				var oferta = new OfertaHtml();
 				var userSession = httpRequest.GetSession();   // el de esta session...
 				IAuthSession user= new AuthUserSession();  // el que lo envio !!!
 
@@ -93,30 +94,32 @@ namespace Aicl.Delfin.BusinessLogic
 					message.Bcc.Add(empresa.ApplicationMailBox);
 				}
 
-				if(!empresa.ResponsableOfertasMail.IsNullOrEmpty()){
-					message.Bcc.Add(empresa.ResponsableOfertasMail);
-				}
-
 				message.Body= html;
 				message.IsBodyHtml=true;
+
+
+				OfertaPdf pdf = new OfertaPdf();
+
+				string logo = Path.Combine("resources".MapServerPath(), "logo.png");
+				string file = Path.Combine("App_Data".MapServerPath(),
+				                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
+
+
+				pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
+				              file);
+
+				message.Attachments.Add(new Attachment(file));
 
 				mailService.Send(message);
 
 
-
-
 			});
-
-
-
 
 			return new MailPedidoResponse{
 
 			};
 		}
 		#endregion Get
-
-
 
 	}
 }
