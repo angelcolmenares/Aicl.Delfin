@@ -25,7 +25,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                     Mailer mailService)
         {
 
-			factory.Execute(proxy=>{
+			return factory.Execute(proxy=>{
 				Pedido pedido= proxy.FirstOrDefault<Pedido>(q=>q.Consecutivo==request.Consecutivo);
 				if (pedido==default(Pedido))
 				{
@@ -38,6 +38,7 @@ namespace Aicl.Delfin.BusinessLogic
 						string.Format("Oferta con Consecutivo:'{0}' No esta en estado ENVIADA", request.Consecutivo));
 				}
 
+				var response =new  MailPedidoResponse();
 
 				List<PedidoItem> items=
 					proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
@@ -106,23 +107,20 @@ namespace Aicl.Delfin.BusinessLogic
 				try{
 					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
 				              file);
+					message.Attachments.Add(new Attachment(file));
+					mailService.Send(message);
 				}
-				catch(Exception){
-
+				catch(Exception e){
+					response.ResponseStatus.ErrorCode="Error-Mail-Pdf";
+					response.ResponseStatus.Message=e.Message;
+					response.ResponseStatus.StackTrace=e.StackTrace;
 				}
 
-				message.Attachments.Add(new Attachment(file));
-
-				mailService.Send(message);
-
+				return response;
 
 			});
 
-			return new MailPedidoResponse{
-				CorreoMensaje=Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png")+";"+
-					Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
-				                           string.Format("oferta-{0}.pdf","X"))
-			};
+
 		}
 		#endregion Get
 
