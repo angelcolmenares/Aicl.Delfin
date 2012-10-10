@@ -580,6 +580,7 @@
     <Content Include="WebApp\resources\icons\silk\up.png" />
     <Content Include="WebApp\resources\icons\silk\us.gif" />
     <Content Include="WebApp\resources\icons\silk\warning.png" />
+    <Content Include="App_Data\algun.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -624,7 +625,6 @@
     <None Include="log4net.conf" />
     <None Include="WebApp\.project" />
     <None Include="WebApp\license.txt" />
-    <None Include="App_Data\algun.txt" />
     <None Include="outfiles\somefile.txt" />
   </ItemGroup>
   <ItemGroup>
