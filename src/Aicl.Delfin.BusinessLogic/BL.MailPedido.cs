@@ -97,16 +97,19 @@ namespace Aicl.Delfin.BusinessLogic
 				message.Body= html;
 				message.IsBodyHtml=true;
 
-
 				OfertaPdf pdf = new OfertaPdf();
 
-				string logo = Path.Combine("resources".MapServerPath(), "logo.png");
-				string file = Path.Combine("resources".MapServerPath(),
+				string logo = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png");
+				string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
 				                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
 
-
-				pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
+				try{
+					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
 				              file);
+				}
+				catch(Exception){
+
+				}
 
 				message.Attachments.Add(new Attachment(file));
 
@@ -116,7 +119,9 @@ namespace Aicl.Delfin.BusinessLogic
 			});
 
 			return new MailPedidoResponse{
-
+				CorreoMensaje=Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png")+";"+
+					Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
+				                           string.Format("oferta-{0}.pdf","X"))
 			};
 		}
 		#endregion Get
