@@ -20,8 +20,8 @@ namespace Aicl.Delfin.Report
 			return ConstruirEncabezado(empresa, pedido, textoInicial)+ 
 				ConstruirTablaCliente(pedido)+
 				ItemsToTable(items)+
-					ConstruirResumen(items)+
-					ConstruirCondiciones(empresa,user);
+					ConstruirResumen(pedido, items)+
+					ConstruirCondiciones(empresa,pedido,user);
 		}
 
 		public string ItemsToTable(List<PedidoItem> items)
@@ -103,7 +103,7 @@ namespace Aicl.Delfin.Report
 			                     ConstruirFilasSolicitadoPor(filas));
 		}
 
-		public string ConstruirResumen(List<PedidoItem> items){
+		public string ConstruirResumen(Pedido pedido, List<PedidoItem> items){
 
 			var valores = 
 				(from p in items
@@ -132,8 +132,8 @@ namespace Aicl.Delfin.Report
         {0}
     </tbody>
     </table>
-    <p style=""font-weight: bold"">Nota : El precio no incluye gastos de envio</p>",
-			                     ConstruirFilasResumen(filas));
+    <p style=""font-weight: bold"">Nota : El precio {1}incluye gastos de envio</p>",
+			                     ConstruirFilasResumen(filas), pedido.IncluyeGastosEnvio? " ": "NO ");
 
 		}
 
@@ -279,7 +279,7 @@ namespace Aicl.Delfin.Report
 			return html.ToString();
 		}
 
-		public string ConstruirCondiciones(Empresa empresa, IAuthSession user){
+		public string ConstruirCondiciones(Empresa empresa,Pedido pedido, IAuthSession user){
 			StringBuilder html = new StringBuilder();
 			html.AppendFormat(@"<table style=""border-collapse: collapse; width: 100%; "">
 									<thead>
@@ -318,7 +318,7 @@ namespace Aicl.Delfin.Report
 				Tambien se da por entendida la aceptaci&oacute;n por parte del cliente si est&eacute; da una autorizaci&oacute;n verbal (telef&oacute;nica), o trae el instrumento para calibrar o realiza el pago correspodiente.</p>
 			<p>
 				Si tiene alguna inquietud comun&iacute;quese con nosotros. No se emiten juicios profesionales sobre los resultados de la calibracion.</p>
-			<br />
+			{13}	
 			<p>{2}</p>
 			<p>{3}</p>
 			<p>{4}</p>
@@ -329,8 +329,14 @@ namespace Aicl.Delfin.Report
 
 	<p>{5} Tel:{6} Telefax:{7} {8} e-mail:{9} {10}-{11}</p>
 	<p> Direccion antigua: {12}</p>
-", empresa.CuentaBancaria, empresa.Nombre, user.DisplayName, user.LastName, user.Email,
-			                  empresa.Direccion,empresa.Telefono, empresa.Fax, empresa.Web,empresa.Mail, empresa.Ciudad, empresa.Pais, empresa.DireccionAntigua);
+",
+			                  empresa.CuentaBancaria, 
+			                  empresa.Nombre, user.DisplayName, user.LastName, user.Email,
+			                  empresa.Direccion,empresa.Telefono, empresa.Fax, 
+			                  empresa.Web,empresa.Mail, empresa.Ciudad, empresa.Pais, empresa.DireccionAntigua,
+			                  pedido.Observacion.IsNullOrEmpty()?
+			                  "<br />":
+			                  string.Format("<p style=\"font-weight:bold;\">Observación:{0}</p><br />",pedido.Observacion));
 			return html.ToString();
 		}
 

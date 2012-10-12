@@ -124,6 +124,7 @@ Ext.define('App.view.cliente.Panel', {
                             name: 'Activo',
                             fieldLabel: 'Activo',
                             hideLabel: false,
+                            checked:true,
                             boxLabel: ''
                         }
                     ]
@@ -225,19 +226,28 @@ Ext.define('App.view.cliente.Panel', {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'Telefono',
-                                    fieldLabel: 'Telefono'
+                                    fieldLabel: 'Telefono',
+                                    enforceMaxLength: true,
+                            		maxLength: 16,
+                            		maxLengthText: 'The maximum length for this field is 16'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'Fax',
-                                    fieldLabel: 'Fax'
+                                    fieldLabel: 'Fax',
+                                    enforceMaxLength: true,
+                            		maxLength: 16,
+                            		maxLengthText: 'The maximum length for this field is 16'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'Celular',
-                                    fieldLabel: 'Celular'
+                                    fieldLabel: 'Celular',
+                                    enforceMaxLength: true,
+                            		maxLength: 16,
+                            		maxLengthText: 'The maximum length for this field is 16'
                                 },
                                 {
                                     xtype: 'textfield',
@@ -279,6 +289,7 @@ Ext.define('App.view.cliente.Panel', {
                                     anchor: '100%',
                                     name: 'Activo',
                                     fieldLabel: 'Activo',
+                                    checked:true,
                                     boxLabel: ''
                                 },
                                 {

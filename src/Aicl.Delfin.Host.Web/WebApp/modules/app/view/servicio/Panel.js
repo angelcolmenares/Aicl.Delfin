@@ -112,6 +112,7 @@ Ext.define('App.view.servicio.Panel', {
                             anchor: '100%',
                             name: 'Activo',
                             fieldLabel: 'Activo',
+                            checked:true,
                             hideLabel: false,
                             boxLabel: ''
                         }
@@ -194,6 +195,7 @@ Ext.define('App.view.servicio.Panel', {
                                     anchor: '100%',
                                     name: 'NombreProcedimiento',
                                     fieldLabel: 'Nombre',
+                                    readOnly:true,
                                     allowBlank: false
                                 },
                                 {
@@ -201,30 +203,35 @@ Ext.define('App.view.servicio.Panel', {
                                     anchor: '100%',
                                     name: 'DescripcionProcedimiento',
                                     fieldLabel: 'Descripcion',
+                                    readOnly:true,
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'ValorBaseProcedimiento',
+                                    readOnly:true,
                                     fieldLabel: 'Valor Base'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'PorcentajeIvaProcedimiento',
+                                    readOnly:true,
                                     fieldLabel: 'Iva %'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'ValorIvaProcedimiento',
+                                    readOnly:true,
                                     fieldLabel: 'Iva $'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'ValorUnitarioProcedimiento',
+                                    readOnly:true,
                                     fieldLabel: 'Total'
                                 },
                                 {
@@ -232,6 +239,7 @@ Ext.define('App.view.servicio.Panel', {
                                     anchor: '100%',
                                     name: 'ActivoProcedimiento',
                                     fieldLabel: 'Activo',
+                                    readOnly:true,
                                     boxLabel: ''
                                 },
                                 {

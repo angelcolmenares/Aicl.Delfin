@@ -60,6 +60,11 @@ namespace Aicl.Delfin.Model.Types
 			}
 		}
 
+		public bool IncluyeGastosEnvio{get;set;}
+
+		[StringLength(128)]
+		public string Observacion {get;set;}
+
 		public int IdCreadoPor {get; set;}
 		#region CreadoPor
 		[BelongsTo(typeof(UserAuth),"DisplayName")]

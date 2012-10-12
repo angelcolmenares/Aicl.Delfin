@@ -1,3 +1,4 @@
+using ServiceStack.Common;
 using System.Linq.Expressions;
 using ServiceStack.OrmLite;
 using ServiceStack.ServiceHost;
@@ -25,7 +26,12 @@ namespace Aicl.Delfin.BusinessLogic
                 var predicate = PredicateBuilder.True<Servicio>();
 
                 var visitor = ReadExtensions.CreateExpression<Servicio>();
-				visitor.Where(predicate);
+
+				if(!request.Nombre.IsNullOrEmpty()){
+					predicate = predicate.AndAlso(q=> q.Nombre.Contains(request.Nombre));
+				}
+
+				visitor.Where(predicate).OrderBy(f=>f.Nombre);
                 if(paginador.PageNumber.HasValue)
                 {
 					visitor.Select(r=> Sql.Count(r.Id));

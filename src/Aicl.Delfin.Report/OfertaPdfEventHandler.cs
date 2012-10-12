@@ -1,3 +1,4 @@
+using ServiceStack.Common;
 using System;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
@@ -58,7 +59,7 @@ namespace Aicl.Delfin.Report
 			headerTable.AddCell(leftTableCell);
 
 			var cell = new PdfPCell(Image.GetInstance(LogoFile),false);
-			cell.FixedHeight = cellHeight-25;
+			cell.FixedHeight = cellHeight*80/100;
 			cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
 			cell.Padding=0;
 			cell.PaddingTop=0;
@@ -67,7 +68,6 @@ namespace Aicl.Delfin.Report
 			leftTable.AddCell(cell);
 
 			cell = new PdfPCell(new Phrase(Empresa.Nit, new Font(){Size=8}));
-			cell.FixedHeight=5;
 			cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
 			cell.Border= PdfPCell.NO_BORDER;
 			leftTable.AddCell(cell);
@@ -79,7 +79,7 @@ namespace Aicl.Delfin.Report
 			PdfPCell rightTableCell = new PdfPCell(rightTable);
 			rightTableCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
 			rightTableCell.Padding = 5;
-			rightTableCell.PaddingTop= 5;
+			rightTableCell.PaddingTop= 20;
             rightTableCell.PaddingBottom = 5;
 			rightTableCell.FixedHeight = cellHeight;
 			rightTableCell.Border= PdfPCell.NO_BORDER;
@@ -107,7 +107,8 @@ namespace Aicl.Delfin.Report
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(Pedido.FechaEnvio.Format(), new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(Pedido.FechaEnvio.HasValue? Pedido.FechaEnvio.Value.Format():"BORRADOR !!!",
+			                               new Font(){Size=10}));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
@@ -149,15 +150,9 @@ namespace Aicl.Delfin.Report
         {
             base.OnEndPage(writer, document);
 
-            int pageN = writer.PageNumber;
-            String text = "Página " + pageN + " de ";
-            float len = bf.GetWidthPoint(text, 8);
-
-            Rectangle pageSize = document.PageSize;
-
-            cb.SetRGBColorFill(100, 100, 100);
-
-
+			Rectangle pageSize = document.PageSize;        
+			//var cellHeight = document.BottomMargin*50/100;
+			            
 			StringBuilder s = new StringBuilder();
 
 			s.AppendFormat(
@@ -165,26 +160,46 @@ namespace Aicl.Delfin.Report
 				Empresa.Direccion,Empresa.Telefono,
 				Empresa.Fax, Empresa.Web, Empresa.Mail, Empresa.Ciudad,
 				Empresa.Pais, Empresa.DireccionAntigua);
+			/*
+			PdfPTable footerTable = new PdfPTable(1);
+			footerTable.TotalWidth = pageSize.Width;
+						var cell = new PdfPCell(new Phrase(s.ToString(), new Font(){Size=8}));
+			cell.FixedHeight= cellHeight;
+			cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
+			cell.Border= PdfPCell.NO_BORDER;
+			footerTable.AddCell(cell);
+
+			footerTable.WriteSelectedRows( 0, -1,  0,  
+			                              pageSize.Height - cellHeight + footerTable.TotalHeight,
+			                              writer.DirectContent );
+			*/
+
+
+            int pageN = writer.PageNumber;
+            String text = "Página " + pageN + " de ";
+            float len = bf.GetWidthPoint(text, 8);
+
+			cb.SetRGBColorFill(100, 100, 100);
 
 			cb.BeginText();
-            cb.SetFontAndSize(bf, 6);
-            cb.SetTextMatrix(pageSize.GetLeft(40), pageSize.GetBottom(18));
-            cb.ShowText(s.ToString());
+            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 8); 
+            cb.SetTextMatrix(pageSize.GetLeft(10), pageSize.GetBottom(15));
+            cb.ShowTextAligned(1,s.ToString(),400,18,0);
             cb.EndText();
-
+            
             cb.BeginText();
             cb.SetFontAndSize(bf, 8);
-            cb.SetTextMatrix(pageSize.GetLeft(40), pageSize.GetBottom(8));
+            cb.SetTextMatrix(pageSize.GetLeft(10), pageSize.GetBottom(8));
             cb.ShowText(text);
             cb.EndText();
 
-            cb.AddTemplate(template, pageSize.GetLeft(40) + len, pageSize.GetBottom(8));
+            cb.AddTemplate(template, pageSize.GetLeft(10) + len, pageSize.GetBottom(8));
             
             cb.BeginText();
             cb.SetFontAndSize(bf, 8);
             cb.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, 
                 "Impreso el:" + printTime.ToString(), 
-                pageSize.GetRight(40), 
+                pageSize.GetRight(10), 
                 pageSize.GetBottom(8), 0);
             cb.EndText();
         }

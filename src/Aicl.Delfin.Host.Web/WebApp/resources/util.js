@@ -2490,6 +2490,14 @@ Ext.define('App.model.Pedido',{
 			convert: function(v){return Aicl.Util.convertToDate(v);}
 		},
 		{
+			name:'IncluyeGastosEnvio',
+			type:'boolean'
+		},
+		{
+			name :'Observacion',
+			type :'string'
+		},
+		{
 			name: 'IdCreadoPor',
 			type: 'int'
 		},

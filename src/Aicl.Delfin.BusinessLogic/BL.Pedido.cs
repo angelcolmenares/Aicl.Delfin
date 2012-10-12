@@ -179,6 +179,7 @@ namespace Aicl.Delfin.BusinessLogic
 
 					proxy.Update(request,ev=>ev.Update(f=> 
 					    new {
+							f.IncluyeGastosEnvio, f.Observacion,
 							f.CargoDestinatario, f.CelularDestinatario, f.DiasDeVigencia,
 							f.DireccionDestinatario, f.FaxDestinatario, f.IdCiudadDestinatario,f.IdContacto,
 							f.IdFormaPago,f.MailDestinatario, f.NitCliente, f.NombreDestinatario,f.TelefonoDestinatario,

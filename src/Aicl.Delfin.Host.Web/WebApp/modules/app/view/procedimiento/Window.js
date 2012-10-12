@@ -158,6 +158,7 @@ Ext.define('App.view.procedimiento.Window', {
                                     xtype: 'checkboxfield',
                                     anchor: '100%',
                                     name: 'Activo',
+                                    checked:true,
                                     fieldLabel: 'Activo'
                                 },
                                 {

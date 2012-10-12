@@ -56,7 +56,7 @@ namespace Aicl.Delfin.Model.Types
 		[DecimalLength(18,2)]
 		public decimal CostoUnitario { 
 			get {
-				return ValorUnitario/(1+PorcentajeIva/100.0m);
+				return Math.Ceiling(ValorUnitario/(1+PorcentajeIva/100.0m));
 			}
 		}
 
@@ -85,8 +85,6 @@ namespace Aicl.Delfin.Model.Types
 				return ValorUnitario*Cantidad - (ValorUnitario*Cantidad*Descuento/100.00m);
 			}
 		}
-
-
 
 
 	}

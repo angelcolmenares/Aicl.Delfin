@@ -71,7 +71,8 @@
     <Compile Include="BL.ServicioProcedimiento.cs" />
     <Compile Include="BL.Consecutivo.cs" />
     <Compile Include="BL.ClienteContacto.cs" />
-    <Compile Include="BL.MailPedido.cs" />
+    <Compile Include="Bl.PedidoPdf.cs" />
+    <Compile Include="BL.PedidoMail.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

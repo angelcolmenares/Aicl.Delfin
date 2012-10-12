@@ -78,9 +78,10 @@
     <Compile Include="Types\Consecutivo.cs" />
     <Compile Include="IHasActivo.cs" />
     <Compile Include="Types\ClienteContacto.cs" />
-    <Compile Include="Types\MailPedido.cs" />
-    <Compile Include="Operations\MailPedidoResponse.cs" />
     <Compile Include="Types\Empresa.cs" />
+    <Compile Include="Types\PedidoMail.cs" />
+    <Compile Include="Types\PedidoPdf.cs" />
+    <Compile Include="Operations\PedidoMailResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

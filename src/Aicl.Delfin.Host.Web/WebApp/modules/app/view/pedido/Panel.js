@@ -82,6 +82,11 @@ Ext.define('App.view.pedido.Panel', {
                             action: 'mail',
                             tooltip:'enviar pedido por mail',
                             iconCls: 'mail'
+                        },{
+                            xtype: 'button',
+                            action: 'download',
+                            tooltip:'ver oferta',
+                            iconCls: 'preview'
                         },
                         {
                             xtype: 'button',
@@ -154,7 +159,7 @@ Ext.define('App.view.pedido.Form', {
 								},{
 									xtype: 'hidden',
 									name: 'IdContacto'
-								},
+								}/*,
                                 {
                                     xtype: 'textfield',
                                     flex: 1,
@@ -168,7 +173,7 @@ Ext.define('App.view.pedido.Form', {
                                     style: 'marginLeft:4px',
                                     tooltip: 'Buscar por Nit',
                                     action:'buscarClientePorNit'
-                                }
+                                }*/
                             ]
                         },
                         {
@@ -208,6 +213,24 @@ Ext.define('App.view.pedido.Form', {
 							fieldLabel: 'FormaPago',
 							allowBlank: false,
 							anchor:'100%'
+                        },
+                        {
+                            xtype: 'checkboxfield',
+                            anchor: '100%',
+                            name: 'IncluyeGastosEnvio',
+                            fieldLabel: 'Incluye Gastos de Envio',
+                            hideLabel: false,
+                            boxLabel: ''
+                        },
+                        {
+                            xtype: 'textfield',
+                            anchor: '100%',
+                            name: 'Observacion',
+                            fieldLabel: 'Observacion',
+                            value:'LOS EQUIPOS SE RECIBEN PREVIA AUTORIZACION DEL LABORATORIO.',
+                            enforceMaxLength: true,
+                            maxLength: 128,
+                            maxLengthText: 'The maximum length for this field is 128'
                         },
                         {
                             xtype: 'numberfield',

@@ -73,7 +73,8 @@
     <Compile Include="Services\ConsecutivoService.cs" />
     <Compile Include="Services\ClienteContactoService.cs" />
     <Compile Include="Services\ServicioProcedimientoService.cs" />
-    <Compile Include="Services\MailPedidoService.cs" />
+    <Compile Include="Services\PedidoMailService.cs" />
+    <Compile Include="Services\PedidoPdfService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

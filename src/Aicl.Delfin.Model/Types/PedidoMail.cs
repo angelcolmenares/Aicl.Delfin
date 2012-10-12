@@ -3,9 +3,9 @@ using ServiceStack.ServiceHost;
 namespace Aicl.Delfin.Model.Types
 {
 	[RestService("/Pedido/mail/{Consecutivo}","get,post")]
-	public class MailPedido
+	public class PedidoMail
 	{
-		public MailPedido ()
+		public PedidoMail ()
 		{
 		}
 

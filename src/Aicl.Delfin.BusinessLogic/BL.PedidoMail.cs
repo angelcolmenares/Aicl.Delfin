@@ -19,9 +19,9 @@ namespace Aicl.Delfin.BusinessLogic
 	public static partial class BL
 	{
 		#region Get
-        public static MailPedidoResponse Get(this MailPedido request,
-		                                              Factory factory,
-		                                              IHttpRequest httpRequest,
+        public static PedidoMailResponse Get(this PedidoMail request,
+		                                     Factory factory,
+		                                     IHttpRequest httpRequest,
 		                                     Mailer mailService)
         {
 
@@ -37,8 +37,6 @@ namespace Aicl.Delfin.BusinessLogic
 					throw HttpError.Unauthorized(
 						string.Format("Oferta con Consecutivo:'{0}' No esta en estado ENVIADA", request.Consecutivo));
 				}
-
-				var response =new  MailPedidoResponse();
 
 				List<PedidoItem> items=
 					proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
@@ -104,19 +102,12 @@ namespace Aicl.Delfin.BusinessLogic
 				string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
 				                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
 
-				try{
-					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
-				              file);
-					message.Attachments.Add(new Attachment(file));
-					mailService.Send(message);
-				}
-				catch(Exception e){
-					response.ResponseStatus.ErrorCode="Error-Mail-Pdf";
-					response.ResponseStatus.Message=e.Message;
-					response.ResponseStatus.StackTrace=e.StackTrace;
-				}
+				pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
+			              file, new OfertaMargin(5,5,90,15));
+				message.Attachments.Add(new Attachment(file));
+				mailService.Send(message);
 
-				return response;
+				return new  PedidoMailResponse();
 
 			});
 

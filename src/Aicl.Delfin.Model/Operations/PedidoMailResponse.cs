@@ -2,11 +2,11 @@ using ServiceStack.ServiceInterface.ServiceModel;
 
 namespace Aicl.Delfin.Model.Operations
 {
-	public class MailPedidoResponse:IHasResponseStatus 
+	public class PedidoMailResponse:IHasResponseStatus 
 	{
         
 
-		public MailPedidoResponse ()
+		public PedidoMailResponse ()
 		{
 			ResponseStatus= new ResponseStatus();
 
