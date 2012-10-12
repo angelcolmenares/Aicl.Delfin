@@ -16,7 +16,7 @@ namespace Aicl.Delfin.Report
 
 		public void CreatePDF(Empresa empresa, IAuthSession user, Pedido pedido,
 		                      List<PedidoItem> items,
-		                      string logFile, string prefijo, string file,
+		                      string logFile, string prefijo, Stream file,
 		                      OfertaMargin margin)
         {
             
@@ -25,9 +25,10 @@ namespace Aicl.Delfin.Report
 				Document document = new Document(PageSize.LETTER.Rotate(), 
 				                                 margin.Left, margin.Right, margin.Top, margin.Bottom );
 
-				using (PdfWriter PDFWriter= PdfWriter.GetInstance(document, new FileStream(file, FileMode.Create)))
+				using (PdfWriter PDFWriter= PdfWriter.GetInstance(document,file))
 				{
 	            PDFWriter.ViewerPreferences = PdfWriter.PageModeUseOutlines;
+				PDFWriter.CloseStream=false;
 
 	            // Our custom Header and Footer is done using Event Handler
 	            OfertaPdfEventHandler PageEventHandler = new OfertaPdfEventHandler(){

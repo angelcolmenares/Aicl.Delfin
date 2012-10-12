@@ -99,13 +99,17 @@ namespace Aicl.Delfin.BusinessLogic
 				OfertaPdf pdf = new OfertaPdf();
 
 				string logo = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png");
-				string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
-				                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
+				//string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
+				//                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
 
-				pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
-			              file, new OfertaMargin(5,5,90,15));
-				message.Attachments.Add(new Attachment(file));
-				mailService.Send(message);
+				using (var stream =  new MemoryStream() ){
+					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
+			              stream, new OfertaMargin(5,5,90,15));
+					stream.Position=0;
+					message.Attachments.Add(new Attachment(stream,string.Format("oferta-{0}.pdf",pedido.Consecutivo)));
+					mailService.Send(message);
+				}
+
 
 				return new  PedidoMailResponse();
 

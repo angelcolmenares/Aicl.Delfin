@@ -9,6 +9,7 @@ using ServiceStack.Common.Web;
 using Aicl.Delfin.Report;
 using ServiceStack.ServiceInterface.Auth;
 using System.IO;
+using ServiceStack.Service;
 
 
 namespace Aicl.Delfin.BusinessLogic
@@ -60,14 +61,29 @@ namespace Aicl.Delfin.BusinessLogic
 				string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
 				                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
 
+				using (var stream =  new MemoryStream()){
+
+
 					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
-				              file, new OfertaMargin(5,5,90,15));
-					return new HttpResult(new FileInfo(file), asAttachment:true);
+				              stream, new OfertaMargin(5,5,90,15));
+
+					stream.Position=0;
+
+					using(var fileStream = new FileStream(file, FileMode.Create )){
+						stream.CopyTo(fileStream);
+						fileStream.Close();
+						return new HttpResult( new FileInfo(file), asAttachment:true);
+					}
+
+				}
 
 			});
 
 		}
 		#endregion Get
 	}
+
+
+
 }
 

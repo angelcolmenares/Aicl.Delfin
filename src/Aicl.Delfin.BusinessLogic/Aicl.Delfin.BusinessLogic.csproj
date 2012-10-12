@@ -73,6 +73,7 @@
     <Compile Include="BL.ClienteContacto.cs" />
     <Compile Include="Bl.PedidoPdf.cs" />
     <Compile Include="BL.PedidoMail.cs" />
+    <Compile Include="PdfFileResult.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
