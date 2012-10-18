@@ -10,14 +10,14 @@ namespace Aicl.Delfin.Model.Operations
 		public AuthenticationResponse ()
 		{
 			ResponseStatus= new ResponseStatus();
-			Permissions= new List<string>();
+			Permissions= new List<AuthPermission>();
 			Roles = new List<AuthRole>();
 
 		}
 		
 		public ResponseStatus ResponseStatus { get; set; }
 		
-		public List<string> Permissions {get; set;}
+		public List<AuthPermission> Permissions {get; set;}
 		public List<AuthRole> Roles {get; set;}
 		public string DisplayName { get; set;}
 		

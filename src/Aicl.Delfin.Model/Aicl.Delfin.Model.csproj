@@ -48,6 +48,9 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\lib\ServiceStack.Text.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +85,9 @@
     <Compile Include="Types\PedidoMail.cs" />
     <Compile Include="Types\PedidoPdf.cs" />
     <Compile Include="Operations\PedidoMailResponse.cs" />
+    <Compile Include="Types\Auth\User.cs" />
+    <Compile Include="Types\Auth\UserRole.cs" />
+    <Compile Include="Types\Auth\RolePermission.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

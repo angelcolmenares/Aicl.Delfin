@@ -15,6 +15,7 @@ using ServiceStack.OrmLite.MySql;
 
 using Aicl.Delfin.DataAccess;
 using Aicl.Delfin.Interface;
+using ServiceStack.ServiceHost;
 
 namespace Aicl.Delfin.Host.Web
 {
@@ -49,7 +50,8 @@ namespace Aicl.Delfin.Host.Web
 						{ "Access-Control-Allow-Origin", "*" },
 						{ "Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH" },
 					},
-				  DefaultContentType = ContentType.Json 
+				DefaultContentType = ContentType.Json,
+				//EnableFeatures =  Feature.All.Remove(Feature.Html),
 			});
 							
 									

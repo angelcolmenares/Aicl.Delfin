@@ -25,7 +25,7 @@ namespace Aicl.Delfin.BusinessLogic
 			}
 			
 			List<AuthRole> roles = new List<AuthRole>();
-			List<string> permissions= new List<string>();
+			List<AuthPermission> permissions= new List<AuthPermission>();
 			
             List<AuthRoleUser> aur= new List<AuthRoleUser>();
             List<AuthRole> rol = new List<AuthRole>();
@@ -46,8 +46,8 @@ namespace Aicl.Delfin.BusinessLogic
                     roles.Add(ar);
                     rol_per.Where(q=>q.AuthRoleId==ar.Id).ToList().ForEach(y=>{
                         AuthPermission up=  per.First( p=> p.Id== y.AuthPermissionId);
-                        if( permissions.IndexOf(up.Name) <0)
-                            permissions.Add(up.Name);
+                        if( permissions.FindIndex(f=>f.Name==up.Name)<0) // .IndexOf(up) <0)
+                            permissions.Add(up);
                     }) ;
                 };    
 

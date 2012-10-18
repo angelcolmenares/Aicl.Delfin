@@ -1,14 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-﻿using ServiceStack.CacheAccess;
-using ServiceStack.Common;
-using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
-using ServiceStack.ServiceInterface.Auth;
-
 using Aicl.Delfin.Model.Types;
-using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Aicl.Delfin.BusinessLogic;
 namespace Aicl.Delfin.Interface
@@ -20,10 +11,12 @@ namespace Aicl.Delfin.Interface
 		
 		public override object OnPost (Authorization request)
 		{
-			
-			return  request.GetAuthorizations(Factory, RequestContext);
-			 
+			return  request.GetAuthorizations(Factory, RequestContext);	 
 		}
-		
+
+		public override object OnGet (Authorization request)
+		{
+			return  request.GetAuthorizations(Factory, RequestContext);	 
+		}
 	}
 }

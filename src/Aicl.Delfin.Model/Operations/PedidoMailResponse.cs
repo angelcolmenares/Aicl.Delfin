@@ -1,3 +1,4 @@
+/*
 using ServiceStack.ServiceInterface.ServiceModel;
 
 namespace Aicl.Delfin.Model.Operations
@@ -20,3 +21,4 @@ namespace Aicl.Delfin.Model.Operations
 
 	}
 }
+*/

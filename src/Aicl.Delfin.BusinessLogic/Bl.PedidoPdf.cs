@@ -9,8 +9,6 @@ using ServiceStack.Common.Web;
 using Aicl.Delfin.Report;
 using ServiceStack.ServiceInterface.Auth;
 using System.IO;
-using ServiceStack.Service;
-
 
 namespace Aicl.Delfin.BusinessLogic
 {

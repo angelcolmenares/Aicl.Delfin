@@ -19,7 +19,7 @@ namespace Aicl.Delfin.BusinessLogic
 	public static partial class BL
 	{
 		#region Get
-        public static PedidoMailResponse Get(this PedidoMail request,
+        public static Response<PedidoMail> Get(this PedidoMail request,
 		                                     Factory factory,
 		                                     IHttpRequest httpRequest,
 		                                     Mailer mailService)
@@ -111,7 +111,7 @@ namespace Aicl.Delfin.BusinessLogic
 				}
 
 
-				return new  PedidoMailResponse();
+				return new Response<PedidoMail>(); 
 
 			});
 

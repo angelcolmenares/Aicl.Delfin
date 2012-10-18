@@ -358,8 +358,13 @@
 		},
 		
 		hasPermission:function (permission){
-			var a= sessionStorage.permissions? Ext.decode(sessionStorage.permissions): [];
-			return a.indexOf(permission)>=0;
+			var permissions= sessionStorage.permissions? Ext.decode(sessionStorage.permissions): [];
+			for(var p in permissions){
+ 			  if (permissions[r].Name==permission) return true;
+			};
+			return false;
+			
+			//return a.indexOf(permission)>=0;
 		},
 		
 		

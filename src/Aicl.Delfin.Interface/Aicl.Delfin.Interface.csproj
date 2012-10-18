@@ -75,6 +75,10 @@
     <Compile Include="Services\ServicioProcedimientoService.cs" />
     <Compile Include="Services\PedidoMailService.cs" />
     <Compile Include="Services\PedidoPdfService.cs" />
+    <Compile Include="Auth\UserService.cs" />
+    <Compile Include="Auth\UserRoleService.cs" />
+    <Compile Include="Auth\AuthRoleService.cs" />
+    <Compile Include="Auth\AuthPermissionService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

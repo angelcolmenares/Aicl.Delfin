@@ -1,11 +1,9 @@
-using System;
+/*
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using ServiceStack.Service;
 using ServiceStack.ServiceHost;
 using ServiceStack.Text;
-
 
 
 namespace Aicl.Delfin.BusinessLogic
@@ -36,9 +34,9 @@ namespace Aicl.Delfin.BusinessLogic
                 responseStream.Flush();
                 try
                 {
-                   // ResponseStream.Dispose();
+                    ResponseStream.Dispose();
                 }
-                catch { /*ignore*/ }
+                catch { } //ignore
 
                 
             }
@@ -46,3 +44,4 @@ namespace Aicl.Delfin.BusinessLogic
 	}
 }
 
+*/

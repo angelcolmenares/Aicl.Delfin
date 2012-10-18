@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 ﻿
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
@@ -10,8 +9,6 @@ using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Aicl.Delfin.BusinessLogic;
-using ServiceStack.ServiceInterface.ServiceModel;
-using System.Net;
 
 namespace Aicl.Delfin.Interface
 {
@@ -54,8 +51,8 @@ namespace Aicl.Delfin.Interface
             
             AuthorizationResponse aur = auth.GetAuthorizations(Factory,RequestContext);
             
-            session.Permissions= aur.Permissions;
-            session.Roles= (from r in aur.Roles select r.Name).ToList();
+            session.Permissions= aur.Permissions.ConvertAll(f=>f.Name);
+			session.Roles= aur.Roles.ConvertAll(f=>f.Name);  //(from r in aur.Roles select r.Name).ToList();
             
             authService.SaveSession(session);
             return new AuthenticationResponse(){
@@ -63,17 +60,7 @@ namespace Aicl.Delfin.Interface
                 Roles= aur.Roles,
                 Permissions= aur.Permissions
             };
-			/*}
-			catch(Exception e){
-				return new HttpResult( 
-					 new ResponseStatus(){
-						Message=e.Message,
-						StackTrace=e.StackTrace,
-						ErrorCode="Desastrosos"
-					},
 
-			HttpStatusCode.InternalServerError);
-			}*/
 		}
 		
 		public override object OnDelete (Authentication request)
