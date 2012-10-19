@@ -7,42 +7,28 @@ using ServiceStack.ServiceInterface.Auth;
 using Aicl.Delfin.Model.Operations;
 using ServiceStack.OrmLite;
 using Mono.Linq.Expressions;
-using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
 	public static partial class BL
 	{
 		#region Get
-        public static Response<UserRole> Get(this UserRole request,
+        public static Response<RolePermission> Get(this RolePermission request,
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
             return factory.Execute(proxy=>{
 
-				var userSession = httpRequest.GetSession();
-
 				long? totalCount=null;
 
 				var paginador= new Paginador(httpRequest);
 
-				var visitor = ReadExtensions.CreateExpression<UserRole>();
-				var predicate = PredicateBuilder.True<UserRole>();
+				var visitor = ReadExtensions.CreateExpression<RolePermission>();
+				var predicate = PredicateBuilder.True<RolePermission>();
 
-
-				if(request.UserId==default(int))
-					request.UserId= int.Parse(userSession.UserAuthId);
-				else if(!(userSession.HasRole(RoleNames.Admin)) &&
-				        request.UserId != int.Parse(userSession.UserAuthId)
-				        )
-				{
-					throw HttpError.Unauthorized("Usuario no puede leer listado de roles de otro usuario");
-				}
-
-				predicate= q=>q.UserId==request.UserId;
+				predicate= q=>q.AuthRoleId==request.AuthRoleId;
 												                
-				visitor.Where(predicate).OrderBy(f=>f.Name);
-
+				visitor.Where(predicate).OrderBy(f=>f.Name) ;
                 if(paginador.PageNumber.HasValue)
                 {
 					visitor.Select(r=> Sql.Count(r.Id));
@@ -53,7 +39,7 @@ namespace Aicl.Delfin.BusinessLogic
                 }
                                 
                 
-				return new Response<UserRole>(){
+				return new Response<RolePermission>(){
                 	Data=proxy.Get(visitor),
                 	TotalCount=totalCount
             	};
@@ -63,7 +49,7 @@ namespace Aicl.Delfin.BusinessLogic
         #endregion Get
 
 		#region Post
-        public static Response<UserRole> Post(this UserRole request,
+        public static Response<RolePermission> Post(this RolePermission request,
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
@@ -71,10 +57,10 @@ namespace Aicl.Delfin.BusinessLogic
 				proxy.Create(request);
 			});
 
-			List<UserRole> data = new List<UserRole>();
+			List<RolePermission> data = new List<RolePermission>();
 			data.Add(request);
 			
-			return new Response<UserRole>(){
+			return new Response<RolePermission>(){
 				Data=data
 			};	
 		}
@@ -83,18 +69,18 @@ namespace Aicl.Delfin.BusinessLogic
 
 
 		#region Delete
-        public static Response<UserRole> Delete(this UserRole request,
+        public static Response<RolePermission> Delete(this RolePermission request,
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
-				proxy.Delete<UserRole>(q=>q.Id==request.Id);
+				proxy.Delete<RolePermission>(q=>q.Id==request.Id);
 			});
 
-			List<UserRole> data = new List<UserRole>();
+			List<RolePermission> data = new List<RolePermission>();
 			data.Add(request);
 			
-			return new Response<UserRole>(){
+			return new Response<RolePermission>(){
 				Data=data
 			};	
 		}

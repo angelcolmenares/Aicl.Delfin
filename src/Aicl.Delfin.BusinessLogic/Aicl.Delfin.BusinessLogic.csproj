@@ -78,6 +78,8 @@
     <Compile Include="Auth\BL.UserRole.cs" />
     <Compile Include="Auth\BL.AuthRole.cs" />
     <Compile Include="Auth\BL.AuthPermission.cs" />
+    <Compile Include="Auth\BL.RolePermission.cs" />
+    <Compile Include="BL.Empresa.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
