@@ -8,12 +8,11 @@ using ServiceStack.ServiceHost;
 namespace Aicl.Delfin.Interface
 {
 	[RequiresAuthenticate]
+	[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
+	[RoleAttribute(ApplyTo.Put,RoleNames.Admin)]
+	[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
 	public class AuthRoleService:AppRestService<AuthRole>
 	{
-		//[PermissionAttribute(ApplyTo.Get,"AuthRole.read")]
-		[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
-		[PermissionAttribute(ApplyTo.Put,RoleNames.Admin)]
-		[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
 		public override object OnGet (AuthRole request)
 		{
 			try{

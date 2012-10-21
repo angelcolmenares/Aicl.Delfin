@@ -137,16 +137,24 @@ namespace Aicl.Delfin.BusinessLogic
 					var old = proxy.FirstOrDefaultById<Pedido>(request.Id);
 
 					if( old==default(Pedido)){
-						throw HttpError.NotFound(string.Format("No existe Pedido con Id: '{0}'", request.Id));
+						throw HttpError.NotFound(string.Format("No existe Oferta con Id: '{0}'", request.Id));
 					}
 
 					if(old.FechaEnvio.HasValue){
-						throw HttpError.Unauthorized(string.Format("Pedido '{0}' Id:'{1} No puede ser Actualizado. Estado:Enviado ", request.Consecutivo, request.Id));
+						throw HttpError.Unauthorized(string.Format("Oferta '{0}' Id:'{1} No puede ser Actualizada. Estado:Enviado ", request.Consecutivo, request.Id));
 					}
 
 					if(old.FechaAnulado.HasValue){
-						throw HttpError.Unauthorized(string.Format("Pedido '{0}' Id:'{1} No puede ser Actualizado. Estado:Anulado ", request.Consecutivo, request.Id));
+						throw HttpError.Unauthorized(string.Format("Oferta '{0}' Id:'{1} No puede ser Actualizada. Estado:Anulado ", request.Consecutivo, request.Id));
 					}
+
+					var userSesssion= httpRequest.GetSession();
+
+					if(!(old.IdCreadoPor== int.Parse(userSesssion.UserAuthId)
+					   || userSesssion.HasRole(BL.RoleCoordinador)))
+
+						throw HttpError.Unauthorized(string.Format("Usuario '{0}' No puede actualizar las ofertas creadas por:'{1}' ",
+						                                           userSesssion.UserName, old.NombreCreadoPor));
 
 					request.FechaActualizacion= DateTime.Today;
 
@@ -204,7 +212,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
-			throw HttpError.Unauthorized("Operacion Borrar no autorizada para Pedidos");
+			throw HttpError.Unauthorized("Operacion Borrar no autorizada para Ofertas");
 		}
 		#endregion Delete
 
@@ -218,7 +226,7 @@ namespace Aicl.Delfin.BusinessLogic
 			var action= httpRequest.PathInfo.Substring(httpRequest.PathInfo.LastIndexOf("/")+1).ToUpper();
 
 			if(actions.IndexOf(action)<0)
-				throw HttpError.Unauthorized(string.Format("Operacion: '{0}' no autorizada en Pedidos", action));
+				throw HttpError.Unauthorized(string.Format("Operacion: '{0}' no autorizada en Ofertas", action));
 
 			var session = httpRequest.GetSession();
 
@@ -230,11 +238,11 @@ namespace Aicl.Delfin.BusinessLogic
 					var old = proxy.FirstOrDefaultById<Pedido>(request.Id);
 
 					if( old==default(Pedido)){
-						throw HttpError.NotFound(string.Format("No existe Pedido con Id: '{0}'", request.Id));
+						throw HttpError.NotFound(string.Format("No existe Oferta con Id: '{0}'", request.Id));
 					}
 
 					if(old.FechaAnulado.HasValue){
-						throw HttpError.Unauthorized(string.Format("Operacion:'{0}' No permitida. Pedido '{1}' Id:'{2} se encuentra anulado",action, request.Consecutivo, request.Id));
+						throw HttpError.Unauthorized(string.Format("Operacion:'{0}' No permitida. Oferta '{1}' Id:'{2} se encuentra anulada",action, request.Consecutivo, request.Id));
 					}
 
 					request.PopulateWith(old);
@@ -242,17 +250,17 @@ namespace Aicl.Delfin.BusinessLogic
 					if(action=="ENVIAR")
 					{
 						if(old.FechaEnvio.HasValue)
-							throw HttpError.Conflict("Pedido ya se encuentra en estado Enviado");
+							throw HttpError.Conflict("Oferta ya se encuentra en estado Enviada");
 						request.FechaEnvio=DateTime.Today;
 						request.IdEnviadoPor= int.Parse(session.UserAuthId);
 					}
 					else if (action=="ACEPTAR")
 					{
 						if(old.FechaAceptacion.HasValue)
-							throw HttpError.Conflict("Pedido ya se encuentra en estado Aceptado");
+							throw HttpError.Conflict("Oferta ya se encuentra en estado Aceptada");
 
 						if(!old.FechaEnvio.HasValue)
-							throw HttpError.Conflict("El Pedido primero debe ser enviado");
+							throw HttpError.Conflict("La Oferta primero debe ser enviada");
 
 						request.FechaAceptacion=DateTime.Today;
 						request.IdAceptadoPor= int.Parse(session.UserAuthId);
@@ -282,7 +290,6 @@ namespace Aicl.Delfin.BusinessLogic
 		#endregion Patch
 
             
-
 		static Ciudad CheckCiudad(DALProxy proxy,  Pedido request)
 		{
 			if(request.IdCiudadDestinatario==0)

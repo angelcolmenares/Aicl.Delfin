@@ -7,6 +7,7 @@ using ServiceStack.ServiceInterface.Auth;
 using Aicl.Delfin.Model.Operations;
 using ServiceStack.OrmLite;
 using Mono.Linq.Expressions;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -54,7 +55,15 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+				proxy.DeleteFromCache<AuthRolePermission>();
+
+				var permission= proxy.FirstOrDefaultById<AuthPermission>(request.AuthPermissionId);
+				if(permission==default(AuthPermission))
+					throw HttpError.NotFound(string.Format("No existe permiso con id :'{0}'",
+					                                       request.AuthPermissionId));
+
 				proxy.Create(request);
+				request.Name= permission.Name;
 			});
 
 			List<RolePermission> data = new List<RolePermission>();
@@ -74,6 +83,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+				proxy.DeleteFromCache<AuthRolePermission>();
 				proxy.Delete<RolePermission>(q=>q.Id==request.Id);
 			});
 

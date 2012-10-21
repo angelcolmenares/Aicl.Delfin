@@ -264,6 +264,12 @@ namespace Aicl.Delfin.DataAccess
         }
 
 
+		public void DeleteFromCache<T>(){
+			Execute((redisClient,dbCmd)=>{
+				redisClient.Remove(string.Format("urn:{0}", typeof(T).Name));
+			});
+		}
+
        public long Count<T>(SqlExpressionVisitor<T> expression)
             where T: IHasId<int>, new()
         {

@@ -8,12 +8,11 @@ using ServiceStack.ServiceHost;
 namespace Aicl.Delfin.Interface
 {
 	[RequiresAuthenticate]
+	[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
+	[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
 	public class UserService:AppRestService<User>
 	{
-		//[PermissionAttribute(ApplyTo.Get,"User.read")]
-		[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
-		//[PermissionAttribute(ApplyTo.Put,"User.update")]
-		[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
+
 		public override object OnGet (User request)
 		{
 			try{

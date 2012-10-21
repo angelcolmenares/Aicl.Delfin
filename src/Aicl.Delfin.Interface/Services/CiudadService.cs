@@ -3,10 +3,15 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
-
+using ServiceStack.ServiceInterface;
 
 namespace Aicl.Delfin.Interface
 {
+	[RequiresAuthenticate]
+	[RoleAttribute(ApplyTo.Post,"Ciudad.create")]
+	[PermissionAttribute(ApplyTo.Get,"Ciudad.read")]
+	[PermissionAttribute(ApplyTo.Put,"Ciudad.update")]
+	[RoleAttribute(ApplyTo.Delete, "Ciudad.destroy")]
 	public class CiudadService:AppRestService<Ciudad>
 	{
 		public override object OnGet (Ciudad request)

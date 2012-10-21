@@ -68,8 +68,16 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+
+				var role =proxy.FirstOrDefaultById<AuthRole>(request.AuthRoleId);
+				if(role==default(AuthRole))
+					throw HttpError.NotFound(string.Format("No existe rol con id :'{0}'",
+					                                       request.AuthRoleId));
 				proxy.Create(request);
+				request.Name= role.Name;
 			});
+
+
 
 			List<UserRole> data = new List<UserRole>();
 			data.Add(request);

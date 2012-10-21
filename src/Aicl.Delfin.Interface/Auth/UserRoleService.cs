@@ -9,10 +9,11 @@ using ServiceStack.Common.Web;
 namespace Aicl.Delfin.Interface
 {
 	[RequiresAuthenticate]
+	[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
+	[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
 	public class UserRoleService:AppRestService<UserRole>
 	{
-		[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
-		[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
+
 		public override object OnGet (UserRole request)
 		{
 			try{

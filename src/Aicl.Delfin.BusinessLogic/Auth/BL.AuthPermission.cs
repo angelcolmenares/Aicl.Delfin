@@ -56,6 +56,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+				proxy.DeleteFromCache<AuthPermission>();
 				proxy.Create(request);
 			});
 
@@ -75,6 +76,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+				proxy.DeleteFromCache<AuthPermission>();
 				proxy.Update(request);
 			});
 
@@ -95,6 +97,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              IHttpRequest httpRequest)
         {
 			factory.Execute(proxy=>{
+				proxy.DeleteFromCache<AuthPermission>();
 				proxy.Delete<AuthPermission>(q=>q.Id==request.Id);
 			});
 

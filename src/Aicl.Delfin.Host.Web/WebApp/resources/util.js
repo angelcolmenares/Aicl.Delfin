@@ -2760,6 +2760,112 @@ Ext.define('App.model.ServicioProcedimiento',{
 		type: 'number'
 	}]
 });
+
+
+Ext.define('App.model.User',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'UserName',
+		type: 'string'
+	},{
+		name: 'FirstName',
+		type: 'string'
+	},{
+		name: 'LastName',
+		type: 'string'
+	},{
+		name: 'Email',
+		type: 'string'
+	},{
+		name: 'Password',
+		type: 'string'
+	},{
+		name: 'Cargo',
+		type: 'string'
+	},{
+		name: 'Activo',
+		type: 'boolean'
+	},{
+		name: 'ExpiresAt',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	}]
+});
+
+Ext.define('App.model.UserRole',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'AuthRoleId',
+		type: 'int'
+	},{
+		name: 'UserId',
+		type: 'int'
+	},{
+		name: 'Name',
+		type: 'string'
+	}]
+});
+
+Ext.define('App.model.AuthRole',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Name',
+		type: 'string'
+	},{
+		name: 'Directory',
+		type: 'string'
+	},{
+		name: 'ShowOrder',
+		type: 'string'
+	},{
+		name: 'Title',
+		type: 'string'
+	}]
+});
+
+Ext.define('App.model.AuthPermission',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'Name',
+		type: 'string'
+	}]
+});
+
+Ext.define('App.model.RolePermission',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'AuthRoleId',
+		type: 'int'
+	},{
+		name: 'AuthPermissionId',
+		type: 'int'
+	},{
+		name: 'Name',
+		type: 'string'
+	}]
+});
+
+
 // fin models
 
 // stores
@@ -2885,4 +2991,51 @@ Ext.define('App.store.ServicioProcedimiento',{
 		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
 	}
 });
+
+Ext.define('App.store.User',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.User',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'User';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.UserRole',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.UserRole',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'UserRole';
+		config.pageSize=config.pageSize||10;
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.AuthRole',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.AuthRole',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Role';
+		config.pageSize=config.pageSize||10;
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.AuthPermission',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.AuthPermission',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Permission';
+		config.pageSize=config.pageSize||20;
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.RolePermission',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.RolePermission',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'RolePermission';
+		config.pageSize=config.pageSize||10;
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
 // fin stores

@@ -5,9 +5,9 @@ using System;
 
 namespace Aicl.Delfin.Model.Types
 {
-	[RestService("/AuthRolePermission/create","post")]
-	[RestService("/AuthRolePermission/read","get")]
-	[RestService("/AuthRolePermission/destroy/{Id}","delete")]
+	[RestService("/RolePermission/create","post")]
+	[RestService("/RolePermission/read","get")]
+	[RestService("/RolePermission/destroy/{Id}","delete")]
 	[JoinTo(typeof(AuthPermission),"AuthPermissionId","Id")]
 	[Alias("AuthRolePermission")]
 	public class RolePermission:IHasId<Int32>
