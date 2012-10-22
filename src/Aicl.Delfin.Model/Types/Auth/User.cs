@@ -28,7 +28,6 @@ namespace Aicl.Delfin.Model.Types
 		public string UserName { get; set; } 
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
-		//public virtual string DisplayName { get; set; }
         public string Email { get; set; }
 
 		public Dictionary<string, string> Meta { private get; set; }
@@ -52,7 +51,9 @@ namespace Aicl.Delfin.Model.Types
 			} 
 			set{
 				Metadata.Activo=value;
-			}}
+			}
+		}
+
 		[Ignore]
 		public DateTime? ExpiresAt {get{
 				return Metadata.ExpiresAt;
@@ -66,11 +67,9 @@ namespace Aicl.Delfin.Model.Types
 		{
 			get{
 				if(metadata!=default(UserMeta)) return metadata;
-				string str = null;
-				if (Meta==null) 
-					Meta= new Dictionary<string, string>();
-            	Meta.TryGetValue(typeof(UserMeta).Name, out str);
-            	metadata = str == null ? new UserMeta() : TypeSerializer.DeserializeFromString<UserMeta>(str);
+				if (Meta==null) Meta= new Dictionary<string, string>();
+				metadata =new UserMeta();
+				metadata.PopulateFromMeta(Meta);
 				return metadata;
 			}
 			//set{
@@ -90,10 +89,29 @@ namespace Aicl.Delfin.Model.Types
 	}
 
 
-	public class UserMeta{
+	public class UserMeta
+	{
+		public UserMeta()
+		{
+			Activo=true;
+		}
 		public string Cargo {get;set;}
 		public bool Activo {get;set;}
 		public DateTime? ExpiresAt {get;set;}
+
+		public void PopulateFromMeta(Dictionary<string, string> meta){
+			if(meta==null) return;
+			string str = null;
+			meta.TryGetValue(typeof(UserMeta).Name, out str);
+            if(str != null) 
+			{
+				var t = TypeSerializer.DeserializeFromString<UserMeta>(str);
+				Activo=t.Activo;
+				Cargo=t.Cargo;
+				ExpiresAt=t.ExpiresAt;
+			}
+
+		}
 	}
 }
 

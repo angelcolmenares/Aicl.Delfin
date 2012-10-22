@@ -45,6 +45,7 @@ Ext.define('App.view.user.Window', {
                     xtype: 'gridpanel',
                     name: 'UserList',
                     autoHeight: true,
+                    autoScroll: true,
                     store: 'User',
                     columns: [
                         {

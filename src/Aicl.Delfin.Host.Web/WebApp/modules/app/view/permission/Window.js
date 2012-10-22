@@ -17,7 +17,7 @@ Ext.define('App.view.permission.Window', {
     extend: 'Ext.window.Window',
     alias: 'widget.permissionwindow',
 
-    height: 640,
+    height: 620,
     width: 720,
     layout: {
         align: 'stretch',
@@ -36,6 +36,7 @@ Ext.define('App.view.permission.Window', {
                     name: 'PermissionList',
                     flex: 1,
                     padding: '20 20 20 20',
+                    autoScroll: true,
                     title: '',
                     store: 'AuthPermission',
                     dockedItems: [

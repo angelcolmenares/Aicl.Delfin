@@ -121,7 +121,9 @@ Ext.define('App.view.user.Panel', {
                             fieldLabel: 'Clave',
                             allowBlank: false,
                             enforceMaxLength: true,
-                            maxLength: 10
+                            maxLength: 10,
+                            minLength: 8,
+                            minLengthText: 'Longitu Minima 8'
                         },
                         {
                             xtype: 'textfield',
@@ -185,6 +187,7 @@ Ext.define('App.view.user.Panel', {
                     frame: false,
                     margin: 10,
                     ui: 'default-framed',
+                    autoScroll: true,
                     layout: {
                         align: 'stretch',
                         padding: '5 20 5 20',

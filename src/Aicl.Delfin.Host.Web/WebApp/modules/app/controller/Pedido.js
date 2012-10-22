@@ -28,7 +28,8 @@ Ext.define('App.controller.Pedido',{
     	{ref: 'descripcionProcedimientoText', selector:'serviciosearchwindow textfield[name=DescripcionProcedimiento]'},
     	{ref: 'servicioList', selector:'serviciolist'},
     	{ref: 'descripcionProcedimientoTextArea', selector: 'procedimientoform textareafield[name=DescripcionProcedimiento]'},
-    	{ref: 'pedidoResumenForm', selector:'pedidoresumenform'}
+    	{ref: 'pedidoResumenForm', selector:'pedidoresumenform'},
+    	{ref: 'pedidoItemPanel', selector:'pedidoitempanel'}
     	    	    	
     ],
 
@@ -249,8 +250,6 @@ Ext.define('App.controller.Pedido',{
                 	var store = this.getClienteContactoStore();       	  	
                 	store.getProxy().extraParams=request;
                 	store.loadPage(1);
-            		
-            		this.getMainPanel().showClienteSearchWindow();
             	}
             },
             'pedidoform button[action=buscarClientePorNombre]':{
@@ -264,8 +263,6 @@ Ext.define('App.controller.Pedido',{
                 	var store = this.getClienteContactoStore();       	  	
                 	store.getProxy().extraParams=request;
                 	store.loadPage(1);
-            		
-            		this.getMainPanel().showClienteSearchWindow();
             	}
             },
             
@@ -280,7 +277,6 @@ Ext.define('App.controller.Pedido',{
                 	var store = this.getServicioProcedimientoStore();       	  	
                 	store.getProxy().extraParams=request;
                 	store.loadPage(1);
-            		this.getMainPanel().showServicioSearchWindow();
             	}
             },
             
@@ -313,15 +309,36 @@ Ext.define('App.controller.Pedido',{
     },
     
     onLaunch: function(application){
-    	    	    	
+    	
+    	var me = this;
+
+		Ext.create('Ext.LoadMask', me.getPedidoForm(), {
+    		msg: "Cargando datos...",
+    		store: me.getFormaPagoStore()
+		});
+			
+		Ext.create('Ext.LoadMask', me.getPedidoForm(), {
+    		msg: "Cargando Clientes...",
+    		store: me.getClienteContactoStore()
+		});
+		
+		Ext.create('Ext.LoadMask', me.getMainPanel(), {
+    		msg: "Cargando ofertas...",
+    		store: me.getPedidoStore()
+		});
+		
+		Ext.create('Ext.LoadMask', me.getPedidoItemPanel(), {
+    		msg: "Cargando servicios..",
+    		store: me.getServicioProcedimientoStore()
+		});
+    	    	
     	this.getFormaPagoStore().load();
     	
     	this.getFormaPagoStore().on('load', function(store , records, success, eOpts){
     		if(!success){
     			Ext.Msg.alert('Error', 'Error al cargar Formas de Pago. Intente mas tarde');
     			return;
-    		}
-    		
+    		}	
     		if(records.length>0){
     			var fp = store.getAt(0);
 			    if (fp){
@@ -398,6 +415,49 @@ Ext.define('App.controller.Pedido',{
             
     	}, this);
     	
+    	this.getServicioProcedimientoStore().on('load', function(store , records, success, eOpts){
+    		if(!success){
+    			Ext.Msg.alert('Error', 'Error al cargar Servicios. Intente mas tarde');
+    			return;
+    		}
+    		
+    		if(records.length==0){
+    			Aicl.Util.msg('Aviso', 'Sin informacion');
+    			return;
+    		}
+    		
+    		if(records.length==1){
+    			var record = records[0];
+    			this.servicioLoadRecord(record);
+    			return;
+    		}
+    		
+    		this.getMainPanel().showServicioSearchWindow();
+            
+    	}, this);
+    	
+    	this.getClienteContactoStore().on('load', function(store , records, success, eOpts){
+    		if(!success){
+    			console.log(arguments);
+    			Ext.Msg.alert('Error', 'Error al cargar Clientes. Intente mas tarde');
+    			return;
+    		}
+    		
+    		if(records.length==0){
+    			Aicl.Util.msg('Aviso', 'Sin informacion');
+    			return;
+    		}
+    		
+    		if(records.length==1){
+    			var record = records[0];
+    			this.clienteLoadRecord(record);
+    			return;
+    		}
+    		
+    		this.getMainPanel().showClienteSearchWindow();
+            
+    	}, this);
+
     },
     
     pedidoDoTotales:function(store){

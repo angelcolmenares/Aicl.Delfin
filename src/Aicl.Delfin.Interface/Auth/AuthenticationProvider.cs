@@ -6,6 +6,7 @@ using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.FluentValidation;
+using Aicl.Delfin.Model.Types;
 
 namespace Aicl.Delfin.Interface
 {
@@ -34,6 +35,16 @@ namespace Aicl.Delfin.Interface
 			UserAuth userAuth = null;
 			if (authRepo.TryAuthenticate(userName, password, out userAuth))
 			{
+				var usermeta =userAuth.Get<UserMeta>();
+				if(usermeta!=default(UserMeta))
+				{
+					if(!usermeta.Activo)
+						throw HttpError.Unauthorized("Usuario se encuentra INACTIVO");
+
+					if(usermeta.ExpiresAt.HasValue && usermeta.ExpiresAt.Value<DateTime.Now)
+						throw HttpError.Unauthorized("la cuenta  ha expirado");
+				}
+			
 				session.PopulateWith(userAuth);
 				session.IsAuthenticated = true;
 				session.UserAuthId =  userAuth.Id.ToString(CultureInfo.InvariantCulture);
@@ -79,7 +90,7 @@ namespace Aicl.Delfin.Interface
 				};
 			}
 
-			throw HttpError.Unauthorized("Invalid UserName or Password");
+			throw HttpError.Unauthorized("Usuario o Clave invalida");
 		}
 		/*
 		public override bool IsAuthorized(IAuthSession session, IOAuthTokens tokens, Auth request=null)

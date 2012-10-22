@@ -10,7 +10,7 @@ namespace Aicl.Delfin.Interface
 {
 	[RequiresAuthenticate]
 	[RoleAttribute(ApplyTo.Post,"ClienteContacto.create")]
-	[PermissionAttribute(ApplyTo.Get,"ClienteContacto.read")]
+	//[PermissionAttribute(ApplyTo.Get,"ClienteContacto.read")]
 	[PermissionAttribute(ApplyTo.Put,"ClienteContacto.update")]
 	[RoleAttribute(ApplyTo.Delete, "ClienteContacto.destroy")]
 	public class ClienteContactoService:AppRestService<ClienteContacto>

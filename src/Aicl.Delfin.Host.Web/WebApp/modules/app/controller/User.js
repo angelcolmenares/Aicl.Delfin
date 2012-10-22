@@ -307,12 +307,30 @@ Ext.define('App.controller.User', {
     },
 
     onLaunch: function() {
+        var me = this;
+
+        Ext.create('Ext.LoadMask', me.getUserForm(), {
+            msg: "Leyendo usuarios...",
+            store: me.getUserStore()
+        });
+
+        Ext.create('Ext.LoadMask', me.getUserRoleList(), {
+            msg: "Leyendo grupos del usuario...",
+            store: me.getUserRoleStore()
+        });
+
+
+        Ext.create('Ext.LoadMask', me.getRolePermissionList(), {
+            msg: "Leyendo permisos del grupo...",
+            store: me.getRolePermissionStore()
+        });
+
+
         this.getAuthRoleStore().getProxy().extraParams={format:'json'};
         this.getAuthRoleStore().loadPage(1);
 
         this.getAuthPermissionStore().getProxy().extraParams={format:'json'};
         this.getAuthPermissionStore().loadPage(1);
-
 
         this.getUserStore().on('load', function(store , records, success, eOpts){
             if(!success){
@@ -383,12 +401,11 @@ Ext.define('App.controller.User', {
 
     userLoadRoles: function(record) {
         this.getUserRoleStore().load({params:{UserId: record.getId()}});
-        this.getUserRoleList().determineScrollbars();
+
     },
 
     roleLoadPermissions: function(record) {
         this.getRolePermissionStore().load({params:{AuthRoleId: record.getId()}});
-        this.getRolePermissionList().determineScrollbars();
     },
 
     permissionLoadRecord: function(record) {
