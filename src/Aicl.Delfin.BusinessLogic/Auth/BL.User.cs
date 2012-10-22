@@ -42,7 +42,7 @@ namespace Aicl.Delfin.BusinessLogic
 					if(!request.UserName.IsNullOrEmpty()) 
 					{
 	                	predicate= q=>q.UserName.StartsWith(request.UserName) ;
-						visitor.OrderBy(r=>r.UserName);
+
 					}
 
 				}
@@ -52,7 +52,7 @@ namespace Aicl.Delfin.BusinessLogic
 					predicate= q=>q.Id==id;
 				}
 				                
-				visitor.Where(predicate);
+				visitor.Where(predicate).OrderBy(r=>r.UserName);;
                 if(paginador.PageNumber.HasValue)
                 {
 					visitor.Select(r=> Sql.Count(r.Id));

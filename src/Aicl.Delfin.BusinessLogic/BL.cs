@@ -14,6 +14,7 @@ namespace Aicl.Delfin.BusinessLogic
         public static readonly int ResponsePageSize=10;
 		public static readonly string Cotizacion="Cotizacion";
 		public static readonly string RoleCoordinador="Coordinador";
+		public static readonly string Prefijo="CMKS";
 		public static readonly double LockSeconds=5;
 
 

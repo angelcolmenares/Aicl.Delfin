@@ -80,7 +80,7 @@
 			Ext.Ajax.request({
 				url: config.url + ( Ext.util.Format.uppercase(config.method)=='DELETE'
 									? Aicl.Util.paramsToUrl(config.params) 
-									:config.format==undefined?'': Ext.String.format('?format={0}', config.format)),
+									:(config.format==undefined?'': Ext.String.format('?format={0}', config.format))),
 				method: config.method, 
 			    success: function(response, options) {
 		            var result = Ext.decode(response.responseText);

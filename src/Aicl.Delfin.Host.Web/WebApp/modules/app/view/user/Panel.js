@@ -87,10 +87,10 @@ Ext.define('App.view.user.Panel', {
                         labelAlign: 'right'
                     },
                     name: 'UserForm',
+                    cls: 'form-border',
                     frame: false,
                     margin: 10,
                     padding: 10,
-                    style: '{\n  -moz-border-radius-topleft: 5px;\n  -webkit-border-top-left-radius: 5px;\n  -o-border-top-left-radius: 5px;\n  -ms-border-top-left-radius: 5px;\n  -khtml-border-top-left-radius: 5px;\n  border-top-left-radius: 5px;\n  -moz-border-radius-topright: 5px;\n  -webkit-border-top-right-radius: 5px;\n  -o-border-top-right-radius: 5px;\n  -ms-border-top-right-radius: 5px;\n  -khtml-border-top-right-radius: 5px;\n  border-top-right-radius: 5px;\n  border: 1px solid #999; }',
                     ui: 'default-framed',
                     bodyBorder: false,
                     bodyPadding: '5 100 5 100',
@@ -181,9 +181,9 @@ Ext.define('App.view.user.Panel', {
                 },
                 {
                     xtype: 'panel',
+                    cls: 'form-border',
                     frame: false,
                     margin: 10,
-                    style: '{\n  -moz-border-radius-topleft: 5px;\n  -webkit-border-top-left-radius: 5px;\n  -o-border-top-left-radius: 5px;\n  -ms-border-top-left-radius: 5px;\n  -khtml-border-top-left-radius: 5px;\n  border-top-left-radius: 5px;\n  -moz-border-radius-topright: 5px;\n  -webkit-border-top-right-radius: 5px;\n  -o-border-top-right-radius: 5px;\n  -ms-border-top-right-radius: 5px;\n  -khtml-border-top-right-radius: 5px;\n  border-top-right-radius: 5px;\n  border: 1px solid #999;\n   \n}',
                     ui: 'default-framed',
                     layout: {
                         align: 'stretch',
@@ -201,7 +201,7 @@ Ext.define('App.view.user.Panel', {
                             height: 300,
                             margin: 5,
                             style: '{\n    border:0px;\n}',
-                            ui: 'default-framed',
+                            ui: 'round',
                             autoScroll: true,
                             title: '',
                             store: 'UserRole',
@@ -238,6 +238,22 @@ Ext.define('App.view.user.Panel', {
                                             tooltip: 'Borrar usuario del grupo'
                                         }
                                     ]
+                                },
+                                {
+                                    xtype: 'pagingtoolbar',
+                                    dock: 'bottom',
+                                    width: 360,
+                                    afterPageText: 'de {0}',
+                                    beforePageText: 'Pag',
+                                    displayInfo: false,
+                                    displayMsg: 'Mostrando {0} - {1} de {2}',
+                                    emptyMsg: 'Sin datos para mostrar',
+                                    firstText: 'Primera',
+                                    lastText: 'Ultima',
+                                    nextText: 'Siguiente',
+                                    prevText: 'Anterior',
+                                    refreshText: 'Refrescar',
+                                    store: 'UserRole'
                                 }
                             ]
                         }

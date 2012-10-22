@@ -17,6 +17,7 @@ Ext.define('App.view.role.Window', {
     extend: 'Ext.window.Window',
     alias: 'widget.rolewindow',
 
+    frame: false,
     padding: '5 5 5 5',
     width: 664,
     autoScroll: true,
@@ -47,8 +48,8 @@ Ext.define('App.view.role.Window', {
                             dockedItems: [
                                 {
                                     xtype: 'toolbar',
-                                    dock: 'top',
                                     name: 'SelectRoleToolbar',
+                                    dock: 'top',
                                     items: [
                                         {
                                             xtype: 'button',
@@ -57,6 +58,22 @@ Ext.define('App.view.role.Window', {
                                             text: 'Seleccionar'
                                         }
                                     ]
+                                },
+                                {
+                                    xtype: 'pagingtoolbar',
+                                    dock: 'bottom',
+                                    width: 360,
+                                    afterPageText: 'de {0}',
+                                    beforePageText: 'Pag',
+                                    displayInfo: false,
+                                    displayMsg: 'Mostrando {0} - {1} de {2}',
+                                    emptyMsg: 'Sin datos para mostrar',
+                                    firstText: 'Primera',
+                                    lastText: 'Ultima',
+                                    nextText: 'Siguiente',
+                                    prevText: 'Anterior',
+                                    refreshText: 'Refrescar',
+                                    store: 'AuthRole'
                                 }
                             ],
                             columns: [
@@ -81,13 +98,17 @@ Ext.define('App.view.role.Window', {
                             },
                             flex: 1,
                             margins: '0 10 0 10',
+                            cls: 'form-noborder',
+                            ui: 'default-framed',
                             bodyPadding: 20,
                             title: '',
                             dockedItems: [
                                 {
                                     xtype: 'toolbar',
-                                    dock: 'top',
                                     name: 'RoleToolbar',
+                                    dock: 'top',
+                                    style: '{\n    border:0;padding:0;\n}',
+                                    ui: 'default-framed',
                                     items: [
                                         {
                                             xtype: 'button',
@@ -156,22 +177,11 @@ Ext.define('App.view.role.Window', {
                     autoScroll: true,
                     title: '',
                     store: 'RolePermission',
-                    columns: [
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'Name',
-                            flex: 1,
-                            text: 'Nombre'
-                        }
-                    ],
-                    viewConfig: {
-
-                    },
                     dockedItems: [
                         {
                             xtype: 'toolbar',
-                            dock: 'top',
                             name: 'RolePermissionToolbar',
+                            dock: 'top',
                             items: [
                                 {
                                     xtype: 'button',
@@ -186,8 +196,35 @@ Ext.define('App.view.role.Window', {
                                     text: ''
                                 }
                             ]
+                        },
+                        {
+                            xtype: 'pagingtoolbar',
+                            dock: 'bottom',
+                            width: 360,
+                            afterPageText: 'de {0}',
+                            beforePageText: 'Pag',
+                            displayInfo: false,
+                            displayMsg: 'Mostrando {0} - {1} de {2}',
+                            emptyMsg: 'Sin datos para mostrar',
+                            firstText: 'Primera',
+                            lastText: 'Ultima',
+                            nextText: 'Siguiente',
+                            prevText: 'Anterior',
+                            refreshText: 'Refrescar',
+                            store: 'RolePermission'
                         }
-                    ]
+                    ],
+                    columns: [
+                        {
+                            xtype: 'gridcolumn',
+                            dataIndex: 'Name',
+                            flex: 1,
+                            text: 'Nombre'
+                        }
+                    ],
+                    viewConfig: {
+
+                    }
                 }
             ]
         });

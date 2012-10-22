@@ -64,7 +64,25 @@ Ext.define('App.view.user.Window', {
                     ],
                     viewConfig: {
 
-                    }
+                    },
+                    dockedItems: [
+                        {
+                            xtype: 'pagingtoolbar',
+                            dock: 'bottom',
+                            width: 360,
+                            afterPageText: 'de {0}',
+                            beforePageText: 'Pag',
+                            displayInfo: true,
+                            displayMsg: 'Mostrando {0} - {1} de {2}',
+                            emptyMsg: 'Sin datos para mostrar',
+                            firstText: 'Primera',
+                            lastText: 'Ultima',
+                            nextText: 'Siguiente',
+                            prevText: 'Anterior',
+                            refreshText: 'Refrescar',
+                            store: 'User'
+                        }
+                    ]
                 }
             ]
         });

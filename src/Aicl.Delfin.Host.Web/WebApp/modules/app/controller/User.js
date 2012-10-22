@@ -26,7 +26,8 @@ Ext.define('App.controller.User', {
     views: [
         'user.Panel',
         'user.Window',
-        'role.Window'
+        'role.Window',
+        'permission.Window'
     ],
 
     refs: [
@@ -69,6 +70,22 @@ Ext.define('App.controller.User', {
         {
             ref: 'rolePermissionList',
             selector: 'gridpanel[name=RolePermissionList]'
+        },
+        {
+            ref: 'rolePermissionDeleteButton',
+            selector: 'toolbar[name=RolePermissionToolbar] button[action=delete]'
+        },
+        {
+            ref: 'permissionList',
+            selector: 'gridpanel[name=PermissionList]'
+        },
+        {
+            ref: 'permissionForm',
+            selector: 'form[name=PermissionForm]'
+        },
+        {
+            ref: 'permissionSelectButton',
+            selector: 'toolbar[name=SelectPermissionToolbar] button[action=select]'
         }
     ],
 
@@ -164,9 +181,59 @@ Ext.define('App.controller.User', {
         store.save({UserId:userId, AuthRoleId:role.getId() });
     },
 
+    onRolePermissionDeleteButtonClick: function(button, e, options) {
+        var grid = this.getRolePermissionList();
+        var record = grid.getSelectionModel().getSelection()[0];
+        this.getRolePermissionStore().remove(record);
+    },
+
+    onRolePermissionAddButtonClick: function(button, e, options) {
+        this.permissionWindow.show();
+    },
+
+    onRolePermissionListSelectionChange: function(tablepanel, selections, options) {
+        this.getRolePermissionDeleteButton().setDisabled(selections.length?false:true);
+    },
+
+    onSelectPermissionButtonClick: function(button, e, options) {
+        var permission= this.getPermissionList().getSelectionModel().getSelection()[0];
+        var roleId = this.getRoleForm().getForm().findField('Id').getValue();
+        var store = this.getRolePermissionStore();
+        store.getProxy().extraParams={format:'json'};
+        store.save({AuthPermissionId:permission.getId(), AuthRoleId:roleId });
+    },
+
+    onNewPermissionButtonClick: function(button, e, options) {
+        this.getPermissionList().getSelectionModel().deselectAll();
+    },
+
+    onSavePermissionButtonClick: function(button, e, options) {
+        var record=this.getPermissionForm().getForm().getFieldValues(false);
+        this.getAuthPermissionStore().getProxy().extraParams={format:'json'};
+        this.getAuthPermissionStore().save(record);
+    },
+
+    onRemovePermissionButtonClick: function(button, e, options) {
+        var grid = this.getPermissionList();
+        var record = grid.getSelectionModel().getSelection()[0];
+        this.getAuthPermissionStore().remove(record);
+    },
+
+    onPermissionListSelectionChange: function(tablepanel, selections, options) {
+        if (selections.length){
+            this.permissionLoadRecord(selections[0]);
+            this.getPermissionSelectButton().setDisabled(false);
+        }
+        else{
+            this.getPermissionForm().getForm().reset();
+            this.getPermissionSelectButton().setDisabled(true);
+        }
+    },
+
     init: function(application) {
         this.selectUserWindow= new App.view.user.Window();
         this.roleWindow= new App.view.role.Window();
+        this.permissionWindow= new App.view.permission.Window();
 
 
         this.control({
@@ -206,11 +273,35 @@ Ext.define('App.controller.User', {
             "toolbar[name=UserRoleToolbar] button[action=delete]": {
                 click: this.onDeleteUserRoleClick
             },
-            "gridpane[name=UserRoleList]": {
+            "gridpanel[name=UserRoleList]": {
                 selectionchange: this.onUserRoleSelectionChange
             },
             "toolbar[name=SelectRoleToolbar] button[action=select]": {
                 click: this.onSelectRoleButtonClick
+            },
+            "toolbar[name=RolePermissionToolbar] button[action=delete]": {
+                click: this.onRolePermissionDeleteButtonClick
+            },
+            "toolbar[name=RolePermissionToolbar] button[action=add]": {
+                click: this.onRolePermissionAddButtonClick
+            },
+            "gridpanel[name=RolePermissionList]": {
+                selectionchange: this.onRolePermissionListSelectionChange
+            },
+            "toolbar[name=SelectPermissionToolbar] button[action=select]": {
+                click: this.onSelectPermissionButtonClick
+            },
+            "toolbar[name=PermissionToolbar] button[action=new]": {
+                click: this.onNewPermissionButtonClick
+            },
+            "toolbar[name=PermissionToolbar] button[action=save]": {
+                click: this.onSavePermissionButtonClick
+            },
+            "toolbar[name=PermissionToolbar] button[action=remove]": {
+                click: this.onRemovePermissionButtonClick
+            },
+            "gridpanel[name=PermissionList]": {
+                selectionchange: this.onPermissionListSelectionChange
             }
         });
     },
@@ -218,6 +309,9 @@ Ext.define('App.controller.User', {
     onLaunch: function() {
         this.getAuthRoleStore().getProxy().extraParams={format:'json'};
         this.getAuthRoleStore().loadPage(1);
+
+        this.getAuthPermissionStore().getProxy().extraParams={format:'json'};
+        this.getAuthPermissionStore().loadPage(1);
 
 
         this.getUserStore().on('load', function(store , records, success, eOpts){
@@ -255,13 +349,28 @@ Ext.define('App.controller.User', {
             if (operation.action != 'destroy'){
                 this.getRoleList().getSelectionModel().select(record,true,true);
                 this.roleLoadRecord(record);
+                this.getRoleSelectButton().setDisabled(false);
             }
             else{
                 this.getRoleForm().getForm().reset();
             }       
         }, this);
 
+        this.getAuthPermissionStore().on('write', function(store, operation, eOpts ){
+            var record =  operation.getRecords()[0];
+            if (operation.action != 'destroy'){
+                this.getPermissionList().getSelectionModel().select(record,true,true);
+                this.permissionLoadRecord(record);
+                this.getPermissionSelectButton().setDisabled(false);
+            }
+            else{
+                this.getPermissionForm().getForm().reset();
+            }       
+        }, this);
+
+
         this.getUserRoleDeleteButton().setDisabled(true);
+        this.getRolePermissionDeleteButton().setDisabled(true);
     },
 
     roleLoadRecord: function(record) {
@@ -280,6 +389,11 @@ Ext.define('App.controller.User', {
     roleLoadPermissions: function(record) {
         this.getRolePermissionStore().load({params:{AuthRoleId: record.getId()}});
         this.getRolePermissionList().determineScrollbars();
+    },
+
+    permissionLoadRecord: function(record) {
+        this.getPermissionForm().getForm().loadRecord(record);
+
     }
 
 });

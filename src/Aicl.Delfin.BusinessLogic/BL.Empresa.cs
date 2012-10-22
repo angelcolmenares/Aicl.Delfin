@@ -3,6 +3,7 @@ using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using System.Collections.Generic;
+using ServiceStack.Common;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -30,6 +31,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+
 			factory.Execute(proxy=>{
 				proxy.PostEmpresa(request);
 			});

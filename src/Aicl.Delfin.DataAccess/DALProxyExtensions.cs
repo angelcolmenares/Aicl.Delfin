@@ -18,7 +18,6 @@ namespace Aicl.Delfin.DataAccess
 				throw HttpError.NotFound(string.Format("No existe registro de consecutivo para: '{0}'", documento));
 			}
 
-
 			consecutivo.Valor+=incremento.HasValue?incremento.Value:1;
 
 			proxy.Update(consecutivo,ev=>ev.Update(f=>f.Valor).Where(q=>q.Id==consecutivo.Id));
@@ -45,22 +44,36 @@ namespace Aicl.Delfin.DataAccess
 
 		public static void PostEmpresa(this DALProxy proxy, Empresa empresa)
 		{
+			if( empresa.DireccionAntigua.IsNullOrEmpty() )
+				empresa.DireccionAntigua=string.Empty;
+
+			var ps = empresa.MailServerPassword;
+
 			if(!empresa.MailServerPassword.IsNullOrEmpty()){
 				empresa.MailServerPassword=
 						Cryptor.Encriptar(empresa.MailServerPassword,
 						                     CryptoKey);
 			}
 			proxy.Create(empresa);
+
+			empresa.MailServerPassword=ps;
 		}
 
 		public static void PutEmpresa(this DALProxy proxy, Empresa empresa)
 		{
+			if( empresa.DireccionAntigua.IsNullOrEmpty() )
+				empresa.DireccionAntigua=string.Empty;
+
+			var ps = empresa.MailServerPassword;
+
 			if(!empresa.MailServerPassword.IsNullOrEmpty()){
 				empresa.MailServerPassword=
 						Cryptor.Encriptar(empresa.MailServerPassword,
 						                     CryptoKey);
 			}
-			proxy.Update(empresa, ev=> ev.Where(q=>q.Id==empresa.Id));
+			proxy.Update(empresa);
+
+			empresa.MailServerPassword=ps;
 		}
 
 		public static void DeleteEmpresa(this DALProxy proxy, Empresa empresa)

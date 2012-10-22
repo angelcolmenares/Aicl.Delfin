@@ -12,7 +12,7 @@ using System.IO;
 
 namespace Aicl.Delfin.BusinessLogic
 {
-	public static class Bl
+	public  static partial class BL
 	{
 		#region Get
         public static object Get(this PedidoPdf request,
@@ -62,7 +62,7 @@ namespace Aicl.Delfin.BusinessLogic
 				using (var stream =  new MemoryStream()){
 
 
-					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 
+					pdf.CreatePDF(empresa,user,pedido,items,logo,BL.Prefijo,
 				              stream, new OfertaMargin(5,5,90,15));
 
 					stream.Position=0;
