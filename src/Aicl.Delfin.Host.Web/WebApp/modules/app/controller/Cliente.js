@@ -166,6 +166,19 @@ Ext.define('App.controller.Cliente', {
     },
 
     onLaunch: function() {
+    	
+    	var me = this;
+
+		Ext.create('Ext.LoadMask', me.getClienteForm(), {
+    		msg: "Cargando datos...",
+		    store: me.getClienteStore()
+		});
+
+		Ext.create('Ext.LoadMask', me.getContactoList(), {
+    		msg: "Cargando datos...",
+		    store: me.getContactoStore()
+		});
+    	
         this.getClienteStore().on('load', function(store , records, success, eOpts){
             if(!success){
                 Ext.Msg.alert('Error', 'Error al cargar Clientes. Intente mas tarde');
@@ -183,6 +196,24 @@ Ext.define('App.controller.Cliente', {
             }
             this.selectClienteWindow.show();
         }, this);
+        
+        this.getContactoStore().on('load', function(store , records, success, eOpts){
+            if(!success){
+                Ext.Msg.alert('Error', 'Error al cargar Contactos. Intente mas tarde');
+                return;
+            }
+            if(records.length===0){
+                Aicl.Util.msg('Aviso', 'Sin Contactos');
+                return;
+            }
+            
+            var record = records[0];
+            this.getContactoList().getSelectionModel().select(record,true,true);
+            this.contactoLoadRecord(record);
+            return;
+            
+        }, this);
+        
 
         this.getClienteStore().on('write', function(store, operation, eOpts ){
             var record =  operation.getRecords()[0];

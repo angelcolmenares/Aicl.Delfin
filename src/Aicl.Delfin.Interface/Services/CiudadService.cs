@@ -9,7 +9,7 @@ namespace Aicl.Delfin.Interface
 {
 	[RequiresAuthenticate]
 	[RoleAttribute(ApplyTo.Post,"Ciudad.create")]
-	[PermissionAttribute(ApplyTo.Get,"Ciudad.read")]
+	//[PermissionAttribute(ApplyTo.Get,"Ciudad.read")]
 	[PermissionAttribute(ApplyTo.Put,"Ciudad.update")]
 	[RoleAttribute(ApplyTo.Delete, "Ciudad.destroy")]
 	public class CiudadService:AppRestService<Ciudad>
