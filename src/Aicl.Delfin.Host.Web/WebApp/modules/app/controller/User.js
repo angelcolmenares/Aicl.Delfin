@@ -112,6 +112,10 @@ Ext.define('App.controller.User', {
     },
 
     onRemoveUserClick: function(button, e, options) {
+        if(this.getUserRoleStore().count()>0){
+            Ext.Msg.alert('Error', 'Debe borrar al usuario de los grupos');
+            return;
+        }
         var grid = this.getUserList();
         var record = grid.getSelectionModel().getSelection()[0];
         this.getUserStore().remove(record);
@@ -154,6 +158,10 @@ Ext.define('App.controller.User', {
     },
 
     onRemoveRoleClick: function(button, e, options) {
+        if(this.getRolePermissionStore().count()>0){
+            Ext.Msg.alert('Error', 'Debe borrar los permisos asociados grupos');
+            return;
+        }
         var grid = this.getRoleList();
         var record = grid.getSelectionModel().getSelection()[0];
         this.getAuthRoleStore().remove(record);

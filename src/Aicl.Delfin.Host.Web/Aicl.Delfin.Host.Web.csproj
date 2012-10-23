@@ -582,6 +582,25 @@
     <Content Include="WebApp\resources\icons\silk\warning.png" />
     <Content Include="App_Data\algun.txt" />
     <Content Include="outfiles\somefile.txt" />
+    <Content Include="WebApp\modules\app\view\permission\Window.js" />
+    <Content Include="WebApp\modules\app\view\user\Panel.js" />
+    <Content Include="WebApp\modules\app\view\user\Window.js" />
+    <Content Include="WebApp\modules\app\view\role\Window.js" />
+    <Content Include="WebApp\modules\app\view\formapago\Panel.js" />
+    <Content Include="WebApp\modules\app\view\empresa\Form.js" />
+    <Content Include="WebApp\modules\app\view\consecutivo\Panel.js" />
+    <Content Include="WebApp\modules\app\controller\User.js" />
+    <Content Include="WebApp\modules\app\controller\FormaPago.js" />
+    <Content Include="WebApp\modules\app\controller\Empresa.js" />
+    <Content Include="WebApp\modules\app\controller\Consecutivo.js" />
+    <Content Include="WebApp\modules\formapago\app.js" />
+    <Content Include="WebApp\modules\formapago\index.html" />
+    <Content Include="WebApp\modules\consecutivo\app.js" />
+    <Content Include="WebApp\modules\consecutivo\index.html" />
+    <Content Include="WebApp\modules\empresa\app.js" />
+    <Content Include="WebApp\modules\empresa\index.html" />
+    <Content Include="WebApp\modules\user\app.js" />
+    <Content Include="WebApp\modules\user\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -598,6 +617,16 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="outfiles\" />
+    <Folder Include="WebApp\modules\app\view\permission\" />
+    <Folder Include="WebApp\modules\app\view\user\" />
+    <Folder Include="WebApp\modules\app\view\role\" />
+    <Folder Include="WebApp\modules\app\view\formapago\" />
+    <Folder Include="WebApp\modules\app\view\empresa\" />
+    <Folder Include="WebApp\modules\app\view\consecutivo\" />
+    <Folder Include="WebApp\modules\formapago\" />
+    <Folder Include="WebApp\modules\consecutivo\" />
+    <Folder Include="WebApp\modules\empresa\" />
+    <Folder Include="WebApp\modules\user\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

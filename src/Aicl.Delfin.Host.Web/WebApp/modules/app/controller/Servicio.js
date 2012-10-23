@@ -104,6 +104,10 @@ Ext.define('App.controller.Servicio', {
     },
 
     onRemoveServicioClick: function(button, e, options) {
+    	if(this.getServicioProcedimientoStore().count()>0){
+    		Ext.Msg.alert('Error', 'Debe borrar los procedimiento asociados primero');
+    		return;
+    	};
         var grid = this.getServicioList();
         var record = grid.getSelectionModel().getSelection()[0];
         this.getServicioStore().remove(record);
@@ -131,7 +135,6 @@ Ext.define('App.controller.Servicio', {
     },
 
     onNewProcedimientoClick: function(button, e, options) {
-        //this.getProcedimientoForm().getForm().reset();
         this.getProcedimientoStore().removeAll();
     },
 
@@ -238,6 +241,17 @@ Ext.define('App.controller.Servicio', {
     },
 
     onLaunch: function() {
+		var me = this;    	
+    	Ext.create('Ext.LoadMask', me.getServicioForm(), {
+    		msg: "Cargando servicios...",
+    		store: me.getServicioStore()
+		});
+		Ext.create('Ext.LoadMask', me.getServicioProcedimientoList(), {
+    		msg: "Cargando procedimeintos asociados al servicio...",
+    		store: me.getServicioProcedimientoStore()
+		});
+
+    	
         this.getServicioStore().on('load', function(store , records, success, eOpts){
             if(!success){
                 Ext.Msg.alert('Error', 'Error al cargar Servicios. Intente mas tarde');
@@ -262,16 +276,39 @@ Ext.define('App.controller.Servicio', {
             if (operation.action != 'destroy'){
                 this.getServicioList().getSelectionModel().select(record,true,true);
                 this.servicioLoadRecord(record);
-            }       
+            }
+            else{
+            	this.getServicioForm().getForm().reset();
+            }
         }, this);
 
+        this.getServicioProcedimientoStore().on('load', function(store , records, success, eOpts){
+            if(!success){
+                Ext.Msg.alert('Error', 'Error al cargar Procedimientos Asociados al Servicio. Intente mas tarde');
+                return;
+            }
+            if(records.length===0){
+                Aicl.Util.msg('Aviso', 'Sin Procedimientos Asociados');
+                return;
+            }
+            
+            var record = records[0];
+            this.getServicioProcedimientoList().getSelectionModel().select(record,true,true);
+            this.servicioProcedimientoLoadRecord(record);
+            return;
+            
+        }, this);
+        
 
         this.getServicioProcedimientoStore().on('write', function(store, operation, eOpts ){
             var record =  operation.getRecords()[0];
             if (operation.action != 'destroy'){
                 this.getServicioProcedimientoList().getSelectionModel().select(record,true,true);
                 this.servicioProcedimientoLoadRecord(record);
-            }       
+            }
+            else{
+            	this.getServicioProcedimientoForm().getForm().reset();
+            }
         }, this);
 
         this.getProcedimientoStore().on('load', function(store , records, success, eOpts){
@@ -296,7 +333,10 @@ Ext.define('App.controller.Servicio', {
             if (operation.action != 'destroy'){
                 this.getProcedimientoList().getSelectionModel().select(record,true,true);
                 this.procedimientoLoadRecord(record);
-            }       
+            }
+            else{
+            	this.getProcedimientoForm().getForm().reset();
+            }
         }, this);
 
     },

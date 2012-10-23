@@ -25,6 +25,7 @@ Ext.define('App.view.permission.Window', {
     },
     closeAction: 'hide',
     title: 'Permisos',
+    modal: true,
 
     initComponent: function() {
         var me = this;
@@ -38,6 +39,7 @@ Ext.define('App.view.permission.Window', {
                     padding: '20 20 20 20',
                     autoScroll: true,
                     title: '',
+                    sortableColumns: false,
                     store: 'AuthPermission',
                     dockedItems: [
                         {
@@ -73,6 +75,7 @@ Ext.define('App.view.permission.Window', {
                     columns: [
                         {
                             xtype: 'gridcolumn',
+                            sortable: false,
                             dataIndex: 'Name',
                             flex: 1,
                             text: 'Nombre'

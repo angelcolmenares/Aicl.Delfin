@@ -207,6 +207,7 @@ Ext.define('App.view.user.Panel', {
                             ui: 'round',
                             autoScroll: true,
                             title: '',
+                            sortableColumns: false,
                             store: 'UserRole',
                             columns: [
                                 {

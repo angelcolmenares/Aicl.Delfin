@@ -46,10 +46,12 @@ Ext.define('App.view.user.Window', {
                     name: 'UserList',
                     autoHeight: true,
                     autoScroll: true,
+                    sortableColumns: false,
                     store: 'User',
                     columns: [
                         {
                             xtype: 'gridcolumn',
+                            sortable: false,
                             dataIndex: 'UserName',
                             text: 'Usuario'
                         },
@@ -58,6 +60,7 @@ Ext.define('App.view.user.Window', {
                             renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
                                 return value + ' ' + record.get('LastName');
                             },
+                            sortable: false,
                             dataIndex: 'FirstName',
                             flex: 1,
                             text: 'Nombres y Apellidos'

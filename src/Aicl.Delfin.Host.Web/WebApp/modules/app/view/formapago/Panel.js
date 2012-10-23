@@ -41,11 +41,13 @@ Ext.define('App.view.formapago.Panel', {
                     width: 302,
                     autoScroll: true,
                     title: '',
+                    sortableColumns: false,
                     store: 'FormaPago',
                     columns: [
                         {
                             xtype: 'gridcolumn',
                             width: 260,
+                            sortable: false,
                             dataIndex: 'Descripcion',
                             flex: 1,
                             text: 'Descripcion'
@@ -53,6 +55,7 @@ Ext.define('App.view.formapago.Panel', {
                         {
                             xtype: 'booleancolumn',
                             width: 59,
+                            sortable: false,
                             dataIndex: 'Activo',
                             text: 'Activo',
                             falseText: 'No',
@@ -65,13 +68,13 @@ Ext.define('App.view.formapago.Panel', {
                 },
                 {
                     xtype: 'form',
-                    flex: 1,
                     fieldDefaults: {
                         msgTarget: 'side',
                         labelWidth: 80,
                         labelAlign: 'right'
                     },
                     name: 'FormaPagoForm',
+                    flex: 1,
                     cls: 'form-border',
                     height: 226,
                     margin: 5,
@@ -120,8 +123,8 @@ Ext.define('App.view.formapago.Panel', {
                     dockedItems: [
                         {
                             xtype: 'toolbar',
-                            dock: 'top',
                             name: 'FormaPagoToolbar',
+                            dock: 'top',
                             style: '{\n    border:0px;\n}',
                             items: [
                                 {

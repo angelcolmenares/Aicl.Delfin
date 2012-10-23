@@ -44,6 +44,7 @@ Ext.define('App.view.role.Window', {
                             height: 300,
                             autoScroll: true,
                             title: '',
+                            sortableColumns: false,
                             store: 'AuthRole',
                             dockedItems: [
                                 {
@@ -79,6 +80,7 @@ Ext.define('App.view.role.Window', {
                             columns: [
                                 {
                                     xtype: 'gridcolumn',
+                                    sortable: false,
                                     dataIndex: 'Name',
                                     flex: 1,
                                     text: 'Nombre'
@@ -176,6 +178,7 @@ Ext.define('App.view.role.Window', {
                     padding: '5 8 5 10',
                     autoScroll: true,
                     title: '',
+                    sortableColumns: false,
                     store: 'RolePermission',
                     dockedItems: [
                         {
@@ -187,13 +190,15 @@ Ext.define('App.view.role.Window', {
                                     xtype: 'button',
                                     action: 'add',
                                     iconCls: 'add',
-                                    text: ''
+                                    text: '',
+                                    tooltip: 'Agregar Permisos al Grupo'
                                 },
                                 {
                                     xtype: 'button',
                                     action: 'delete',
                                     iconCls: 'remove',
-                                    text: ''
+                                    text: '',
+                                    tooltip: 'Borrar permiso de este grupo'
                                 }
                             ]
                         },
@@ -217,6 +222,7 @@ Ext.define('App.view.role.Window', {
                     columns: [
                         {
                             xtype: 'gridcolumn',
+                            sortable: false,
                             dataIndex: 'Name',
                             flex: 1,
                             text: 'Nombre'

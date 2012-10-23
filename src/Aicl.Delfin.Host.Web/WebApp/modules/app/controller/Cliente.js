@@ -74,8 +74,6 @@ Ext.define('App.controller.Cliente', {
         }
 		else nit= searchText;
 
-
-
         var request={
             Nit: nit,
             Nombre:nombre,
@@ -94,6 +92,11 @@ Ext.define('App.controller.Cliente', {
     },
 
     onRemoveClienteClick: function(button, e, options) {
+    	if(this.getContactoStore().count()>0){
+    		Ext.Msg.alert('Error', 'Debe borrar los contactos primero');
+    		return;
+    	};
+    	
         var grid = this.getClienteList();
         var record = grid.getSelectionModel().getSelection()[0];
         this.getClienteStore().remove(record);
@@ -220,7 +223,10 @@ Ext.define('App.controller.Cliente', {
             if (operation.action != 'destroy'){
                 this.getClienteList().getSelectionModel().select(record,true,true);
                 this.clienteLoadRecord(record);
-            }       
+            }
+            else{
+            	this.getClienteForm().getForm().reset();
+            }
         }, this);
 
 
