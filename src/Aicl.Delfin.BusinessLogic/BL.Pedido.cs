@@ -237,6 +237,15 @@ namespace Aicl.Delfin.BusinessLogic
 
 					var old = proxy.FirstOrDefaultById<Pedido>(request.Id);
 
+					var userSesssion= httpRequest.GetSession();
+
+					if(!(old.IdCreadoPor== int.Parse(userSesssion.UserAuthId)
+					   || userSesssion.HasRole(BL.RoleCoordinador)))
+
+						throw HttpError.Unauthorized(string.Format("Usuario '{0}' No puede  ejecutar '{1}' en las ofertas creadas por:'{2}' ",
+						                                           userSesssion.UserName,action, old.NombreCreadoPor));
+
+
 					if( old==default(Pedido)){
 						throw HttpError.NotFound(string.Format("No existe Oferta con Id: '{0}'", request.Id));
 					}
@@ -244,6 +253,9 @@ namespace Aicl.Delfin.BusinessLogic
 					if(old.FechaAnulado.HasValue){
 						throw HttpError.Unauthorized(string.Format("Operacion:'{0}' No permitida. Oferta '{1}' Id:'{2} se encuentra anulada",action, request.Consecutivo, request.Id));
 					}
+
+
+
 
 					request.PopulateWith(old);
 

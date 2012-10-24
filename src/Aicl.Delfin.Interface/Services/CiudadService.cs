@@ -7,11 +7,11 @@ using ServiceStack.ServiceInterface;
 
 namespace Aicl.Delfin.Interface
 {
-	[RequiresAuthenticate]
-	[RoleAttribute(ApplyTo.Post,"Ciudad.create")]
-	//[PermissionAttribute(ApplyTo.Get,"Ciudad.read")]
+
+	[PermissionAttribute(ApplyTo.Post,"Ciudad.create")]
+	[RequiresAuthenticateAttribute(ApplyTo.Get)]
 	[PermissionAttribute(ApplyTo.Put,"Ciudad.update")]
-	[RoleAttribute(ApplyTo.Delete, "Ciudad.destroy")]
+	[PermissionAttribute(ApplyTo.Delete, "Ciudad.destroy")]
 	public class CiudadService:AppRestService<Ciudad>
 	{
 		public override object OnGet (Ciudad request)

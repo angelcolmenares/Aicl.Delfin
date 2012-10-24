@@ -3,10 +3,15 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
-
+using ServiceStack.ServiceInterface;
 
 namespace Aicl.Delfin.Interface
 {
+
+	[PermissionAttribute(ApplyTo.Post,"Pedido.update")]
+	[RequiresAuthenticateAttribute(ApplyTo.Get)]
+	[PermissionAttribute(ApplyTo.Put,"Pedido.update")]
+	[PermissionAttribute(ApplyTo.Delete, "Pedido.update")]
 	public class PedidoItemService:AppRestService<PedidoItem>
 	{
 		public override object OnGet (PedidoItem request)

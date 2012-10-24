@@ -3,10 +3,14 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
-
+using ServiceStack.ServiceInterface;
 
 namespace Aicl.Delfin.Interface
 {
+	[PermissionAttribute(ApplyTo.Post,"Servicio.update")]
+	[RequiresAuthenticateAttribute(ApplyTo.Get)]
+	[PermissionAttribute(ApplyTo.Put,"Servicio.update")]
+	[PermissionAttribute(ApplyTo.Delete, "Servicio.update")]
 	public class ServicioProcedimientoService:AppRestService<ServicioProcedimiento>
 	{
 		public override object OnGet (ServicioProcedimiento request)

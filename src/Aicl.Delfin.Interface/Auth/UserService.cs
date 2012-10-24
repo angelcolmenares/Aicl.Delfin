@@ -7,7 +7,8 @@ using ServiceStack.ServiceHost;
 
 namespace Aicl.Delfin.Interface
 {
-	[RequiresAuthenticate]
+
+	[RequiresAuthenticate(ApplyTo.All)]
 	[RoleAttribute(ApplyTo.Post,RoleNames.Admin)]
 	[RoleAttribute(ApplyTo.Delete, RoleNames.Admin)]
 	public class UserService:AppRestService<User>

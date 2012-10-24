@@ -3,10 +3,15 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
+using ServiceStack.ServiceInterface;
 
 
 namespace Aicl.Delfin.Interface
 {
+	[PermissionAttribute(ApplyTo.Post,"Cliente.create")]
+	[RequiresAuthenticateAttribute(ApplyTo.Get)]
+	[PermissionAttribute(ApplyTo.Put,"Cliente.update")]
+	[PermissionAttribute(ApplyTo.Delete, "Cliente.destroy")]
 	public class ClienteService:AppRestService<Cliente>
 	{
 		public override object OnGet (Cliente request)

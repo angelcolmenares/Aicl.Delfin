@@ -7,6 +7,7 @@ using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Mono.Linq.Expressions;
 using System.Collections.Generic;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -121,16 +122,7 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
-			factory.Execute(proxy=>{
-				proxy.Update(request);
-			});
-
-			List<ServicioProcedimiento> data = new List<ServicioProcedimiento>();
-			data.Add(request);
-			
-			return new Response<ServicioProcedimiento>(){
-				Data=data
-			};	
+			throw HttpError.NotFound("PutServicioProcedimiento No Implementado");
 		}
 		#endregion Put
 

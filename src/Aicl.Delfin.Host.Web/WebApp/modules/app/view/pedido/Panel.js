@@ -500,8 +500,7 @@ Ext.define('App.view.clientesearch.Window',{
 Ext.define('App.view.serviciosearch.Window', {
     extend: 'Ext.window.Window',
     alias: 'widget.serviciosearchwindow',
-
-    autoHeight: true,
+    height: 550,
     width: 970,
     layout: {
         align: 'stretch',
@@ -1167,7 +1166,7 @@ Ext.define('App.view.pedidoresumen.Form', {
 Ext.define('App.view.servicio.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.serviciolist',
-
+	autoScroll: true,
 
     initComponent: function() {
         var me = this;

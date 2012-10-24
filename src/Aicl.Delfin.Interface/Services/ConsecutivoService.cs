@@ -3,10 +3,15 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
+using ServiceStack.ServiceInterface;
 
 
 namespace Aicl.Delfin.Interface
 {
+	[PermissionAttribute(ApplyTo.Post,"Consecutivo.create")]
+	[RequiresAuthenticateAttribute(ApplyTo.Get)]
+	[PermissionAttribute(ApplyTo.Put,"Consecutivo.update")]
+	[PermissionAttribute(ApplyTo.Delete, "Consecutivo.destroy")]
 	public class ConsecutivoService:AppRestService<Consecutivo>
 	{
 		public override object OnGet (Consecutivo request)

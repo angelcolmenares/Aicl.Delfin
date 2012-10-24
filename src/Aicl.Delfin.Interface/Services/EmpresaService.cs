@@ -3,9 +3,12 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
+using ServiceStack.ServiceInterface;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.Interface
 {
+	[RoleAttribute(RoleNames.Admin)]
 	public class EmpresaService:AppRestService<Empresa>
 	{
 		public override object OnGet (Empresa request)
@@ -42,12 +45,7 @@ namespace Aicl.Delfin.Interface
 
 		public override object OnDelete (Empresa request)
 		{
-			try{
-				return request.Delete(Factory, RequestContext.Get<IHttpRequest>());
-			}
-			catch(Exception e){
-				return HttpResponse.ErrorResult<Response<Empresa>>(e,"DeleteEmpresaError");
-			}
+			throw HttpError.Unauthorized("Borrar Empresa no permitido");
 		}
 
 	}

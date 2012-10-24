@@ -3,10 +3,14 @@ using System;
 using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.BusinessLogic;
-
+using ServiceStack.ServiceInterface;
 
 namespace Aicl.Delfin.Interface
 {
+	[PermissionAttribute(ApplyTo.Post,"FormaPago.create")]
+	[RequiresAuthenticateAttribute(ApplyTo.Get)]
+	[PermissionAttribute(ApplyTo.Put,"FormaPago.update")]
+	[PermissionAttribute(ApplyTo.Delete, "FormaPago.destroy")]
 	public class FormaPagoService:AppRestService<FormaPago>
 	{
 		public override object OnGet (FormaPago request)

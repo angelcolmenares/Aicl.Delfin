@@ -40,10 +40,10 @@ namespace Aicl.Delfin.BusinessLogic
 					predicate= q=>q.Id==request.Id;
 
 					if(!request.UserName.IsNullOrEmpty()) 
-					{
 	                	predicate= q=>q.UserName.StartsWith(request.UserName) ;
 
-					}
+					if(userSession.UserName!=BL.AdminUser)
+						predicate=predicate.AndAlso(q=>q.UserName!=BL.AdminUser);
 
 				}
 				else
