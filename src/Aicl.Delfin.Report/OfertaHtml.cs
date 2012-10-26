@@ -183,7 +183,7 @@ namespace Aicl.Delfin.Report
 	</table>
 <br />
 ",
-			                     textoInicial.IsNullOrEmpty()?"":"<p>"+textoInicial+"</p>",
+			                     textoInicial.IsNullOrEmpty()?"":"<p lang=\"es\">"+textoInicial+"</p>",
 			                     empresa.Nombre,
 			                     empresa.ApplicationHost.IsNullOrEmpty()?"resources/logo.png": empresa.ApplicationHost+"/resources/logo.png",
 			                     empresa.Nit, 
