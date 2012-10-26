@@ -17,12 +17,23 @@ namespace Aicl.Delfin.Report
 		public string ConstruirHtmlReport(Empresa empresa, IAuthSession user,
 		                                  Pedido pedido, List<PedidoItem> items,
 		                                  string textoInicial=default(string)){
-			return ConstruirEncabezado(empresa, pedido, textoInicial)+ 
-				ConstruirTablaCliente(pedido)+
-				ItemsToTable(items)+
-					ConstruirResumen(pedido, items)+
-					ConstruirCondiciones(empresa,pedido,user);
+
+			return string.Format(@"<!DOCTYPE html>
+<html lang=""es"">
+	<head>
+		<meta http-equiv=""Content-Type"" content=""text/html"" charset=""utf-8"" />
+	</head>
+	<body>
+		{0}{1}{2}{3}{4}
+	</body>
+</html>",
+			                            ConstruirEncabezado(empresa, pedido, textoInicial),
+			                            ConstruirTablaCliente(pedido),
+			                            ItemsToTable(items),
+			                            ConstruirResumen(pedido, items),
+										ConstruirCondiciones(empresa,pedido,user));
 		}
+
 
 		public string ItemsToTable(List<PedidoItem> items)
 		{
