@@ -5,6 +5,7 @@ using System;
 using ServiceStack.Common.Web;
 using ServiceStack.Common.Utils;
 using ServiceStack.DesignPatterns.Model;
+using System.Web;
 
 
 namespace Aicl.Delfin.BusinessLogic
@@ -64,6 +65,12 @@ namespace Aicl.Delfin.BusinessLogic
 		public static string GetLockKey<T>(this T request) where T : IHasId<int>
 		{
 			return string.Format("urn:lock:{0}:Id:{1}",typeof(T).Name, request.Id); 
+		}
+
+
+		public static string Decode(this string text)
+		{
+			return HttpUtility.UrlDecode(text,System.Text.Encoding.UTF8);
 		}
 
     }

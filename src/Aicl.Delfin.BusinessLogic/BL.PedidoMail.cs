@@ -67,7 +67,7 @@ namespace Aicl.Delfin.BusinessLogic
 				                                      user,
 				                                      pedido,
 				                                      items,
-				                                      HttpUtility.UrlDecode(request.TextoInicial,System.Text.Encoding.Default));
+				                                      request.TextoInicial.Decode());
 
 				MailMessage message = new MailMessage();
 				message.Subject=  !request.Asunto.IsNullOrEmpty()?
