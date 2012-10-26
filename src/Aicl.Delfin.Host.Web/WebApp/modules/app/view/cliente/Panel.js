@@ -124,8 +124,8 @@ Ext.define('App.view.cliente.Panel', {
                             name: 'Activo',
                             fieldLabel: 'Activo',
                             hideLabel: false,
-                            checked:true,
-                            boxLabel: ''
+                            boxLabel: '',
+                            checked: true
                         }
                     ]
                 },
@@ -213,14 +213,20 @@ Ext.define('App.view.cliente.Panel', {
                                     anchor: '100%',
                                     name: 'Nombre',
                                     fieldLabel: 'Nombre',
-                                    allowBlank: false
+                                    allowBlank: false,
+                                    enforceMaxLength: true,
+                                    maxLength: 128,
+                                    maxLengthText: 'Maximo 128 caracteres'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'Cargo',
                                     fieldLabel: 'Cargo',
-                                    allowBlank: false
+                                    allowBlank: false,
+                                    enforceMaxLength: true,
+                                    maxLength: 64,
+                                    maxLengthText: 'Maximo 64 caracteres'
                                 },
                                 {
                                     xtype: 'textfield',
@@ -228,8 +234,8 @@ Ext.define('App.view.cliente.Panel', {
                                     name: 'Telefono',
                                     fieldLabel: 'Telefono',
                                     enforceMaxLength: true,
-                            		maxLength: 16,
-                            		maxLengthText: 'The maximum length for this field is 16'
+                                    maxLength: 16,
+                                    maxLengthText: 'Maximo 16 caracteres'
                                 },
                                 {
                                     xtype: 'textfield',
@@ -237,8 +243,8 @@ Ext.define('App.view.cliente.Panel', {
                                     name: 'Fax',
                                     fieldLabel: 'Fax',
                                     enforceMaxLength: true,
-                            		maxLength: 16,
-                            		maxLengthText: 'The maximum length for this field is 16'
+                                    maxLength: 16,
+                                    maxLengthText: 'Maximo 16 caracteres'
                                 },
                                 {
                                     xtype: 'textfield',
@@ -246,18 +252,23 @@ Ext.define('App.view.cliente.Panel', {
                                     name: 'Celular',
                                     fieldLabel: 'Celular',
                                     enforceMaxLength: true,
-                            		maxLength: 16,
-                            		maxLengthText: 'The maximum length for this field is 16'
+                                    maxLength: 16,
+                                    maxLengthText: 'Maximo 16 Caracteres'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'Mail',
                                     fieldLabel: 'Mail',
+                                    enforceMaxLength: true,
+                                    maxLength: 128,
+                                    maxLengthText: 'Maximo 128 Caracteres',
                                     vtype: 'email'
                                 },
                                 {
-                                    xtype: 'boxselect',
+                                    xtype: 'combobox',
+                                    tpl: '<tpl for="."><div class="x-boundlist-item">{Nombre}  {Codigo}</div></tpl>',
+                                    displayTpl: '<tpl for=".">{Nombre} {Codigo}</tpl>',
                                     anchor: '100%',
                                     name: 'IdCiudad',
                                     fieldLabel: 'Ciudad',
@@ -265,32 +276,28 @@ Ext.define('App.view.cliente.Panel', {
                                     displayField: 'Nombre',
                                     forceSelection: true,
                                     multiSelect: false,
+                                    pageSize: 12,
                                     queryParam: 'Nombre',
                                     store: 'Ciudad',
-                                    valueField: 'Id',
-									triggerOnClick: false,
-    								labelTpl: '{Nombre} - {Codigo} ',
-						    		listConfig: {
-        								tpl: Ext.create('Ext.XTemplate',
-								            '<ul><tpl for=".">',
-							                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre} {Codigo}</li>',
-								            '</tpl></ul>'
-    								)}
+                                    valueField: 'Id'
                                 },
                                 {
                                     xtype: 'textfield',
                                     anchor: '100%',
                                     name: 'Direccion',
                                     fieldLabel: 'Direccion',
-                                    allowBlank: false
+                                    allowBlank: false,
+                                    enforceMaxLength: true,
+                                    maxLength: 256,
+                                    maxLengthText: 'Maximo 256 Caracteres'
                                 },
                                 {
                                     xtype: 'checkboxfield',
                                     anchor: '100%',
                                     name: 'Activo',
                                     fieldLabel: 'Activo',
-                                    checked:true,
-                                    boxLabel: ''
+                                    boxLabel: '',
+                                    checked: true
                                 },
                                 {
                                     xtype: 'hiddenfield',

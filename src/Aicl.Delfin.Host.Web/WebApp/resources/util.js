@@ -2345,6 +2345,9 @@ Ext.define('App.model.ClienteContacto',{
 		name: 'NombreCiudad',
 		type: 'string'
 	},{
+		name: 'CodigoCiudad',
+		type: 'string'
+	},{
 		name: 'Id',
 		type: 'int'
 	},{
@@ -2418,6 +2421,9 @@ Ext.define('App.model.Contacto',{
 		type: 'int'
 	},{
 		name: 'NombreCiudad',
+		type: 'string'
+	},{
+		name: 'CodigoCiudad',
 		type: 'string'
 	}]
 });

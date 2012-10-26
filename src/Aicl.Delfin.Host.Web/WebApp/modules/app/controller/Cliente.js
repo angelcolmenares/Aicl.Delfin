@@ -15,12 +15,15 @@
 
 Ext.define('App.controller.Cliente', {
     extend: 'Ext.app.Controller',
-    views:  ['cliente.Panel','cliente.Window' ],
 
     stores: [
         'Cliente',
         'Contacto',
         'Ciudad'
+    ],
+    views: [
+        'cliente.Panel',
+        'cliente.Window'
     ],
 
     refs: [
@@ -72,7 +75,7 @@ Ext.define('App.controller.Cliente', {
             nit='';
             nombre=searchText;
         }
-		else nit= searchText;
+        else nit= searchText;
 
         var request={
             Nit: nit,
@@ -92,11 +95,10 @@ Ext.define('App.controller.Cliente', {
     },
 
     onRemoveClienteClick: function(button, e, options) {
-    	if(this.getContactoStore().count()>0){
-    		Ext.Msg.alert('Error', 'Debe borrar los contactos primero');
-    		return;
-    	};
-    	
+        if(this.getContactoStore().count()>0){
+            Ext.Msg.alert('Error', 'Debe borrar los contactos primero');
+            return;
+        }
         var grid = this.getClienteList();
         var record = grid.getSelectionModel().getSelection()[0];
         this.getClienteStore().remove(record);
@@ -108,7 +110,7 @@ Ext.define('App.controller.Cliente', {
 
     onSaveContactoClick: function(button, e, options) {
         var record=this.getContactoForm().getForm().getFieldValues(false);
-		record.IdCliente= this.getClienteForm().getForm().findField("Id").getValue();
+        record.IdCliente= this.getClienteForm().getForm().findField("Id").getValue();
         this.getContactoStore().getProxy().extraParams={format:'json'};
         this.getContactoStore().save(record);
     },
@@ -169,26 +171,25 @@ Ext.define('App.controller.Cliente', {
     },
 
     onLaunch: function() {
-    	
-    	var me = this;
+        var me = this;
 
-		Ext.create('Ext.LoadMask', me.getClienteForm(), {
-    		msg: "Cargando datos...",
-		    store: me.getClienteStore()
-		});
+        Ext.create('Ext.LoadMask', me.getClienteForm(), {
+            msg: "Cargando Clientes...",
+            store: me.getClienteStore()
+        });
 
-		Ext.create('Ext.LoadMask', me.getContactoList(), {
-    		msg: "Cargando datos...",
-		    store: me.getContactoStore()
-		});
-    	
+        Ext.create('Ext.LoadMask', me.getContactoList(), {
+            msg: "Cargando Contactos...",
+            store: me.getContactoStore()
+        });
+
         this.getClienteStore().on('load', function(store , records, success, eOpts){
             if(!success){
                 Ext.Msg.alert('Error', 'Error al cargar Clientes. Intente mas tarde');
                 return;
             }
             if(records.length===0){
-                Aicl.Util.msg('Aviso', 'Sin informacion');
+                Aicl.Util.msg('Aviso', 'Sin informacion de clientes');
                 return;
             }
             if(records.length==1){
@@ -199,7 +200,8 @@ Ext.define('App.controller.Cliente', {
             }
             this.selectClienteWindow.show();
         }, this);
-        
+
+
         this.getContactoStore().on('load', function(store , records, success, eOpts){
             if(!success){
                 Ext.Msg.alert('Error', 'Error al cargar Contactos. Intente mas tarde');
@@ -209,14 +211,14 @@ Ext.define('App.controller.Cliente', {
                 Aicl.Util.msg('Aviso', 'Sin Contactos');
                 return;
             }
-            
+
             var record = records[0];
             this.getContactoList().getSelectionModel().select(record,true,true);
             this.contactoLoadRecord(record);
             return;
-            
+
         }, this);
-        
+
 
         this.getClienteStore().on('write', function(store, operation, eOpts ){
             var record =  operation.getRecords()[0];
@@ -225,7 +227,7 @@ Ext.define('App.controller.Cliente', {
                 this.clienteLoadRecord(record);
             }
             else{
-            	this.getClienteForm().getForm().reset();
+                this.getClienteForm().getForm().reset();
             }
         }, this);
 
@@ -240,7 +242,7 @@ Ext.define('App.controller.Cliente', {
     },
 
     contactoLoadRecord: function(record) {
-    	this.ciudadAddLocal(record,"IdCiudad");
+        this.ciudadAddLocal(record,"IdCiudad");
         this.getContactoForm().getForm().loadRecord(record);
     },
 
@@ -252,18 +254,17 @@ Ext.define('App.controller.Cliente', {
         this.getContactoStore().load({params:{IdCliente: record.getId()}});
         this.getContactoList().determineScrollbars();
     },
-	
-	ciudadAddLocal:function(record, id){
-    	var rt= this.getCiudadStore();
-		if(!rt.getById(record.get(id))){
-			rt.addLocal({
-				Id:record.get(id),
-				Nombre:record.get('NombreCiudad'),
-				Codigo: record.get('CodigoCiudad')
-			})
-		};
+
+    ciudadAddLocal: function(record,id) {
+        var rt= this.getCiudadStore();
+        if(!rt.getById(record.get(id))){
+            rt.addLocal({
+                Id:record.get(id),
+                Nombre:record.get('NombreCiudad'),
+                Codigo: record.get('CodigoCiudad')
+            });
+        }
+
     }
-
-
 
 });

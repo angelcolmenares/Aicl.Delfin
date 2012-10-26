@@ -46,12 +46,6 @@ Ext.define('App.view.cliente.Window', {
                     name: 'ClienteList',
                     autoHeight: true,
                     store: 'Cliente',
-					bbar: Ext.create('Ext.PagingToolbar', {
-            			store: 'Cliente',
-			            displayInfo: true,
-            			displayMsg: 'Clientes del {0} al {1} de {2}',
-            			emptyMsg: "No hay Clientes para Mostrar"
-				    }),
                     columns: [
                         {
                             xtype: 'gridcolumn',
@@ -67,7 +61,25 @@ Ext.define('App.view.cliente.Window', {
                     ],
                     viewConfig: {
 
-                    }
+                    },
+                    dockedItems: [
+                        {
+                            xtype: 'pagingtoolbar',
+                            dock: 'bottom',
+                            width: 360,
+                            afterPageText: 'de {0}',
+                            beforePageText: 'Pag',
+                            displayInfo: true,
+                            displayMsg: 'Clientes del {0} al {1} de {2}',
+                            emptyMsg: 'Sin Clientes para mostrar',
+                            firstText: 'Primera',
+                            lastText: 'Ultima',
+                            nextText: 'Siguiente',
+                            prevText: 'Anterior',
+                            refreshText: 'Refrescar',
+                            store: 'Cliente'
+                        }
+                    ]
                 }
             ]
         });
