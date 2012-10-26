@@ -117,6 +117,11 @@ Ext.define('App.controller.Login',{
 	},
 	
 	onLaunch: function(application){
-		
+		if(Aicl.Util.isAuth()){
+			this.createMenu();
+		}
+		else{
+    		this.getLoginWindow().show();	
+		}
     }    
 });

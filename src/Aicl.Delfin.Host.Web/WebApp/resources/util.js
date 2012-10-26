@@ -1,6 +1,13 @@
 (function(){
 	Ext.ns('Aicl.Util');
 	Aicl.Util = {}; 
+		
+	var apiPath= '/dlfn-api';
+	var modulesPath= '/WebApp/modules';
+	var loginPath = apiPath+'/login';
+	var logoutPath = apiPath+'/logout';
+	var server= location.protocol + '//' + location.host;
+	var proxyType='json'; //jsonp
 	
 	var Util = Aicl.Util, 
 		_msgCt, 
@@ -175,7 +182,7 @@
 			config.api.destroy=config.api.destroy;
 			
 			config.reader= config.reader||{
-				type: 'json',
+				type: proxyType,
 		        root: 'Data', 
 				totalProperty : config.totalProperty? config.totalProperty:undefined,
 		    	successProperty	: config.successProperty? config.successProperty: undefined,
@@ -183,7 +190,7 @@
 			};
 			
 			config.writer= config.writer || {
-				type: 'json',
+				type: proxyType,
 				getRecordData: function(record) { 
 					console.log('Proxy writer getRecordData', record);
 					return record.data; 
@@ -297,16 +304,15 @@
 		},
 		
 		getUrlModules:function (){
-			return sessionStorage["urlModules"];
+			return sessionStorage["urlModules"] || (server + modulesPath);
 		},
-		
-		
+				
 		setUrlLogin: function (urlLogin){
 			sessionStorage["urlLogin"]=urlLogin;
 		},
 		
 		getUrlLogin:function (){
-			return sessionStorage["urlLogin"];
+			return sessionStorage["urlLogin"] || (server + loginPath);
 		},
 		
 		setUrlLogout: function (urlLogout){
@@ -314,7 +320,7 @@
 		},
 		
 		getUrlLogout:function (){
-			return sessionStorage["urlLogout"];
+			return sessionStorage["urlLogout"] || (server + logoutPath);
 		},
 				
 		setUrlApi: function (urlApi){
@@ -322,11 +328,11 @@
 		},
 		
 		getUrlApi:function (){
-			return sessionStorage["urlApi"];
+			return sessionStorage["urlApi"] || (server + apiPath);
 		},
 		
 		getHttpUrlApi:function (){
-			return sessionStorage["httpUrlApi"];
+			return sessionStorage["httpUrlApi"]||(server + apiPath+'/json/asynconeway');
 		},
 		
 		setHttpUrlApi:function(httpUrlApi){
