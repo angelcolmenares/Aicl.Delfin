@@ -1,5 +1,5 @@
 using System;
-using System.Configuration;
+//using System.Configuration;
 
 namespace Aicl.Delfin.Host.Web
 {
@@ -7,9 +7,9 @@ namespace Aicl.Delfin.Host.Web
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			string redirect= ConfigurationManager.AppSettings.Get("RedirectTo");
-			if(!string.IsNullOrEmpty(redirect))
-				Response.Redirect(redirect);
+			//string redirect= ConfigurationManager.AppSettings.Get("RedirectTo");
+			//if(!string.IsNullOrEmpty(redirect))
+			//	Response.Redirect(redirect);
 		}	
 	}
 }

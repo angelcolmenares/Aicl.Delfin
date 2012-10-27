@@ -1,0 +1,4 @@
+<ListOfTask>
+  <Task file="" description="TODO : Agregar Datos Destinatario en cada Pedido : Nombre, Direccion , Telefono, mail, asignar por defecto los valores del contacto y se pueden modificar " />
+  <Task file="" description="TODO: Tarea por Cliente: Fecha, Asunto, Comentario, estodo, En  tramite, Finalizado Exitoso, Finalizado." />
+</ListOfTask>

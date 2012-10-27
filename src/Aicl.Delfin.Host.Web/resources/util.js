@@ -2,8 +2,8 @@
 	Ext.ns('Aicl.Util');
 	Aicl.Util = {}; 
 		
-	var apiPath= '/dlfn-api';
-	var modulesPath= '/WebApp/modules';
+	var apiPath= 'dlfn-api';
+	var modulesPath= 'modules';
 	var loginPath = apiPath+'/login';
 	var logoutPath = apiPath+'/logout';
 	var server= location.protocol + '//' + location.host;
@@ -304,7 +304,7 @@
 		},
 		
 		getUrlModules:function (){
-			return sessionStorage["urlModules"] || (server + modulesPath);
+			return sessionStorage["urlModules"] || (server + '/'+modulesPath);
 		},
 				
 		setUrlLogin: function (urlLogin){
@@ -312,7 +312,7 @@
 		},
 		
 		getUrlLogin:function (){
-			return sessionStorage["urlLogin"] || (server + loginPath);
+			return sessionStorage["urlLogin"] || (server + '/'+ loginPath);
 		},
 		
 		setUrlLogout: function (urlLogout){
@@ -320,7 +320,7 @@
 		},
 		
 		getUrlLogout:function (){
-			return sessionStorage["urlLogout"] || (server + logoutPath);
+			return sessionStorage["urlLogout"] || (server + '/'+logoutPath);
 		},
 				
 		setUrlApi: function (urlApi){
@@ -328,11 +328,11 @@
 		},
 		
 		getUrlApi:function (){
-			return sessionStorage["urlApi"] || (server + apiPath);
+			return sessionStorage["urlApi"] || (server +'/'+ apiPath);
 		},
 		
 		getHttpUrlApi:function (){
-			return sessionStorage["httpUrlApi"]||(server + apiPath+'/json/asynconeway');
+			return sessionStorage["httpUrlApi"]||(server + '/'+apiPath+'/json/asynconeway');
 		},
 		
 		setHttpUrlApi:function(httpUrlApi){
