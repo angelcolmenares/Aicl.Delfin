@@ -49,6 +49,7 @@ namespace Aicl.Delfin.Report
 			float cellHeight = document.TopMargin;
 			headerTable.TotalWidth = pageSize.Width;
 
+
 			var leftTable = new PdfPTable(1);  // logo y nit 
 			PdfPCell leftTableCell = new PdfPCell( leftTable);
 			leftTableCell.FixedHeight = cellHeight;
@@ -78,13 +79,34 @@ namespace Aicl.Delfin.Report
 			rightTable.SetTotalWidth(new float[]{3,4,3,6});
 			PdfPCell rightTableCell = new PdfPCell(rightTable);
 			rightTableCell.HorizontalAlignment = PdfPCell.ALIGN_RIGHT;
-			rightTableCell.Padding = 5;
-			rightTableCell.PaddingTop= 20;
-            rightTableCell.PaddingBottom = 5;
+			rightTableCell.Padding = 2;
+			rightTableCell.PaddingTop= 10;
+            rightTableCell.PaddingBottom = 2;
 			rightTableCell.FixedHeight = cellHeight;
 			rightTableCell.Border= PdfPCell.NO_BORDER;
 
             headerTable.AddCell(rightTableCell);
+
+			cell = new PdfPCell(new Phrase("", new Font(){Size=10}));
+			cell.Border= PdfPCell.NO_BORDER;
+			cell.Colspan=3;
+			rightTable.AddCell(cell);
+
+			var textoFormato=string.Format("FLPA0201");
+			cell = new PdfPCell(new Phrase(textoFormato, new Font(){Size=10}));
+			cell.Border= PdfPCell.NO_BORDER;
+			rightTable.AddCell(cell);
+
+			cell = new PdfPCell(new Phrase("", new Font(){Size=10}));
+			cell.Border= PdfPCell.NO_BORDER;
+			cell.Colspan=3;
+			rightTable.AddCell(cell);
+
+			textoFormato=string.Format("EDICION:08 (2012-09-14)");
+			cell = new PdfPCell(new Phrase(textoFormato, new Font(){Size=10}));
+			cell.Border= PdfPCell.NO_BORDER;
+			cell.PaddingBottom = 8;
+			rightTable.AddCell(cell);
 
 			cell = new PdfPCell(new Phrase("Oferta No:", new Font(){Size=10}));
 			cell.Border= PdfPCell.NO_BORDER;

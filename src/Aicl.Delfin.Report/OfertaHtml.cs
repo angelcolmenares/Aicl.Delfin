@@ -163,6 +163,18 @@ namespace Aicl.Delfin.Report
 
 			var filasHtml = ConstruirFilasEncabezado(filas);
 
+			var filasFormato = new List<Fila>(
+				new Fila[]{
+				new Fila{Value="FLPA0201" },
+				new Fila{Value="EDICION:08 (2012-09-14)"},
+				new Fila{Value=string.Empty.ValueOrHtmlSpace()},
+				new Fila{Value=string.Empty.ValueOrHtmlSpace()},
+				new Fila{Value=string.Empty.ValueOrHtmlSpace()},
+				new Fila{Value=string.Empty.ValueOrHtmlSpace()}
+			});
+
+			var filasFormatoHtml = ConstruirFilasFormato(filasFormato);
+
 			return string.Format(@"<head>
  <meta http-equiv=""Content-Type"" content=""text/html"" charset=""utf-8"" />
 </head>
@@ -189,6 +201,13 @@ namespace Aicl.Delfin.Report
 						</tbody>
 					</table>
 				</td>
+				<td style=""padding: .3em; "">
+					<table cellpadding=""1"" cellspacing=""1"">
+						<tbody>
+							{5}
+						</tbody>
+					</table>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -198,7 +217,8 @@ namespace Aicl.Delfin.Report
 			                     empresa.Nombre,
 			                     empresa.ApplicationHost.IsNullOrEmpty()?"resources/logo.png": empresa.ApplicationHost+"/resources/logo.png",
 			                     empresa.Nit, 
-			                     filasHtml);
+			                     filasHtml,
+			                     filasFormatoHtml);
 		}
 
 		MvcHtmlString ConstruirListaDeItems(List<PedidoItem> items)
@@ -284,6 +304,17 @@ namespace Aicl.Delfin.Report
 				html.AppendFormat(@"<tr>
 	<td style=""width: 0%; ""></td>
 	<td style=""padding: .35em; "">{0}</td>
+</tr>
+",fila.Value);
+			}
+			return html.ToString();
+		}
+
+		string ConstruirFilasFormato(List<Fila> filas){
+			StringBuilder html= new StringBuilder();
+			foreach(var fila in filas){
+				html.AppendFormat(@"<tr>
+	<td>{0}</td>
 </tr>
 ",fila.Value);
 			}
