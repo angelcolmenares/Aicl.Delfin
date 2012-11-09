@@ -8,6 +8,7 @@ using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Mono.Linq.Expressions;
 using System.Collections.Generic;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -71,6 +72,12 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+			if(request.Nit.IsNullOrEmpty() || request.Nit.Trim()=="")
+			throw HttpError.Unauthorized("Debe Indicar el Nit del Cliente");
+
+			if(request.Nombre.IsNullOrEmpty() || request.Nombre.Trim()=="")
+			throw HttpError.Unauthorized("Debe Indicar el Nombre del Cliente");
+
 			factory.Execute(proxy=>{
 				proxy.Create(request);
 			});
@@ -90,6 +97,12 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+			if(request.Nit.IsNullOrEmpty() || request.Nit.Trim()=="")
+			throw HttpError.Unauthorized("Debe Indicar el Nit del Cliente");
+
+			if(request.Nombre.IsNullOrEmpty() || request.Nombre.Trim()=="")
+			throw HttpError.Unauthorized("Debe Indicar el Nombre del Cliente");
+
 			factory.Execute(proxy=>{
 				proxy.Update(request);
 			});

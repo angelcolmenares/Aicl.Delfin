@@ -7,6 +7,7 @@ using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Mono.Linq.Expressions;
 using System.Collections.Generic;
+using ServiceStack.Common.Web;
 
 namespace Aicl.Delfin.BusinessLogic
 {
@@ -56,6 +57,10 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+
+			if(request.Nombre.IsNullOrEmpty() || request.Nombre.Trim()=="")
+				throw HttpError.Unauthorized("Debe Indicar el Nombre del Servicio");
+
 			factory.Execute(proxy=>{
 				proxy.Create(request);
 			});
@@ -75,6 +80,9 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+			if(request.Nombre.IsNullOrEmpty() || request.Nombre.Trim()=="")
+				throw HttpError.Unauthorized("Debe Indicar el Nombre del Servicio");
+
 			factory.Execute(proxy=>{
 				proxy.Update(request);
 			});

@@ -76,6 +76,9 @@ namespace Aicl.Delfin.BusinessLogic
 			if(request.IdCliente==default(int))
 				throw HttpError.Unauthorized("Debe Indicar el IdCliente");
 
+			if(request.Nombre.IsNullOrEmpty() || request.Nombre.Trim()=="")
+			throw HttpError.Unauthorized("Debe Indicar el Nombre del Contacto");
+
 			factory.Execute(proxy=>{
 				proxy.Create(request);
 			});
@@ -95,6 +98,12 @@ namespace Aicl.Delfin.BusinessLogic
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
+			if(request.IdCliente==default(int))
+				throw HttpError.Unauthorized("Debe Indicar el IdCliente");
+
+			if(request.Nombre.IsNullOrEmpty() || request.Nombre.Trim()=="")
+			throw HttpError.Unauthorized("Debe Indicar el Nombre del Contacto");
+
 			factory.Execute(proxy=>{
 				proxy.Update(request);
 			});
