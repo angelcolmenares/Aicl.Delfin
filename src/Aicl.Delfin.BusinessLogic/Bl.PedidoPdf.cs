@@ -63,7 +63,7 @@ namespace Aicl.Delfin.BusinessLogic
 
 
 					pdf.CreatePDF(empresa,user,pedido,items,logo,BL.Prefijo,
-				              stream, new OfertaMargin(5,5,90,15));
+				              stream, new OfertaMargin(5,5,100,30));
 
 					stream.Position=0;
 

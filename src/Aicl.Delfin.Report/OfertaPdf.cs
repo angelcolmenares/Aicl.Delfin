@@ -123,7 +123,7 @@ namespace Aicl.Delfin.Report
 
 			List<string> itemHeaders= new List<string>(new string[]{
 				"Descripcion","Tiempo Entrega","Cantida","Precio Unitario",
-				"Descuento","Precio Con Dscnt","IVA","Procedimiento"
+				"Descuento %","Precio Con Dscnt","IVA","Procedimiento"
 			});
 
 			var grupos = from p in items
@@ -166,7 +166,7 @@ namespace Aicl.Delfin.Report
 					itemTable.AddCell(cell);
 
 					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.Descuento),new Font(){Size=9}));
-					cell.HorizontalAlignment = 2;
+					cell.HorizontalAlignment = Element.ALIGN_CENTER;
 					itemTable.AddCell(cell);
 
 					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.CostoInversion),new Font(){Size=9}));
@@ -178,6 +178,7 @@ namespace Aicl.Delfin.Report
 					itemTable.AddCell(cell);
 
 					cell = new PdfPCell(new Phrase(item.DescripcionProcedimiento,new Font(){Size=8}));
+					cell.HorizontalAlignment=Element.ALIGN_JUSTIFIED;
 					itemTable.AddCell(cell);
 				}
 
