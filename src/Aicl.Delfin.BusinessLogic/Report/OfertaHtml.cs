@@ -6,6 +6,7 @@ using Aicl.Delfin.Model.Types;
 using System.Collections.Generic;
 using ServiceStack.Common;
 using ServiceStack.ServiceInterface.Auth;
+using Aicl.Delfin.BusinessLogic;
 
 namespace Aicl.Delfin.Report
 {
@@ -213,7 +214,7 @@ namespace Aicl.Delfin.Report
 	</table>
 <br />
 ",
-			                     textoInicial.IsNullOrEmpty()?"":"<p lang=\"es\">"+textoInicial+"</p>",
+			                     textoInicial.IsNullOrEmpty()?"":"<p lang=\"es\">"+textoInicial.Decode()+"</p>",
 			                     empresa.Nombre,
 			                     empresa.ApplicationHost.IsNullOrEmpty()?"resources/logo.png": empresa.ApplicationHost+"/resources/logo.png",
 			                     empresa.Nit, 
@@ -248,8 +249,8 @@ namespace Aicl.Delfin.Report
 				foreach(var item in grupo){
 					sb.Append("\t\t\t<tr>");
 					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: left;\">{0}</p></td>",
-					                string.Concat(item.Descripcion,
-					              item.Nota.IsNullOrEmpty()?"": "<br /><b>Nota:"+item.Nota+"</b>" ));
+					                string.Concat(item.Descripcion.Decode(),
+					              item.Nota.IsNullOrEmpty()?"": "<br /><b>Nota:"+item.Nota.Decode()+"</b>" ));
 					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: center;\">{0}</p></td>",
 					                string.Format("{0} días hábiles",item.DiasEntrega));
 					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: center;\">{0}</p></td>",

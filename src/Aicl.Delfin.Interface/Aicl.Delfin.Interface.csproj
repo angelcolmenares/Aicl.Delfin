@@ -50,6 +50,9 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>..\..\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Linq.Expressions">
+      <HintPath>..\..\lib\Mono.Linq.Expressions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

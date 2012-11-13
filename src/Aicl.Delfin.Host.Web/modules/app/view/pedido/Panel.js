@@ -842,13 +842,17 @@ Ext.define('App.view.pedidoitem.Form', {
                     xtype: 'textfield',
                     anchor: '100%',
                     name: 'Descripcion',
-                    fieldLabel: 'Detalle'
+                    fieldLabel: 'Detalle',
+                    enforceMaxLength: true,
+                    maxLength: 128
                 },
                 {
                     xtype: 'textfield',
                     anchor: '100%',
                     name: 'Nota',
-                    fieldLabel: 'Nota'
+                    fieldLabel: 'Nota',
+                    enforceMaxLength: true,
+                    maxLength: 128
                 },
                 {
                     xtype: 'numberfield',

@@ -54,6 +54,12 @@
       <HintPath>..\..\lib\ServiceStack.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="itextsharp">
+      <HintPath>..\..\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.pdfa">
+      <HintPath>..\..\lib\itextsharp.pdfa.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,7 +70,6 @@
     <Compile Include="BL.Contacto.cs" />
     <Compile Include="BL.FormaPago.cs" />
     <Compile Include="BL.Pedido.cs" />
-    <Compile Include="BL.PedidoItem.cs" />
     <Compile Include="BL.Procedimiento.cs" />
     <Compile Include="BL.Servicio.cs" />
     <Compile Include="BL.ServicioProcedimiento.cs" />
@@ -80,11 +85,17 @@
     <Compile Include="Auth\BL.AuthPermission.cs" />
     <Compile Include="Auth\BL.RolePermission.cs" />
     <Compile Include="BL.Empresa.cs" />
+    <Compile Include="Report\OfertaPdfEventHandler.cs" />
+    <Compile Include="Report\OfertaPdf.cs" />
+    <Compile Include="Report\OfertaMargin.cs" />
+    <Compile Include="Report\OfertaHtml.cs" />
+    <Compile Include="Report\Extensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="Auth\" />
+    <Folder Include="Report\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aicl.Delfin.Model\Aicl.Delfin.Model.csproj">
@@ -95,9 +106,8 @@
       <Project>{C0319E77-DA72-47AD-A64F-5E25C634DC4B}</Project>
       <Name>Aicl.Delfin.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Aicl.Delfin.Report\Aicl.Delfin.Report.csproj">
-      <Project>{0DC75AD8-D24F-41B9-9449-153B20A7A124}</Project>
-      <Name>Aicl.Delfin.Report</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BL.PedidoItem.cs" />
   </ItemGroup>
 </Project>

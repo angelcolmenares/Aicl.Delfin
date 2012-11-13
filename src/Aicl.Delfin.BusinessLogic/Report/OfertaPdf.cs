@@ -7,12 +7,22 @@ using System.IO;
 using System.Collections.Generic;
 using ServiceStack.ServiceInterface.Auth;
 using System.Text;
+using Aicl.Delfin.BusinessLogic;
 
 namespace Aicl.Delfin.Report
 {
 	public class OfertaPdf
 	{
-		public OfertaPdf (){}
+		internal readonly string FontFamilyName = "unifont";
+
+		public OfertaPdf (string applicationFilePath)
+		{
+			var fontPath= Path.Combine( Path.Combine(applicationFilePath, "resources"), "Ubuntu-R.ttf");
+			//FontFactory.Register("/usr/share/fonts/truetype/unifont/unifont.ttf","unifont");
+			//FontFactory.Register("//usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf","unifont");
+			//FontFactory.Register("//usr/share/fonts/truetype/ttf-liberation/LiberationSans-Regular.ttf","unifont");
+			FontFactory.Register(fontPath,FontFamilyName);
+		}
 
 		public void CreatePDF(Empresa empresa, IAuthSession user, Pedido pedido,
 		                      List<PedidoItem> items,
@@ -21,6 +31,7 @@ namespace Aicl.Delfin.Report
         {
             
 			//using (var fileStream= new FileStream(file, FileMode.Create)){
+				
 
 				Document document = new Document(PageSize.LETTER.Rotate(), 
 				                                 margin.Left, margin.Right, margin.Top, margin.Bottom );
@@ -122,64 +133,75 @@ namespace Aicl.Delfin.Report
 
 
 			List<string> itemHeaders= new List<string>(new string[]{
-				"Descripcion","Tiempo Entrega","Cantida","Precio Unitario",
-				"Descuento %","Precio Con Dscnt","IVA","Procedimiento"
+				"Descripción","Días","Ctd","Precio Unit",
+				"Dscnt %","Precio Con Dscnt","IVA","Procedimiento"
 			});
 
 			var grupos = from p in items
 				group p by p.NombreServicio ;
 
+			var unifont10= FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			unifont10.Size=10;
+
+			var unifont8= FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			unifont8.Size=8;
+
+			var unifont7= FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+			unifont7.Size=7;
+
+
 			foreach(var grupo in grupos){
 
 				PdfPTable  itemTable = new PdfPTable(8);
 				itemTable.WidthPercentage=95;
-				itemTable.SetTotalWidth(new float[]{2,1,1,1,1,1,1,5});
-				//itemTable.TotalWidth = document.PageSize.Width;
+				itemTable.SetTotalWidth(new float[]{4,0.4f,0.4f,0.9f,0.5f,0.95f,0.75f,5});
 
-				var cell = new PdfPCell(new Phrase(grupo.Key, new Font(){Size=10}));
+				var cell = new PdfPCell(new Phrase(grupo.Key, unifont10 ));
 				cell.Colspan = 8;
 				itemTable.AddCell(cell);
 
 				foreach(var header in itemHeaders){
-					cell = new PdfPCell(new Phrase(header,new Font(){Size=10}));
-					cell.HorizontalAlignment = 1;
+					cell = new PdfPCell(new Phrase(header,unifont8));
+					cell.HorizontalAlignment = Element.ALIGN_CENTER;
 					itemTable.AddCell(cell);
 				}
 
 				itemTable.HeaderRows=2;
 
 				foreach(var item in grupo){
-					cell = new PdfPCell(new Phrase(string.Concat(item.Descripcion,
-					              item.Nota.IsNullOrEmpty()?"": "\r\nNota:"+item.Nota ),new Font(){Size=10}));
+
+					cell = new PdfPCell(new Phrase(string.Concat(item.Descripcion.Decode(),
+					              item.Nota.IsNullOrEmpty()?"": "\r\nNota:"+item.Nota.Decode() ),unifont8 ));
 					itemTable.AddCell(cell);
 
-					cell = new PdfPCell(new Phrase(item.DiasEntrega.ToString(),new Font(){Size=10}));
-					cell.HorizontalAlignment = 1;
-					itemTable.AddCell(cell);
-
-					cell = new PdfPCell(new Phrase(item.Cantidad.ToString(),new Font(){Size=10}));
-					cell.HorizontalAlignment = 1;
-					itemTable.AddCell(cell);
-
-					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.CostoUnitario),new Font(){Size=9}));
-					cell.HorizontalAlignment = 2;
-					itemTable.AddCell(cell);
-
-					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.Descuento),new Font(){Size=9}));
+					cell = new PdfPCell(new Phrase(item.DiasEntrega.ToString(), unifont8));
 					cell.HorizontalAlignment = Element.ALIGN_CENTER;
 					itemTable.AddCell(cell);
 
-					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.CostoInversion),new Font(){Size=9}));
-					cell.HorizontalAlignment = 2;
+					cell = new PdfPCell(new Phrase(item.Cantidad.ToString(), unifont8));
+					cell.HorizontalAlignment = Element.ALIGN_CENTER;
 					itemTable.AddCell(cell);
 
-					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.ValorIva),new Font(){Size=9}));
-					cell.HorizontalAlignment = 2;
+					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.CostoUnitario),unifont8));
+					cell.HorizontalAlignment = Element.ALIGN_RIGHT;
 					itemTable.AddCell(cell);
 
-					cell = new PdfPCell(new Phrase(item.DescripcionProcedimiento,new Font(){Size=8}));
+					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.Descuento),unifont8));
+					cell.HorizontalAlignment = Element.ALIGN_CENTER;
+					itemTable.AddCell(cell);
+
+					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.CostoInversion),unifont8));
+					cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+					itemTable.AddCell(cell);
+
+					cell = new PdfPCell(new Phrase(string.Format("{0:##,0}", item.ValorIva),unifont8));
+					cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+					itemTable.AddCell(cell);
+
+					cell = new PdfPCell(new Phrase(item.DescripcionProcedimiento,unifont7));
 					cell.HorizontalAlignment=Element.ALIGN_JUSTIFIED;
 					itemTable.AddCell(cell);
+
 				}
 
 				document.Add(itemTable);

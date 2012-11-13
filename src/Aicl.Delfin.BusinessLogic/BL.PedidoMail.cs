@@ -67,7 +67,7 @@ namespace Aicl.Delfin.BusinessLogic
 				                                      user,
 				                                      pedido,
 				                                      items,
-				                                      request.TextoInicial.Decode());
+				                                      request.TextoInicial);
 
 				MailMessage message = new MailMessage();
 				message.Subject=  !request.Asunto.IsNullOrEmpty()?
@@ -96,7 +96,7 @@ namespace Aicl.Delfin.BusinessLogic
 				message.Body= html;
 				message.IsBodyHtml=true;
 
-				OfertaPdf pdf = new OfertaPdf();
+				OfertaPdf pdf = new OfertaPdf(httpRequest.ApplicationFilePath);
 
 				string logo = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png");
 				//string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),

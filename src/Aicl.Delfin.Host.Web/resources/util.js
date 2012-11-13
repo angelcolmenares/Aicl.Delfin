@@ -388,7 +388,15 @@
             var m = Ext.core.DomHelper.append(_msgCt, _createBox(title, s), true);
             m.hide();
             m.slideIn('t').ghost("t", { delay: 1000, remove: true});
-		}   	
+		},
+		
+		 textEncode:function(str) {
+    		return encodeURI(str);
+		},
+ 	
+		textDecode:function(str) {
+			return decodeURI(str);
+		}
     	
     });	
     
@@ -458,7 +466,7 @@ Ext.define('Aicl.data.RemoteStore',{
 
 
 Ext.data.Store.implement({
-    //record={somefield:'value', othefield:'value'}
+    //record={somefield:'value', otherfield:'value'}
     save:function(record){
 		if (record.Id){
 			var keys = Ext.create( this.model.getName(),{}).fields.keys;
@@ -476,7 +484,7 @@ Ext.data.Store.implement({
 		}			
 	},
 	
-	//record={somefield:'value', othefield:'value'}
+	//record={somefield:'value', otherfield:'value'}
 	addLocal:function(record){
 		var nr = Ext.create( this.model.getName(),record );
 		this.suspendAutoSync();
@@ -2638,10 +2646,12 @@ Ext.define('App.model.PedidoItem',{
 		{
 			name: 'Descripcion',
 			type: 'string'
+			//convert: function(v){return Aicl.Util.textDecode(v);}
 		},
 		{
 			name: 'Nota',
 			type: 'string'
+			//convert: function(v){return Aicl.Util.textDecode(v);}
 		},
 		{
 			name: 'NombreServicio',

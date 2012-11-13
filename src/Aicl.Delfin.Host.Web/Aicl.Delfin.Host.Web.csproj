@@ -601,6 +601,7 @@
     <Content Include="index.html" />
     <Content Include="intro.html" />
     <Content Include="resources\util.css" />
+    <Content Include="resources\Ubuntu-R.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">

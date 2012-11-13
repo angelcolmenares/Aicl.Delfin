@@ -53,7 +53,7 @@ namespace Aicl.Delfin.BusinessLogic
 				var empresa = proxy.GetEmpresa(); 
 
 
-				OfertaPdf pdf = new OfertaPdf();
+				OfertaPdf pdf = new OfertaPdf(httpRequest.ApplicationFilePath);
 
 				string logo = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png");
 				string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),

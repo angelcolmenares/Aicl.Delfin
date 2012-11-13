@@ -19,6 +19,8 @@ namespace Aicl.Delfin.BusinessLogic
 		public static readonly string AdminUser="admin";
 		public static readonly double LockSeconds=5;
 
+		internal static readonly string HtmlSpace = "&nbsp;";
+		internal static readonly string DateFormat = "dd.MM.yyyy";
 
 		public static T CheckExistAndActivo<T>(this DALProxy proxy, int id, Expression<Func<T,string>> field )
 			where T : IHasActivo, new()
@@ -72,6 +74,26 @@ namespace Aicl.Delfin.BusinessLogic
 		{
 			return HttpUtility.UrlDecode(text,System.Text.Encoding.UTF8);
 		}
+
+		public static string Encode(this string text)
+		{
+			return HttpUtility.UrlEncode(text,System.Text.Encoding.UTF8);
+		}
+
+
+		public static string ValueOrHtmlSpace(this string value){
+			return !string.IsNullOrEmpty(value)?value:HtmlSpace;
+		}
+
+		public static string Format(this DateTime date){
+			return date!=default(DateTime)? date.ToString(DateFormat):string.Empty;
+		}
+
+		public static string Format(this DateTime? date){
+			return date.HasValue? Format(date.Value):Format(new DateTime());
+		}
+
+
 
     }
 }

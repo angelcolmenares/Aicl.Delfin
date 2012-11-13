@@ -1,3 +1,4 @@
+/*
 using System.Linq.Expressions;
 using ServiceStack.OrmLite;
 using ServiceStack.ServiceHost;
@@ -40,8 +41,16 @@ namespace Aicl.Delfin.BusinessLogic
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                 
+				var data =proxy.Get(visitor);
+
+				foreach(var d in data)
+				{
+					d.Descripcion= d.Descripcion.Decode();
+					d.Nota= d.Nota.Decode();
+				}
+
 				return new Response<PedidoItem>(){
-                	Data=proxy.Get(visitor),
+                	Data=data,
                 	TotalCount=totalCount
             	};
             });
@@ -77,8 +86,12 @@ namespace Aicl.Delfin.BusinessLogic
 				var procedimiento = proxy.CheckExistAndActivo<Procedimiento>(request.IdProcedimiento, f=>f.Nombre);
 				request.ValorUnitario=procedimiento.ValorUnitario;
 				request.PorcentajeIva=procedimiento.PorcentajeIva;
+				//request.Descripcion= request.Descripcion.Encode();
+				//request.Nota= request.Nota.Encode();
 				request.DescripcionProcedimiento=procedimiento.Descripcion;
 				proxy.Create(request);
+				request.Descripcion= request.Descripcion.Decode();
+				request.Nota= request.Nota.Decode();
 
 			});
 
@@ -174,3 +187,4 @@ namespace Aicl.Delfin.BusinessLogic
 	}
 }
 
+*/

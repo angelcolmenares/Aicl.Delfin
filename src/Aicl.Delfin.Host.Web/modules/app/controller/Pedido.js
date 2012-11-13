@@ -140,9 +140,8 @@ Ext.define('App.controller.Pedido',{
             'pedidomailwindow button[action=send]': {
                 click: function(button, event, options){
                 	var mp = this.getMainPanel();
-                	var urlencode= this.urlencode;
                 	var record = this.getPedidoMailForm().getForm().getFieldValues(false);
-                	record.TextoInicial= urlencode( record.TextoInicial);
+                	record.TextoInicial= Aicl.Util.textEncode( record.TextoInicial);
                 	
                 	Aicl.Util.executeRestRequest({
 						url : Aicl.Util.getUrlApi()+'/Pedido/mail/'+record.Consecutivo,
@@ -543,17 +542,5 @@ Ext.define('App.controller.Pedido',{
 				Codigo: record.get('CodigoCiudad')
 			})
 		};
-    },
-    
-    urlencode:function(str) {
-    	//return escape(str).replace(/\+/g,'%2B').replace(/%20/g, '+').replace(/\*/g, '%2A').replace(/\//g, '%2F').replace(/@/g, '%40');
-    	return encodeURI(str);
-	},
- 	
-	urldecode:function(str) {
-    	//return unescape(str.replace(/\+/g, ' '));
-		return decodeURI(str);
-	}
-
-	
+    }	
 });
