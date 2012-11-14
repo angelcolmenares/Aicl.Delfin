@@ -99,8 +99,6 @@ namespace Aicl.Delfin.BusinessLogic
 				OfertaPdf pdf = new OfertaPdf(httpRequest.ApplicationFilePath);
 
 				string logo = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath, "resources"), "logo.png");
-				//string file = Path.Combine(Path.Combine(httpRequest.ApplicationFilePath,"App_Data"),
-				//                           string.Format("oferta-{0}.pdf",pedido.Consecutivo));
 
 				using (var stream =  new MemoryStream() ){
 					pdf.CreatePDF(empresa,user,pedido,items,logo,"CMK-S", 

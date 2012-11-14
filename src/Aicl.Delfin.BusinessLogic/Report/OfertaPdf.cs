@@ -8,12 +8,15 @@ using System.Collections.Generic;
 using ServiceStack.ServiceInterface.Auth;
 using System.Text;
 using Aicl.Delfin.BusinessLogic;
+using System;
 
 namespace Aicl.Delfin.Report
 {
 	public class OfertaPdf
 	{
 		internal readonly string FontFamilyName = "unifont";
+
+		public OfertaPdf():this(AppDomain.CurrentDomain.BaseDirectory){}
 
 		public OfertaPdf (string applicationFilePath)
 		{

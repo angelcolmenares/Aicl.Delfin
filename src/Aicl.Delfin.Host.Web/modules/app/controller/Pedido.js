@@ -145,7 +145,7 @@ Ext.define('App.controller.Pedido',{
                 	
                 	Aicl.Util.executeRestRequest({
 						url : Aicl.Util.getUrlApi()+'/Pedido/mail/'+record.Consecutivo,
-						method : 'get',
+						method : 'post',
 						success : function(result) {
 							Aicl.Util.msg('Listo', 'Oferta enviada por mail');
 						},

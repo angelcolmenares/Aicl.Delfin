@@ -92,8 +92,14 @@ namespace Aicl.Delfin.Model.Types
 		[StringLength(64)]
 		public string ApplicationHost{get;set;}
 
-
 		[StringLength(128)]
 		public string ApplicationMailBox{get;set;}
+
+		[StringLength(12)]
+		public string Formato{get;set;}
+
+		[StringLength(36)]
+		public string Edicion{get;set;}
+
 	}
 }
