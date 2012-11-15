@@ -228,13 +228,12 @@ namespace Aicl.Delfin.Report
 			var th = "\n\t\t\t\t<th style=\"padding: .3em; border: 1px #ccc solid;\">{0}</th>";
 
 			var sb = new StringBuilder();
-			var grupos = from p in items
-				group p by p.NombreServicio ;
+			//var grupos = from p in items group p by p.NombreServicio ;
 
-			foreach(var grupo in grupos){
+			//foreach(var grupo in grupos){
 				//sb.AppendFormat("<fieldset>\n\t<legend style=\"padding: 0.2em 0.5em; border:1px solid green; color:green; font-size:90%; text-align:left;\" >Servicio:{0}</legend>\n", grupo.Key);
 				sb.AppendFormat("\t<table style=\"margin: 0.5em; border-collapse: collapse; width: 100%\">\n\t\t<thead>\n\t\t\t<tr>");
-				sb.AppendFormat("<th colspan=\"8\" style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: left;\">Servicio:{0}</p></th>",grupo.Key);
+				//sb.AppendFormat("<th colspan=\"8\" style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: left;\">Servicio:{0}</p></th>",grupo.Key);
 				sb.Append("\n\t\t\t</tr>");
 				sb.Append("\n\t\t\t<tr>");
 				sb.AppendFormat(th,"Descripcion");
@@ -246,10 +245,10 @@ namespace Aicl.Delfin.Report
 				sb.AppendFormat(th,"Iva");
 				sb.AppendFormat(th,"Procedimiento");
 				sb.Append("\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n");
-				foreach(var item in grupo){
+				foreach(var item in items){
 					sb.Append("\t\t\t<tr>");
 					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: left;\">{0}</p></td>",
-					                string.Concat(item.Descripcion.Decode(),
+					                string.Concat(item.NombreServicio, ". ", item.Descripcion.Decode(),
 					              item.Nota.IsNullOrEmpty()?"": "<br /><b>Nota:"+item.Nota.Decode()+"</b>" ));
 					sb.AppendFormat("\n\t\t\t\t<td style=\"padding: .3em; border: 1px #ccc solid;\"><p style=\"text-align: center;\">{0}</p></td>",
 					                string.Format("{0} días hábiles",item.DiasEntrega));
@@ -269,7 +268,7 @@ namespace Aicl.Delfin.Report
 				}
 				sb.AppendFormat("\n\t\t</tbody>\n\t</table>\n");
 				//sb.Append("</fieldset>");
-			}
+			//}
 
 			return MvcHtmlString.Create(sb.ToString());
 		}

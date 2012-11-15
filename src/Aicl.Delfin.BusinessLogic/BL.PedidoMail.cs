@@ -39,7 +39,8 @@ namespace Aicl.Delfin.BusinessLogic
 				}
 
 				List<PedidoItem> items=
-					proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
+					proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.Id).ToList();
+					//proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
 
 
 				var oferta = new OfertaHtml();

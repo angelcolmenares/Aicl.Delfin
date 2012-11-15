@@ -140,8 +140,7 @@ namespace Aicl.Delfin.Report
 				"Dscnt %","Precio Con Dscnt","IVA","Procedimiento"
 			});
 
-			var grupos = from p in items
-				group p by p.NombreServicio ;
+			//var grupos = from p in items group p by p.NombreServicio ;
 
 			var unifont10= FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 			unifont10.Size=10;
@@ -153,15 +152,16 @@ namespace Aicl.Delfin.Report
 			unifont7.Size=7;
 
 
-			foreach(var grupo in grupos){
+			//foreach(var grupo in grupos){
 
 				PdfPTable  itemTable = new PdfPTable(8);
 				itemTable.WidthPercentage=95;
 				itemTable.SetTotalWidth(new float[]{4,0.4f,0.4f,0.9f,0.5f,0.95f,0.75f,5});
 
-				var cell = new PdfPCell(new Phrase(grupo.Key, unifont10 ));
-				cell.Colspan = 8;
-				itemTable.AddCell(cell);
+				//var cell = new PdfPCell(new Phrase(grupo.Key, unifont10 ));
+				//cell.Colspan = 8;
+				//itemTable.AddCell(cell);
+				PdfPCell cell;
 
 				foreach(var header in itemHeaders){
 					cell = new PdfPCell(new Phrase(header,unifont8));
@@ -169,11 +169,11 @@ namespace Aicl.Delfin.Report
 					itemTable.AddCell(cell);
 				}
 
-				itemTable.HeaderRows=2;
+				itemTable.HeaderRows=1;
 
-				foreach(var item in grupo){
+				foreach(var item in items){
 
-					cell = new PdfPCell(new Phrase(string.Concat(item.Descripcion.Decode(),
+					cell = new PdfPCell(new Phrase(string.Concat(item.NombreServicio,". ", item.Descripcion.Decode(),
 					              item.Nota.IsNullOrEmpty()?"": "\r\nNota:"+item.Nota.Decode() ),unifont8 ));
 					itemTable.AddCell(cell);
 
@@ -208,7 +208,7 @@ namespace Aicl.Delfin.Report
 				}
 
 				document.Add(itemTable);
-			}
+			//}
 		}
 
 		public void ConstruirResumen(Document document, List<PedidoItem> items){
