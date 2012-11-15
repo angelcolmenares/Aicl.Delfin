@@ -84,6 +84,7 @@
     <Compile Include="Auth\AuthPermissionService.cs" />
     <Compile Include="Auth\RolePermissionService.cs" />
     <Compile Include="Services\EmpresaService.cs" />
+    <Compile Include="Services\TareaService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
