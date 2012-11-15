@@ -29,6 +29,8 @@ namespace Aicl.Delfin.Interface
 
 					var visitor = ReadExtensions.CreateExpression<Tarea>();
 					var predicate = PredicateBuilder.True<Tarea>();
+					var userId = int.Parse(httpRequest.GetSession().UserAuthId);
+					predicate= q=>q.UserId==userId;
 
 					if(request.IdCliente.HasValue && request.IdCliente.Value!=default(int)){
 						predicate=q=>q.IdCliente== request.IdCliente.Value;
@@ -39,6 +41,7 @@ namespace Aicl.Delfin.Interface
 					if(bool.TryParse(qs,out cumplida)){
 						predicate= predicate.AndAlso(q=>q.Cumplida==cumplida);
 					}
+
 
 					visitor.Where(predicate).OrderByDescending(f=>f.Fecha);
 
@@ -69,6 +72,10 @@ namespace Aicl.Delfin.Interface
 				if( request.Tema.IsNullOrEmpty())
 					throw HttpError.NotFound(string.Format("Debe indicar el tema de la tarea"));
 
+				var httpRequest= RequestContext.Get<IHttpRequest>();
+
+				request.UserId = int.Parse(httpRequest.GetSession().UserAuthId);
+
 				Factory.Execute(proxy=>{
 					proxy.Create(request);
 				});
@@ -91,9 +98,22 @@ namespace Aicl.Delfin.Interface
 		{
 			try{
 				if( request.Tema.IsNullOrEmpty())
-					throw HttpError.NotFound(string.Format("Debe indicar el tema de la tarea"));
+					throw HttpError.NotFound("Debe indicar el tema de la tarea");
 
 				Factory.Execute(proxy=>{
+
+					var oldData= proxy.FirstOrDefaultById<Tarea>(request.Id);
+
+					if(oldData==default(Tarea))
+						throw HttpError.NotFound(string.Format("No existe tarea con Id:'{0}'", request.Id));
+
+					var httpRequest= RequestContext.Get<IHttpRequest>();
+
+					var userId = int.Parse(httpRequest.GetSession().UserAuthId);
+
+					if(oldData.UserId!=userId)
+						throw HttpError.Unauthorized("No puede actualizar Tareas de otro usuario");
+
 					proxy.Update(request);
 				});
 
@@ -116,7 +136,20 @@ namespace Aicl.Delfin.Interface
 			try{
 		
 				Factory.Execute(proxy=>{
+					var oldData= proxy.FirstOrDefaultById<Tarea>(request.Id);
+
+					if(oldData==default(Tarea))
+						throw HttpError.NotFound(string.Format("No existe tarea con Id:'{0}'", request.Id));
+
+					var httpRequest= RequestContext.Get<IHttpRequest>();
+
+					var userId = int.Parse(httpRequest.GetSession().UserAuthId);
+
+					if(oldData.UserId!=userId)
+						throw HttpError.Unauthorized("No puede Borrar Tareas de otro usuario");
+
 					proxy.Delete<Tarea>(q=>q.Id==request.Id);
+
 				});
 
 				List<Tarea> data = new List<Tarea>();

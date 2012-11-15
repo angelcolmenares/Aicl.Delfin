@@ -12,7 +12,7 @@ namespace Aicl.Delfin.Model.Types
 	[RestService("/Tarea/update/{Id}","put")]
 	[RestService("/Tarea/destroy/{Id}","delete" )]
 	[JoinTo(typeof(Cliente),"IdCliente","Id", Order=0) ]
-	public class Tarea:IHasId<int>
+	public class Tarea:IHasId<int>, IHasIntUserId
 	{
 		public Tarea ()
 		{
@@ -20,6 +20,8 @@ namespace Aicl.Delfin.Model.Types
 
 		[AutoIncrement]
 		public int Id { get; set; }
+
+		public int UserId { get; set; }
 
 		public int? IdCliente {get; set;}
 
