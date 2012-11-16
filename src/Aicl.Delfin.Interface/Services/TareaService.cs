@@ -86,6 +86,7 @@ namespace Aicl.Delfin.Interface
 						else
 							throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
 					}
+					request.Fecha = request.Fecha.ToUniversalTime();
 					proxy.Create(request);
 				});
 
