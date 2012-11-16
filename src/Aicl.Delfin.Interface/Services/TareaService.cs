@@ -86,8 +86,10 @@ namespace Aicl.Delfin.Interface
 						else
 							throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
 					}
-					request.Fecha = request.Fecha.ToUniversalTime();
+					var fa = request.Fecha;
 					proxy.Create(request);
+					request.Tema= request.Tema + " Fecha en QueryString" + httpRequest.QueryString["Fecha"]+
+						" fecha grabada : "+ request.Fecha + " fecha antes de grabar: "+ fa;
 				});
 
 				List<Tarea> data = new List<Tarea>();
