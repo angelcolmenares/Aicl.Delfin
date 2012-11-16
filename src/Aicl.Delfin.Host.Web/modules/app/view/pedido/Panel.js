@@ -245,7 +245,8 @@ Ext.define('App.view.pedido.Form', {
                             anchor: '50%',
                             name: 'VigenteHasta',
                             readOnly: true,
-                            fieldLabel: 'Vigente Hasta'
+                            fieldLabel: 'Vigente Hasta',
+                            format: 'd.m.Y'
                         }
                     ]
                 },

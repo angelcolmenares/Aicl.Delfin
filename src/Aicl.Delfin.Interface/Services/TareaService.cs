@@ -72,11 +72,20 @@ namespace Aicl.Delfin.Interface
 				if( request.Tema.IsNullOrEmpty())
 					throw HttpError.NotFound(string.Format("Debe indicar el tema de la tarea"));
 
+
 				var httpRequest= RequestContext.Get<IHttpRequest>();
 
 				request.UserId = int.Parse(httpRequest.GetSession().UserAuthId);
 
 				Factory.Execute(proxy=>{
+
+					if(request.IdCliente.HasValue){
+						var cliente = proxy.FirstOrDefaultById<Cliente>(request.IdCliente.Value);
+						if(cliente!=default(Cliente))
+							request.NombreCliente=cliente.Nombre;
+						else
+							throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
+					}
 					proxy.Create(request);
 				});
 
@@ -107,6 +116,14 @@ namespace Aicl.Delfin.Interface
 					if(oldData==default(Tarea))
 						throw HttpError.NotFound(string.Format("No existe tarea con Id:'{0}'", request.Id));
 
+					if(request.IdCliente.HasValue){
+						var cliente = proxy.FirstOrDefaultById<Cliente>(request.IdCliente.Value);
+						if(cliente!=default(Cliente))
+							request.NombreCliente=cliente.Nombre;
+						else
+							throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
+					}
+
 					var httpRequest= RequestContext.Get<IHttpRequest>();
 
 					var userId = int.Parse(httpRequest.GetSession().UserAuthId);
@@ -114,7 +131,11 @@ namespace Aicl.Delfin.Interface
 					if(oldData.UserId!=userId)
 						throw HttpError.Unauthorized("No puede actualizar Tareas de otro usuario");
 
+					request.UserId= userId;
+
+
 					proxy.Update(request);
+
 				});
 
 				List<Tarea> data = new List<Tarea>();

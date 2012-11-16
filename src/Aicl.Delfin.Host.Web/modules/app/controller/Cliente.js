@@ -19,7 +19,8 @@ Ext.define('App.controller.Cliente', {
     stores: [
         'Cliente',
         'Contacto',
-        'Ciudad'
+        'Ciudad',
+        'Tarea'
     ],
     views: [
         'cliente.Panel',
@@ -50,6 +51,14 @@ Ext.define('App.controller.Cliente', {
         {
             ref: 'clienteSelectButton',
             selector: 'toolbar[name=FindToolbar] button[action=select]'
+        },
+        {
+            ref: 'tareaForm',
+            selector: 'form[name=TareaForm]'
+        },
+        {
+            ref: 'tareaList',
+            selector: 'gridpanel[name=TareaList]'
         }
     ],
 
@@ -65,6 +74,7 @@ Ext.define('App.controller.Cliente', {
     onNewClienteClick: function(button, e, options) {
         this.getClienteForm().getForm().reset();
         this.getContactoStore().removeAll();
+        this.getTareaStore().removeAll();
     },
 
     onFindClienteClick: function(button, e, options) {
@@ -99,6 +109,12 @@ Ext.define('App.controller.Cliente', {
             Ext.Msg.alert('Error', 'Debe borrar los contactos primero');
             return;
         }
+
+        if(this.getTareaStore().count()>0){
+            Ext.Msg.alert('Error', 'Debe borrar las tareas primero');
+            return;
+        }
+
         var grid = this.getClienteList();
         var record = grid.getSelectionModel().getSelection()[0];
         this.getClienteStore().remove(record);
@@ -125,11 +141,38 @@ Ext.define('App.controller.Cliente', {
         this.selectClienteWindow.hide();
         var record= this.getClienteList().getSelectionModel().getSelection()[0];
         this.clienteLoadContactos(record);
+        this.clienteLoadTareas(record);
         this.clienteLoadRecord(record);
     },
 
     onClienteListSelectionChange: function(tablepanel, selections, options) {
         this.getClienteSelectButton().setDisabled(selections.length?false:true);
+    },
+
+    onNewTareaButtonClick: function(button, e, options) {
+        this.getTareaList().getSelectionModel().deselectAll();
+    },
+
+    onSaveTareaButtonClick: function(button, e, options) {
+        var record=this.getTareaForm().getForm().getFieldValues(false);
+        record.IdCliente= this.getClienteForm().getForm().findField("Id").getValue();
+        this.getTareaStore().getProxy().extraParams={format:'json'};
+        this.getTareaStore().save(record);
+    },
+
+    onRemoveTareaButtonClick: function(button, e, options) {
+        var grid = this.getTareaList();
+        var record = grid.getSelectionModel().getSelection()[0];
+        this.getTareaStore().remove(record);
+    },
+
+    onTareaListSelectionChange: function(tablepanel, selections, options) {
+        if (selections.length){
+            this.tareaLoadRecord(selections[0]);
+        }
+        else{
+            this.getTareaForm().getForm().reset();
+        }
     },
 
     init: function(application) {
@@ -166,6 +209,18 @@ Ext.define('App.controller.Cliente', {
             },
             "gridpanel[name=ClienteList]": {
                 selectionchange: this.onClienteListSelectionChange
+            },
+            "toolbar[name=TareaToolbar] button[action=new]": {
+                click: this.onNewTareaButtonClick
+            },
+            "toolbar[name=TareaToolbar] button[action=save]": {
+                click: this.onSaveTareaButtonClick
+            },
+            "toolbar[name=TareaToolbar] button[action=remove]": {
+                click: this.onRemoveTareaButtonClick
+            },
+            "gridpanel[name=TareaList]": {
+                selectionchange: this.onTareaListSelectionChange
             }
         });
     },
@@ -183,6 +238,12 @@ Ext.define('App.controller.Cliente', {
             store: me.getContactoStore()
         });
 
+        Ext.create('Ext.LoadMask', me.getTareaList(), {
+            msg: "Cargando Tares...",
+            store: me.getTareaStore()
+        });
+
+
         this.getClienteStore().on('load', function(store , records, success, eOpts){
             if(!success){
                 Ext.Msg.alert('Error', 'Error al cargar Clientes. Intente mas tarde');
@@ -195,6 +256,7 @@ Ext.define('App.controller.Cliente', {
             if(records.length==1){
                 var record = records[0];
                 this.clienteLoadContactos(record);
+                this.clienteLoadTareas(record);
                 this.clienteLoadRecord(record);
                 return;
             }
@@ -215,7 +277,7 @@ Ext.define('App.controller.Cliente', {
             var record = records[0];
             this.getContactoList().getSelectionModel().select(record,true,true);
             this.contactoLoadRecord(record);
-            return;
+
 
         }, this);
 
@@ -239,6 +301,31 @@ Ext.define('App.controller.Cliente', {
                 this.contactoLoadRecord(record);
             }       
         }, this);
+
+        this.getTareaStore().on('load', function(store , records, success, eOpts){
+            if(!success){
+                Ext.Msg.alert('Error', 'Error al cargar Tareas. Intente mas tarde');
+                return;
+            }
+            if(records.length===0){
+                Aicl.Util.msg('Aviso', 'Sin Tareas');
+                return;
+            }
+
+            var record = records[0];
+            this.getTareaList().getSelectionModel().select(record,true,true);
+            this.tareaLoadRecord(record);    
+
+        }, this);
+
+        this.getTareaStore().on('write', function(store, operation, eOpts ){
+            var record =  operation.getRecords()[0];
+            if (operation.action != 'destroy'){
+                this.getTareaList().getSelectionModel().select(record,true,true);
+                this.tareaLoadRecord(record);
+            }       
+        }, this);
+
     },
 
     contactoLoadRecord: function(record) {
@@ -252,7 +339,6 @@ Ext.define('App.controller.Cliente', {
 
     clienteLoadContactos: function(record) {
         this.getContactoStore().load({params:{IdCliente: record.getId()}});
-        this.getContactoList().determineScrollbars();
     },
 
     ciudadAddLocal: function(record,id) {
@@ -265,6 +351,14 @@ Ext.define('App.controller.Cliente', {
             });
         }
 
+    },
+
+    clienteLoadTareas: function(record) {
+        this.getTareaStore().load({params:{IdCliente: record.getId()}});
+    },
+
+    tareaLoadRecord: function(record) {
+        this.getTareaForm().getForm().loadRecord(record);
     }
 
 });

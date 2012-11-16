@@ -72,6 +72,16 @@
 			return today==d;
 		},
 		
+		isDueDate: function(date){
+			var d ;
+			if( typeof date=='object') d= Ext.Date.format(date,'Y.m.d');
+			else d= Ext.util.Format.substr(date,0,10);
+	
+			var today = Ext.Date.format(new Date() ,'Y.m.d');
+			return today>d;
+		},
+		
+		
 		// ajax request
 		
 		executeAjaxRequest: function (config){
@@ -2646,12 +2656,10 @@ Ext.define('App.model.PedidoItem',{
 		{
 			name: 'Descripcion',
 			type: 'string'
-			//convert: function(v){return Aicl.Util.textDecode(v);}
 		},
 		{
 			name: 'Nota',
 			type: 'string'
-			//convert: function(v){return Aicl.Util.textDecode(v);}
 		},
 		{
 			name: 'NombreServicio',
@@ -2887,6 +2895,34 @@ Ext.define('App.model.RolePermission',{
 	}]
 });
 
+Ext.define('App.model.Tarea',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',
+		type: 'int'
+	},{
+		name: 'UserId',
+		type: 'int'
+	},{
+		name: 'IdCliente',
+		type: 'int'
+	},{
+		name: 'Tema',
+		type: 'string'
+	},{
+		name: 'Cumplida',
+		type: 'boolean'
+	},{
+		name: 'Fecha',
+		type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'NombreCliente',
+		type: 'string'
+	}]
+});
+
 
 // fin models
 
@@ -3057,6 +3093,22 @@ Ext.define('App.store.RolePermission',{
 		config=config||{};
 		config.storeId=config.storeId||'RolePermission';
 		config.pageSize=config.pageSize||10;
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.Tarea',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Tarea',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Tarea';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.store.RemoteTarea',{
+	extend: 'Aicl.data.RemoteStore',
+	model: 'App.model.Tarea',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'RemoteTarea';
+		config.pageSize=config.pageSize||20;
 		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
 });
 
