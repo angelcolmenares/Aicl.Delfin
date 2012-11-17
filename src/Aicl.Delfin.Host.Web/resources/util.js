@@ -32,9 +32,13 @@
     	
     	convertToDate: function (v){
 			if (!v) return null;
-			return (typeof v == 'string')
-			?new Date(parseFloat(/Date\(([^)]+)\)/.exec(v)[1])) // thanks demis bellot!
-			:v ;   
+			if (typeof v == 'string'){
+				var d = new Date(parseFloat(/Date\(([^)]+)\)/.exec(v)[1])) // thanks demis bellot!
+				return new Date( d.getUTCFullYear(),d.getUTCMonth(), d.getUTCDate(),
+				 				 d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+			}
+			else
+				return v;   
 		},
 
 		convertToUTC: function (date){
