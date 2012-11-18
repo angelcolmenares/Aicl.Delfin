@@ -11,7 +11,7 @@ namespace Aicl.Delfin.Model.Types
 	[RestService("/Tarea/read","get")]
 	[RestService("/Tarea/update/{Id}","put")]
 	[RestService("/Tarea/destroy/{Id}","delete" )]
-	[JoinTo(typeof(Cliente),"IdCliente","Id", Order=0) ]
+	[JoinTo(typeof(Cliente),"IdCliente","Id", Order=0, JoinType=JoinType.Left) ]
 	public class Tarea:IHasId<int>, IHasIntUserId
 	{
 		public Tarea ()
@@ -35,6 +35,9 @@ namespace Aicl.Delfin.Model.Types
 
 		[BelongsTo(typeof(Cliente),"Nombre")]
 		public string NombreCliente {get; set;}
+
+		[BelongsTo(typeof(Cliente),"Nit")]
+		public string NitCliente {get; set;}
 
 	}
 }

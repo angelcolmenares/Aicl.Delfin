@@ -602,6 +602,10 @@
     <Content Include="intro.html" />
     <Content Include="resources\util.css" />
     <Content Include="resources\Ubuntu-R.ttf" />
+    <Content Include="modules\tarea\app.js" />
+    <Content Include="modules\tarea\index.html" />
+    <Content Include="modules\app\controller\Tarea.js" />
+    <Content Include="modules\app\view\tarea\Panel.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -619,6 +623,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="outfiles\" />
     <Folder Include="WebApp\resources\" />
+    <Folder Include="modules\tarea\" />
+    <Folder Include="modules\app\view\tarea\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

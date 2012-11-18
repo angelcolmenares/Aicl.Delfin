@@ -36,6 +36,15 @@ namespace Aicl.Delfin.Interface
 						predicate=q=>q.IdCliente== request.IdCliente.Value;
 					}
 
+					if(!request.NitCliente.IsNullOrEmpty()){
+						predicate= predicate.AndAlso(q=>q.NitCliente.StartsWith(request.NitCliente));
+					}
+
+					if(!request.NombreCliente.IsNullOrEmpty()){
+						predicate= predicate.AndAlso(q=>q.NombreCliente.Contains(request.NombreCliente));
+					}
+
+
 					var qs= httpRequest.QueryString["Cumplida"];
 					bool cumplida;
 					if(bool.TryParse(qs,out cumplida)){
@@ -80,11 +89,24 @@ namespace Aicl.Delfin.Interface
 				Factory.Execute(proxy=>{
 
 					if(request.IdCliente.HasValue){
-						var cliente = proxy.FirstOrDefaultById<Cliente>(request.IdCliente.Value);
-						if(cliente!=default(Cliente))
-							request.NombreCliente=cliente.Nombre;
-						else
-							throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
+						if(request.IdCliente.Value!=default(int)){
+							var cliente = proxy.FirstOrDefaultById<Cliente>(request.IdCliente.Value);
+							if(cliente!=default(Cliente)){
+								request.NombreCliente=cliente.Nombre;
+								request.NitCliente=cliente.Nit;
+							}
+							else
+								throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
+						}
+						else{
+							request.IdCliente=null;
+							request.NombreCliente=string.Empty;
+							request.NitCliente=string.Empty;
+						}
+					}
+					else{
+						request.NombreCliente=string.Empty;
+						request.NitCliente=string.Empty;
 					}
 					proxy.Create(request);
 
@@ -118,11 +140,24 @@ namespace Aicl.Delfin.Interface
 						throw HttpError.NotFound(string.Format("No existe tarea con Id:'{0}'", request.Id));
 
 					if(request.IdCliente.HasValue){
-						var cliente = proxy.FirstOrDefaultById<Cliente>(request.IdCliente.Value);
-						if(cliente!=default(Cliente))
-							request.NombreCliente=cliente.Nombre;
-						else
-							throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
+						if(request.IdCliente.Value!=default(int)){
+							var cliente = proxy.FirstOrDefaultById<Cliente>(request.IdCliente.Value);
+							if(cliente!=default(Cliente)){
+								request.NombreCliente=cliente.Nombre;
+								request.NitCliente=cliente.Nit;
+							}
+							else
+								throw HttpError.NotFound(string.Format("No existe Cliente con Id:'{0}'", request.IdCliente.Value));
+						}
+						else{
+							request.IdCliente=null;
+							request.NombreCliente=string.Empty;
+							request.NitCliente=string.Empty;
+						}
+					}
+					else{
+						request.NombreCliente=string.Empty;
+						request.NitCliente=string.Empty;
 					}
 
 					var httpRequest= RequestContext.Get<IHttpRequest>();
@@ -133,7 +168,6 @@ namespace Aicl.Delfin.Interface
 						throw HttpError.Unauthorized("No puede actualizar Tareas de otro usuario");
 
 					request.UserId= userId;
-
 
 					proxy.Update(request);
 

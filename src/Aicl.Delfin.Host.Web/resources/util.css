@@ -225,6 +225,11 @@ pre.code{
     background-image: url('icons/silk/find.png') !important;
 }
 
+.clear {
+    background-image: url('icons/silk/cross.png') !important;
+}
+
+
 .search-item {
             padding: 5px 10px;
             white-space: normal;

@@ -3113,6 +3113,14 @@ Ext.define('App.store.RemoteTarea',{
 		config=config||{};
 		config.storeId=config.storeId||'RemoteTarea';
 		config.pageSize=config.pageSize||20;
+		config.proxy= Aicl.Util.createRestProxy({
+    		url: config.url||(Aicl.Util.getUrlApi()+'/Tarea'),
+    		totalProperty: 'TotalCount',
+    		storeId:config.storeId,
+        	pageParam:'page',
+        	limitParam:'limit',
+        	startParam:'start'
+    	});
 		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
 });
 
