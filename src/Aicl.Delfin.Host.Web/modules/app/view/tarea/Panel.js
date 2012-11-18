@@ -168,7 +168,8 @@ Ext.define('App.view.tarea.Panel', {
                             xtype: 'datefield',
                             anchor: '100%',
                             name: 'Fecha',
-                            fieldLabel: 'Fecha'
+                            fieldLabel: 'Fecha',
+                            format: 'd.m.Y'
                         },
                         {
                             xtype: 'textareafield',
