@@ -145,7 +145,7 @@ Ext.define('App.controller.Tarea', {
     onLaunch: function() {
         var me = this;
 
-        Ext.create('Ext.LoadMask', me.getClienteList(), {
+        Ext.create('Ext.LoadMask', me.getTareaForm(), {
             msg: "Cargando Clientes...",
             store: me.getClienteStore()
         });

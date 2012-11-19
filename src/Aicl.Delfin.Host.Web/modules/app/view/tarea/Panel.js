@@ -17,12 +17,18 @@ Ext.define('App.view.tarea.Panel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.tareapanel',
 
+    padding: 5,
+    style: '{\n    border:0;\n    \n}',
+    ui: 'default-framed',
     width: 950,
     autoScroll: true,
     layout: {
         align: 'stretch',
+        padding: 5,
         type: 'hbox'
     },
+    bodyBorder: false,
+    bodyPadding: 5,
 
     initComponent: function() {
         var me = this;
@@ -33,31 +39,36 @@ Ext.define('App.view.tarea.Panel', {
                     xtype: 'gridpanel',
                     name: 'TareaList',
                     flex: 1.2,
-                    height: 500,
+                    height: 515,
+                    padding: '10 10 10 10',
+                    ui: 'default-framed',
                     autoScroll: true,
                     store: 'RemoteTarea',
                     columns: [
                         {
                             xtype: 'booleancolumn',
+                            draggable: false,
                             width: 75,
+                            resizable: false,
+                            sortable: false,
                             align: 'center',
                             dataIndex: 'Cumplida',
+                            hideable: false,
                             text: 'Estado',
                             falseText: 'Pendiente',
                             trueText: 'Cumplida'
                         },
                         {
                             xtype: 'datecolumn',
+                            draggable: false,
                             width: 80,
+                            resizable: false,
+                            sortable: false,
                             align: 'center',
                             dataIndex: 'Fecha',
+                            hideable: false,
                             text: 'Fecha',
                             format: 'd.m.Y'
-                        },
-                        {
-                            xtype: 'gridcolumn',
-                            dataIndex: 'NombreCliente',
-                            text: 'Cliente'
                         },
                         {
                             xtype: 'gridcolumn',
@@ -91,12 +102,19 @@ Ext.define('App.view.tarea.Panel', {
                                 value);
                             },
                             draggable: false,
-                            resizable: false,
+                            width: 250,
                             sortable: false,
                             dataIndex: 'Tema',
-                            flex: 1,
                             hideable: false,
                             text: 'Tarea'
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            width: 250,
+                            sortable: false,
+                            dataIndex: 'NombreCliente',
+                            hideable: false,
+                            text: 'Cliente'
                         }
                     ],
                     dockedItems: [
@@ -122,16 +140,21 @@ Ext.define('App.view.tarea.Panel', {
                     name: 'TareaForm',
                     fieldDefaults: {
                         msgTarget: 'side',
-                        labelWidth: 80,
+                        labelWidth: 55,
                         labelAlign: 'right'
                     },
                     flex: 0.8,
+                    margin: '0 0 0 20',
+                    padding: 10,
+                    ui: 'default-framed',
+                    bodyBorder: false,
                     bodyPadding: 10,
                     dockedItems: [
                         {
                             xtype: 'toolbar',
                             name: 'TareaToolbar',
                             dock: 'top',
+                            border: 0,
                             items: [
                                 {
                                     xtype: 'button',
@@ -167,6 +190,7 @@ Ext.define('App.view.tarea.Panel', {
                         {
                             xtype: 'datefield',
                             anchor: '100%',
+                            margin: '10 2 2 2',
                             name: 'Fecha',
                             fieldLabel: 'Fecha',
                             format: 'd.m.Y'
@@ -174,6 +198,7 @@ Ext.define('App.view.tarea.Panel', {
                         {
                             xtype: 'textareafield',
                             anchor: '100%',
+                            margin: '10 2 2 2',
                             name: 'Tema',
                             fieldLabel: 'Tarea',
                             enforceMaxLength: true,
@@ -184,7 +209,7 @@ Ext.define('App.view.tarea.Panel', {
                             xtype: 'fieldcontainer',
                             fieldDefaults: {
                                 msgTarget: 'side',
-                                labelWidth: 80,
+                                labelWidth: 55,
                                 labelAlign: 'right'
                             },
                             layout: {
@@ -194,6 +219,7 @@ Ext.define('App.view.tarea.Panel', {
                                 {
                                     xtype: 'textfield',
                                     flex: 4,
+                                    margin: '10 2 2 2',
                                     name: 'NombreCliente',
                                     fieldLabel: 'Cliente'
                                 },
@@ -201,12 +227,14 @@ Ext.define('App.view.tarea.Panel', {
                                     xtype: 'button',
                                     action: 'find',
                                     flex: 0,
+                                    margin: '10 2 2 2',
                                     iconCls: 'find'
                                 },
                                 {
                                     xtype: 'button',
                                     action: 'clear',
                                     flex: 0,
+                                    margin: '10 2 2 2',
                                     iconCls: 'clear'
                                 }
                             ]
@@ -214,6 +242,7 @@ Ext.define('App.view.tarea.Panel', {
                         {
                             xtype: 'checkboxfield',
                             anchor: '100%',
+                            margin: '10 2 2 2',
                             name: 'Cumplida',
                             fieldLabel: 'Cumplida?'
                         }

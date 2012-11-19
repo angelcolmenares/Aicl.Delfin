@@ -31,6 +31,7 @@ Ext.define('App.controller.Login',{
 					success : function(result) {
 						me.getLoginWindow().hide()
 						me.createMenu();
+						me.showTareas();
 					},
 					failure : function(response, options) {
 						console.log(arguments);
@@ -45,6 +46,10 @@ Ext.define('App.controller.Login',{
             this.login();
         }
 
+    },
+    
+    showTareas:function(){
+    	Ext.getDom('iframe-win').src = Aicl.Util.getUrlModules()+"/tarea";
     },
     
     createMenu: function(){
