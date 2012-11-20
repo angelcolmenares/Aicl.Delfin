@@ -44,35 +44,33 @@ namespace Aicl.Delfin.Interface
 				//------------------------------
 
 				t = new Table(){
-					Style= Table.DefaultTableStyle ,
-					RowBorderStyle= new RowBorder()
+					Style= Table.DefaultTableStyle 
+
 				};
 
-				r = new Row(){CellBorderStyle= new CellBorder()};
+				r = new Row();
 				c= new Cell(){Value= "1 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "1 Row Segunda Fila"};
 				r.AddCell(c);
 				t.AddRow(r);
 
-				r = new Row(){CellBorderStyle= new CellBorder()};
+				r = new Row();
 				c= new Cell(){Value= "2 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "2 Row Segunda Fila"};
 				r.AddCell(c);
 				t.AddRow(r);
 
-				r = new Row(){CellBorderStyle= new CellBorder()};
+				r = new Row();
 				c= new Cell(){Value= "3 Row Primera Celda"};
 				r.AddCell(c);
-				c= new Cell(){Value= "3 Row Segunda Fila",
-					CellBorderStyle=new CellBorder()};
+				c= new Cell(){Value= "3 Row Segunda Fila"};
 				r.AddCell(c);
 				t.AddRow(r);
 
-				r = new Row(){CellBorderStyle= new CellBorder()};
-				c= new Cell(){Value= "4 Row Primera Celda",
-					CellBorderStyle= new CellBorder()};
+				r = new Row();
+				c= new Cell(){Value= "4 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "4 Row Segunda Fila"};
 				r.AddCell(c);
@@ -80,6 +78,45 @@ namespace Aicl.Delfin.Interface
 				Console.WriteLine(t.ToString());
 
 				//---
+
+				//------------------------------
+
+				t = new Table(){
+					Style= Table.DefaultTableStyle ,
+					RowStyle= Table.DefaultRowStyle
+				};
+
+				r = new Row();
+				c= new Cell(){Value= "1 Row Primera Celda"};
+				r.AddCell(c);
+				c= new Cell(){Value= "1 Row Segunda Fila"};
+				r.AddCell(c);
+				t.AddRow(r);
+
+				r = new Row();
+				c= new Cell(){Value= "2 Row Primera Celda"};
+				r.AddCell(c);
+				c= new Cell(){Value= "2 Row Segunda Fila"};
+				r.AddCell(c);
+				t.AddRow(r);
+
+				r = new Row();
+				c= new Cell(){Value= "3 Row Primera Celda"};
+				r.AddCell(c);
+				c= new Cell(){Value= "3 Row Segunda Fila"};
+				r.AddCell(c);
+				t.AddRow(r);
+
+				r = new Row();
+				c= new Cell(){Value= "4 Row Primera Celda"};
+				r.AddCell(c);
+				c= new Cell(){Value= "4 Row Segunda Fila"};
+				r.AddCell(c);
+				t.AddRow(r);
+				Console.WriteLine(t.ToString());
+
+				//---
+
 				var visitor = ReadExtensions.CreateExpression<OfertaInforme>();
 				var predicate = PredicateBuilder.True<OfertaInforme>();
 	

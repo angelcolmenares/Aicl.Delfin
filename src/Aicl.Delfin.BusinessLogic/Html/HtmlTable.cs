@@ -8,7 +8,7 @@ namespace Aicl.Delfin.Html
 	{
 		public TableStyle Style{get;set;}
 
-		public RowBorder RowBorderStyle{get;set;}
+		public RowStyle RowStyle{get;set;}
 
 		public Table ():base("table")
 		{
@@ -16,7 +16,7 @@ namespace Aicl.Delfin.Html
 		}
 
 		public void AddRow(Row row){
-			InnerHtml=InnerHtml+row.ToString(RowBorderStyle);
+			InnerHtml=InnerHtml+row.ToString(RowStyle);
 		}
 
 		public override string ToString ()
@@ -54,7 +54,52 @@ namespace Aicl.Delfin.Html
 						Left=1
 					}
 
-				};}
+				};
+			}
+		}
+
+		public static RowStyle DefaultRowStyle {
+			get {return new RowStyle{
+					BorderStyle = new RowBorder{
+						Width=new ElementSideProperty("border-width"){
+							Top=1,
+							Right=1,
+							Bottom=1,
+							Left=1
+						},
+						Style ="solid",
+						Color="black"
+					},
+					Padding = new ElementPadding{
+						Top=1,
+						Right=1,
+						Bottom=1,
+						Left=1
+					}
+				};
+			}
+		}
+
+		public static CellStyle DefaultCellStyle {
+			get {return new CellStyle{
+					BorderStyle = new CellBorder{
+						Width=new ElementSideProperty("border-width"){
+							Top=1,
+							Right=1,
+							Bottom=1,
+							Left=1
+						},
+						Style ="solid",
+						Color="black"
+					},
+					Padding = new ElementPadding{
+						Top=1,
+						Right=1,
+						Bottom=1,
+						Left=1
+					}
+				};
+			}
 		}
 
 	}
@@ -63,23 +108,23 @@ namespace Aicl.Delfin.Html
 	#region Row
 	public class Row:TagBuilder
 	{
-		public CellBorder CellBorderStyle{get;set;}
+		public CellStyle CellStyle{get;set;}
 
-		public RowBorder RowBorderStyle{get;set;}
+		public RowStyle Style{get;set;}
 
 		public Row():base("tr"){
 			InnerHtml=string.Empty;
 		}
 
 		public void AddCell(Cell cell){
-			InnerHtml=InnerHtml+cell.ToString(CellBorderStyle);
+			InnerHtml=InnerHtml+cell.ToString(CellStyle);
 		}
 
-		internal string ToString(RowBorder rowBorderStyle){
+		internal string ToString(RowStyle rowStyle){
 
-			RowBorder rb = RowBorderStyle??rowBorderStyle;
-			if(rb!=default(RowBorder))
-				Attributes.Add("style", rb.ToString());
+			RowStyle rs = Style??rowStyle;
+			if(rs!=default(RowStyle))
+				Attributes.Add("style", rs.ToString());
 			return base.ToString(TagRenderMode.Normal);
 		}
 
@@ -89,7 +134,7 @@ namespace Aicl.Delfin.Html
 	#region Cell
 	public class Cell:TagBuilder
 	{
-		public CellBorder CellBorderStyle{get;set;}
+		public CellStyle Style{get;set;}
 
 		public Cell():base("td"){
 			InnerHtml=string.Empty;
@@ -104,11 +149,11 @@ namespace Aicl.Delfin.Html
 			set{ SetInnerText(value.ToString());}
 		}
 
-		internal string ToString(CellBorder cellBorderStyle){
+		internal string ToString(CellStyle cellStyle){
 
-			CellBorder cb = CellBorderStyle??cellBorderStyle;
-			if(cb!=default(CellBorder))
-				Attributes.Add("style", cb.ToString());
+			CellStyle cs = Style??cellStyle;
+			if(cs!=default(CellStyle))
+				Attributes.Add("style", cs.ToString());
 			return base.ToString(TagRenderMode.Normal);
 		}
 
@@ -291,6 +336,32 @@ namespace Aicl.Delfin.Html
 		}
 	}
 
+	public class RowStyle:ElementStyle{
+
+		public RowStyle():base(){
+					
+		}
+		public RowBorder BorderStyle {get;set;}
+
+		public override string ToString ()
+		{
+			return base.ToString() + ((BorderStyle==default(RowBorder))?"":BorderStyle.ToString());
+		}
+	}
+
+	public class CellStyle:ElementStyle{
+
+		public CellStyle():base(){
+					
+		}
+		public CellBorder BorderStyle {get;set;}
+
+		public override string ToString ()
+		{
+			return base.ToString() + ((BorderStyle==default(CellBorder))?"":BorderStyle.ToString());
+		}
+	}
+
 
 }
 
@@ -369,6 +440,7 @@ padding	1px 2px 3px 4px 5px 0px
 
 <table width="200" cellpadding="0" cellspacing="0" border="0"
 style="background-color: #9C084A">
+.datagrid table { border-collapse: collapse; text-align: left; width: 100%; } .datagrid {font: normal 12px/150% Times New Roman, Times, serif; background: #fff; overflow: hidden; border: 4px solid #FFFFFF; -webkit-border-radius: 7px; -moz-border-radius: 7px; border-radius: 7px; }.datagrid table td, .datagrid table th { padding: 3px 10px; }.datagrid table thead th {background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');background-color:#006699; color:#FFFFFF; font-size: 15px; font-weight: bold; border-left: 1px solid #0070A8; } .datagrid table thead th:first-child { border: none; }.datagrid table tbody td { color: #00496B; border-left: 1px solid #E1EEF4;font-size: 12px;border-bottom: 2px solid #F44E11;font-weight: normal; }.datagrid table tbody .alt td { background: #E1EEF4; color: #00496B; }.datagrid table tbody td:first-child { border-left: none; }.datagrid table tbody tr:last-child td { border-bottom: none; }.datagrid table tfoot td div { border-top: 1px solid #FFFFFF;background: #E1EEF4;} .datagrid table tfoot td { padding: 0; font-size: 12px } .datagrid table tfoot td div{ padding: 2px; }.datagrid table tfoot td ul { margin: 0; padding:0; list-style: none; text-align: right; }.datagrid table tfoot  li { display: inline; }.datagrid table tfoot li a { text-decoration: none; display: inline-block;  padding: 2px 8px; margin: 1px;color: #FFFFFF;border: 1px solid #006699;-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');background-color:#006699; }.datagrid table tfoot ul.active, .datagrid table tfoot ul a:hover { text-decoration: none;border-color: #006699; color: #FFFFFF; background: none; background-color:#00557F;}
 
 
 */
