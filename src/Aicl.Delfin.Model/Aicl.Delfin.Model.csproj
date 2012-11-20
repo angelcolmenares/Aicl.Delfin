@@ -89,6 +89,7 @@
     <Compile Include="Types\Auth\UserRole.cs" />
     <Compile Include="Types\Auth\RolePermission.cs" />
     <Compile Include="Types\Tarea.cs" />
+    <Compile Include="Types\OfertaInforme.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
