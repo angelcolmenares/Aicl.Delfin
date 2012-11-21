@@ -10,7 +10,8 @@ namespace Aicl.Delfin.Html
 
 		public RowStyle RowStyle{get;set;}
 
-		public Header Header {get;set;}
+		public TableHeader Header {get;set;}
+		public TableFooter Footer {get;set;}
 
 		int RowsCount{get;set;}
 
@@ -30,10 +31,14 @@ namespace Aicl.Delfin.Html
 		{
 			if(Style!=default(TableStyle)){
 				var style= Style.ToString();
-				if(!string.IsNullOrEmpty(style)) Attributes.Add("style", style );
+				if(!string.IsNullOrEmpty(style)) Attributes["style"]= style ;
 			}
 
-			if(Header!=default(Header)){
+			if(Footer!=default(TableFooter)){
+				InnerHtml= Footer.ToString()+ InnerHtml;
+			}
+
+			if(Header!=default(TableHeader)){
 				InnerHtml= Header.ToString()+ InnerHtml;
 			}
 
@@ -45,17 +50,17 @@ namespace Aicl.Delfin.Html
 					//style="border-collapse:separate;padding:1px 1px 1px 1px;border-spacing:10px;border-width:1px;border-style:solid;border-color:black;background-color:white; border-radius:5px;" 
 					BorderStyle = new TableBorder{
 						Width=new BorderWidth(){
-							Top=1
+							AllSides=1
 						},
 						Style ="solid",
 						Spacing=0,
 						Radius= new BorderRadius(){
-							Top=10
+							AllSides=10
 						},
 						Color="black"
 					},
 					Padding = new ElementPadding{
-						Top=10
+						AllSides=10
 					}
 
 				};
@@ -75,7 +80,7 @@ namespace Aicl.Delfin.Html
 		public static CellStyle DefaultCellStyle {
 			get {return new CellStyle{
 					Padding = new ElementPadding{
-						Top=2
+						AllSides=2
 					}
 				};
 			}
@@ -104,23 +109,40 @@ namespace Aicl.Delfin.Html
 			RowStyle rs = Style??rowStyle;
 			if(rs!=default(RowStyle)){
 				var style= rs.ToString();
-				if(!string.IsNullOrEmpty(style)) Attributes.Add("style", style );
+				if(!string.IsNullOrEmpty(style)) Attributes["style"]= style;
 			}
 			return base.ToString(TagRenderMode.Normal);
 		}
 	}
 
-	public class Header:Row{
+	public class TableHeader:Row{
 
-		public Header():base(){}
+		public TableHeader():base(){}
 		public void AddColumnHeader(ColumnHeader columnHeader){
 			InnerHtml=InnerHtml+columnHeader.ToString(CellStyle); 
 		}
 		public override string ToString ()
 		{
-			return base.ToString(Style);
+			var tag = new TagBuilder("thead");
+			tag.InnerHtml= base.ToString(Style);
+			return tag.ToString(TagRenderMode.Normal);
 		}
 	}
+
+	public class TableFooter:Row{
+
+		public TableFooter():base(){}
+		public void AddColumnFooter(ColumnFooter columnFooter){
+			InnerHtml=InnerHtml+columnFooter.ToString(CellStyle); 
+		}
+		public override string ToString ()
+		{
+			var tag = new TagBuilder("tfoot");
+			tag.InnerHtml= base.ToString(Style);
+			return tag.ToString(TagRenderMode.Normal);
+		}
+	}
+
 
 	#endregion Row
 
@@ -149,7 +171,7 @@ namespace Aicl.Delfin.Html
 			CellStyle cs = Style??cellStyle;
 			if(cs!=default(CellStyle)){
 				var style= cs.ToString();
-				if(!string.IsNullOrEmpty(style)) Attributes.Add("style", style );
+				if(!string.IsNullOrEmpty(style)) Attributes["style"]= style;
 			}
 			return base.ToString(TagRenderMode.Normal);
 		}
@@ -165,6 +187,10 @@ namespace Aicl.Delfin.Html
 	{
 		public ColumnHeader():base("th"){}
 		public ColumnHeader(object value):base("th",value){}
+	}
+
+	public class ColumnFooter:ColumnHeader{
+		public ColumnFooter():base(){}
 	}
 
 	#endregion Cell
@@ -196,6 +222,10 @@ namespace Aicl.Delfin.Html
 	#region TableBorder
 	public class TableBorder:Border{
 		public TableBorder():base(){}
+
+		public int? AllBorderSpacing {get;set;}
+		public int? HorizontalBorderSpacing {get;set;}
+		public int? VerticalBorderSpacing {get;set;}
 
 		public int? Spacing {get;set;}
 		public string Collapse{get;set;}
@@ -238,6 +268,18 @@ namespace Aicl.Delfin.Html
 		public ElementHeight Height  {get;set;}
 		public ElementPadding Padding {get;set;}
 		public string BackgroundColor {get;set;}
+		public int? FontSize{get;set;}
+		public string FontWeight{get;set;}
+		public string FontStyle{get;set;}
+		public string FontFamily{get;set;}
+
+/*
+font-size: 15px; 
+font-weight: bold; 
+font-style : normal || italic 
+font-family: verdana,arial,sans-serif;
+
+*/
 		public string Color {get;set;}
 
 		public override string ToString ()
@@ -247,6 +289,16 @@ namespace Aicl.Delfin.Html
 				r=string.Format("{0} background-color:{1};",r, BackgroundColor);
 			if(!string.IsNullOrEmpty(Color)) 
 				r=string.Format("{0} color:{1};",r, Color);
+			if(FontSize.HasValue)
+				r=string.Format("{0} font-size:{1};",r, FontSize.Value);
+			if(!string.IsNullOrEmpty(FontWeight)) 
+				r=string.Format("{0} font-weight:{1};",r, FontWeight);
+			if(!string.IsNullOrEmpty(FontStyle)) 
+				r=string.Format("{0} font-style:{1};",r, FontStyle);
+			if(!string.IsNullOrEmpty(FontFamily)) 
+				r=string.Format("{0} font-family:{1};",r, FontFamily);
+
+
 			return r.Trim();
 		}
 	}
@@ -337,6 +389,7 @@ namespace Aicl.Delfin.Html
 			Unit="px";
 		}
 
+		public int? AllSides {get;set;}
 		public int? Top {get;set;}
 		public int? Right {get;set;}
 		public int? Bottom {get;set;}
@@ -346,13 +399,42 @@ namespace Aicl.Delfin.Html
 
 		public override string ToString ()
 		{
-			var r= string.Format("{0}{1}{2}{3}",
-			                     Top.HasValue?Top.Value.ToString()+Unit+" ":string.Empty,
-			                     Right.HasValue?Right.Value.ToString()+Unit+" ":string.Empty,
-			                     Bottom.HasValue?Bottom.Value.ToString()+Unit+" ":string.Empty,
-			                     Left.HasValue?Left.Value.ToString()+Unit:string.Empty).Trim();
+			int? t, r, b, l;
+			if(Left.HasValue){
+				l=Left.Value;
+				b= Bottom??(AllSides??0);
+				r= Right??(AllSides??0);
+				t= Top??(AllSides??0);
+			}
+			else if(Bottom.HasValue){
+				l =AllSides??0;
+				b=Bottom.Value;
+				r= Right??(AllSides??0);
+				t= Top??(AllSides??0);
+			}
+			else if(Right.HasValue){
+				l =AllSides??0;
+				b =AllSides??0;
+				r=Right.Value;
+				t= Top??(AllSides??0);
+			}
+			else if(Top.HasValue){
+				l =AllSides??0;
+				b =AllSides??0;
+				r =AllSides??0;
+				t=Top.Value;
+			}
+			else{
+				t =AllSides;
+			}
 
-			return string.IsNullOrEmpty(r)?string.Empty:r+";";
+			var rs= string.Format("{0}{1}{2}{3}",
+			                     t.HasValue?t.Value.ToString()+Unit+" ":string.Empty,
+			                     r.HasValue?r.Value.ToString()+Unit+" ":string.Empty,
+			                     b.HasValue?b.Value.ToString()+Unit+" ":string.Empty,
+			                     l.HasValue?l.Value.ToString()+Unit:string.Empty).Trim();
+
+			return string.IsNullOrEmpty(rs)?string.Empty:rs+";";
 		}
 	}
 
@@ -398,6 +480,10 @@ namespace Aicl.Delfin.Html
 }
 
 /*
+font-size: 15px; 
+font-weight: bold; 
+font-style : normal || italic 
+font-family: verdana,arial,sans-serif;
 
 .datagrid table 
 {
