@@ -10,19 +10,33 @@ namespace Aicl.Delfin.Html
 
 		public RowStyle RowStyle{get;set;}
 
+		public Header Header {get;set;}
+
+		int RowsCount{get;set;}
+
 		public Table ():base("table")
 		{
+			RowsCount=0;
+			AlternateRowStyle=new RowStyle(){BackgroundColor="#E1EEF4"};
 			InnerHtml=string.Empty;
 		}
 
 		public void AddRow(Row row){
-			InnerHtml=InnerHtml+row.ToString(RowStyle);
+			InnerHtml=InnerHtml+row.ToString( RowsCount%2==0? RowStyle: AlternateRowStyle??RowStyle);
+			RowsCount++;
 		}
 
 		public override string ToString ()
 		{
-			if(Style!=default(TableStyle))
-				Attributes.Add("style", Style.ToString());
+			if(Style!=default(TableStyle)){
+				var style= Style.ToString();
+				if(!string.IsNullOrEmpty(style)) Attributes.Add("style", style );
+			}
+
+			if(Header!=default(Header)){
+				InnerHtml= Header.ToString()+ InnerHtml;
+			}
+
 			return base.ToString(TagRenderMode.Normal);
 		}
 
@@ -30,28 +44,18 @@ namespace Aicl.Delfin.Html
 			get {return new TableStyle{
 					//style="border-collapse:separate;padding:1px 1px 1px 1px;border-spacing:10px;border-width:1px;border-style:solid;border-color:black;background-color:white; border-radius:5px;" 
 					BorderStyle = new TableBorder{
-						Spacing=1,
-						Width=new ElementSideProperty("border-width"){
-							Top=1,
-							Right=1,
-							Bottom=1,
-							Left=1
+						Width=new BorderWidth(){
+							Top=1
 						},
 						Style ="solid",
-						Radius= new ElementSideProperty("border-radius"){
-							Top=10,
-							Right=10,
-							Bottom=10,
-							Left=10
+						Spacing=0,
+						Radius= new BorderRadius(){
+							Top=10
 						},
 						Color="black"
-
 					},
 					Padding = new ElementPadding{
-						Top=1,
-						Right=1,
-						Bottom=1,
-						Left=1
+						Top=10
 					}
 
 				};
@@ -59,44 +63,19 @@ namespace Aicl.Delfin.Html
 		}
 
 		public static RowStyle DefaultRowStyle {
-			get {return new RowStyle{
-					BorderStyle = new RowBorder{
-						Width=new ElementSideProperty("border-width"){
-							Top=1,
-							Right=1,
-							Bottom=1,
-							Left=1
-						},
-						Style ="solid",
-						Color="black"
-					},
-					Padding = new ElementPadding{
-						Top=1,
-						Right=1,
-						Bottom=1,
-						Left=1
-					}
-				};
+			get {
+				return new RowStyle();
 			}
+		}
+
+		public static RowStyle AlternateRowStyle {
+			get ;set;
 		}
 
 		public static CellStyle DefaultCellStyle {
 			get {return new CellStyle{
-					BorderStyle = new CellBorder{
-						Width=new ElementSideProperty("border-width"){
-							Top=1,
-							Right=1,
-							Bottom=1,
-							Left=1
-						},
-						Style ="solid",
-						Color="black"
-					},
 					Padding = new ElementPadding{
-						Top=1,
-						Right=1,
-						Bottom=1,
-						Left=1
+						Top=2
 					}
 				};
 			}
@@ -108,7 +87,7 @@ namespace Aicl.Delfin.Html
 	#region Row
 	public class Row:TagBuilder
 	{
-		public CellStyle CellStyle{get;set;}
+		public CellStyle CellStyle {get;set;}
 
 		public RowStyle Style{get;set;}
 
@@ -117,30 +96,46 @@ namespace Aicl.Delfin.Html
 		}
 
 		public void AddCell(Cell cell){
-			InnerHtml=InnerHtml+cell.ToString(CellStyle);
+			InnerHtml=InnerHtml+cell.ToString(CellStyle); 
 		}
 
 		internal string ToString(RowStyle rowStyle){
 
 			RowStyle rs = Style??rowStyle;
-			if(rs!=default(RowStyle))
-				Attributes.Add("style", rs.ToString());
+			if(rs!=default(RowStyle)){
+				var style= rs.ToString();
+				if(!string.IsNullOrEmpty(style)) Attributes.Add("style", style );
+			}
 			return base.ToString(TagRenderMode.Normal);
 		}
-
 	}
+
+	public class Header:Row{
+
+		public Header():base(){}
+		public void AddColumnHeader(ColumnHeader columnHeader){
+			InnerHtml=InnerHtml+columnHeader.ToString(CellStyle); 
+		}
+		public override string ToString ()
+		{
+			return base.ToString(Style);
+		}
+	}
+
 	#endregion Row
 
+
+
 	#region Cell
-	public class Cell:TagBuilder
+	public abstract class TagCell:TagBuilder
 	{
 		public CellStyle Style{get;set;}
 
-		public Cell():base("td"){
+		public TagCell(string tag):base(tag){
 			InnerHtml=string.Empty;
 		}
 
-		public Cell(object value):base("td"){
+		public TagCell(string tag,object value):base(tag){
 			SetInnerText(value.ToString());
 		}
 
@@ -152,33 +147,46 @@ namespace Aicl.Delfin.Html
 		internal string ToString(CellStyle cellStyle){
 
 			CellStyle cs = Style??cellStyle;
-			if(cs!=default(CellStyle))
-				Attributes.Add("style", cs.ToString());
+			if(cs!=default(CellStyle)){
+				var style= cs.ToString();
+				if(!string.IsNullOrEmpty(style)) Attributes.Add("style", style );
+			}
 			return base.ToString(TagRenderMode.Normal);
 		}
-
 	}
+
+	public class Cell:TagCell
+	{
+		public Cell():base("td"){}
+		public Cell(object value):base("td",value){}
+	}
+
+	public class ColumnHeader:TagCell
+	{
+		public ColumnHeader():base("th"){}
+		public ColumnHeader(object value):base("th",value){}
+	}
+
 	#endregion Cell
 
 	#region Border
 	public class Border{
 
 		public Border(){
-			Width = new ElementSideProperty("border-width");
-			Radius = new ElementSideProperty("border-radius");
+			Width = new BorderWidth();
+			Radius = new BorderRadius();
 		}
 
-
-		public ElementSideProperty Width {get;set;}
-		public ElementSideProperty Radius {get;set;}
+		public BorderWidth Width {get;set;}
+		public BorderRadius Radius {get;set;}
 		public string Style {get;set;}
 		public string Color {get;set;}
 		public override string ToString(){
 		
-			var bw= Width==default(ElementSideProperty)? string.Empty: Width.ToString();
+			var bw= Width==default(BorderWidth)? string.Empty: Width.ToString();
 			var st = string.IsNullOrEmpty(Style)?string.Empty: string.Format("border-style:{0};",Style);
 			var cl = string.IsNullOrEmpty(Color)?string.Empty: string.Format("border-color:{0};",Color);
-			var br= Radius==default(ElementSideProperty)? string.Empty: Radius.ToString();
+			var br= Radius==default(BorderRadius)? string.Empty: Radius.ToString();
 			return string.Format("{0}{1}{2}{3}",
 			                     bw,st,cl,br);
 		}
@@ -236,10 +244,10 @@ namespace Aicl.Delfin.Html
 		{
 			var r= string.Format ("{0}{1}{2}", Width, Height, Padding);
 			if(!string.IsNullOrEmpty(BackgroundColor)) 
-				r=string.Format("{0} background-color:{1}",r, BackgroundColor);
+				r=string.Format("{0} background-color:{1};",r, BackgroundColor);
 			if(!string.IsNullOrEmpty(Color)) 
-				r=string.Format("{0} color:{1}",r, Color);
-			return r;
+				r=string.Format("{0} color:{1};",r, Color);
+			return r.Trim();
 		}
 	}
 	#endregion ElementStyle
@@ -271,6 +279,31 @@ namespace Aicl.Delfin.Html
 			return Height.HasValue? string.Format("height:{0}{1};",Height.Value,Unit):string.Empty;
 		}
 	}
+
+	public class BorderWidth:ElementSide{
+		public BorderWidth(){
+			Unit="px";
+		}
+		public override string ToString(){
+			var r= base.ToString();
+			return (string.IsNullOrEmpty(r))?
+				string.Empty:
+					string.Format("border-width:{0}",r);
+		}
+	}
+
+	public class BorderRadius:ElementSide{
+		public BorderRadius(){
+			Unit="px";
+		}
+		public override string ToString(){
+			var r= base.ToString();
+			return (string.IsNullOrEmpty(r))?
+				string.Empty:
+					string.Format("border-radius:{0}",r);
+		}
+	}
+
 
 	public class ElementPadding:ElementSide{
 		public ElementPadding(){
@@ -341,11 +374,10 @@ namespace Aicl.Delfin.Html
 		public RowStyle():base(){
 					
 		}
-		public RowBorder BorderStyle {get;set;}
 
 		public override string ToString ()
 		{
-			return base.ToString() + ((BorderStyle==default(RowBorder))?"":BorderStyle.ToString());
+			return base.ToString() ;
 		}
 	}
 

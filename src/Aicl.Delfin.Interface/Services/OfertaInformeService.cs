@@ -43,8 +43,19 @@ namespace Aicl.Delfin.Interface
 
 				//------------------------------
 
+
+				Header h = new Header();
+				h.Style = new RowStyle{BackgroundColor="#00557F", Color="#FFFFFF"};
+				h.Attributes.Add("someAtt","somvalue");
+				ColumnHeader ch = new ColumnHeader(){Value="First"};
+				h.AddColumnHeader(ch);
+
+				ch = new ColumnHeader(){Value="Second"};
+				h.AddColumnHeader(ch);
+
 				t = new Table(){
-					Style= Table.DefaultTableStyle 
+					Style= Table.DefaultTableStyle,
+					Header= h
 
 				};
 
@@ -86,28 +97,30 @@ namespace Aicl.Delfin.Interface
 					RowStyle= Table.DefaultRowStyle
 				};
 
-				r = new Row();
+				var cellStyle= Table.DefaultCellStyle;
+
+				r = new Row(){CellStyle=cellStyle};
 				c= new Cell(){Value= "1 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "1 Row Segunda Fila"};
 				r.AddCell(c);
 				t.AddRow(r);
 
-				r = new Row();
+				r = new Row(){CellStyle=cellStyle};
 				c= new Cell(){Value= "2 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "2 Row Segunda Fila"};
 				r.AddCell(c);
 				t.AddRow(r);
 
-				r = new Row();
+				r = new Row(){CellStyle=cellStyle};
 				c= new Cell(){Value= "3 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "3 Row Segunda Fila"};
 				r.AddCell(c);
 				t.AddRow(r);
 
-				r = new Row();
+				r = new Row(){CellStyle=cellStyle, Style= new RowStyle{BackgroundColor="red"}};
 				c= new Cell(){Value= "4 Row Primera Celda"};
 				r.AddCell(c);
 				c= new Cell(){Value= "4 Row Segunda Fila"};
