@@ -53,7 +53,7 @@ namespace Aicl.Delfin.Html
 							AllSides=1
 						},
 						Style ="solid",
-						Spacing=0,
+						AllBorderSpacing=0,
 						Radius= new BorderRadius(){
 							AllSides=10
 						},
@@ -227,14 +227,24 @@ namespace Aicl.Delfin.Html
 		public int? HorizontalBorderSpacing {get;set;}
 		public int? VerticalBorderSpacing {get;set;}
 
-		public int? Spacing {get;set;}
 		public string Collapse{get;set;}
 
 		public override string ToString ()
 		{
+			string bs=string.Empty;
+			if(VerticalBorderSpacing.HasValue){
+				bs=string.Format("border-spacing:{0}px {1}px",HorizontalBorderSpacing??(AllBorderSpacing??0), VerticalBorderSpacing );
+			}
+			else if(HorizontalBorderSpacing.HasValue){
+				bs=string.Format("border-spacing:{0}px{1}",HorizontalBorderSpacing,
+				                 AllBorderSpacing.HasValue? string.Format(" {0}px",AllBorderSpacing):string.Empty );
+			}
+			else{
+				bs= AllBorderSpacing.HasValue? string.Format("border-spacing:{0}px",AllBorderSpacing):string.Empty;
+			}
+
 			var bc = string.IsNullOrEmpty(Collapse)?string.Empty: string.Format("border-collapse:{0};",Collapse);
-			var sp = (Spacing.HasValue)? string.Format("border-spacing:{0}px;",Spacing.Value):string.Empty;
-			return base.ToString()+ string.Format("{0}{1}",bc,sp);
+			return base.ToString()+  string.Format("{0}{1}",bc,bs);
 		}
 	}
 	#endregion TableBorder
@@ -407,21 +417,21 @@ font-family: verdana,arial,sans-serif;
 				t= Top??(AllSides??0);
 			}
 			else if(Bottom.HasValue){
-				l =AllSides??0;
+				l =AllSides;
 				b=Bottom.Value;
 				r= Right??(AllSides??0);
 				t= Top??(AllSides??0);
 			}
 			else if(Right.HasValue){
-				l =AllSides??0;
-				b =AllSides??0;
+				l =AllSides;
+				b =AllSides;
 				r=Right.Value;
 				t= Top??(AllSides??0);
 			}
 			else if(Top.HasValue){
-				l =AllSides??0;
-				b =AllSides??0;
-				r =AllSides??0;
+				l =AllSides;
+				b =AllSides;
+				r =AllSides;
 				t=Top.Value;
 			}
 			else{
