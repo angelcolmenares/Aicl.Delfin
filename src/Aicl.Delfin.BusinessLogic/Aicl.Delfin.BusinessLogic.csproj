@@ -90,7 +90,8 @@
     <Compile Include="Report\OfertaMargin.cs" />
     <Compile Include="Report\OfertaHtml.cs" />
     <Compile Include="Report\Extensions.cs" />
-    <Compile Include="Html\HtmlTable.cs" />
+    <Compile Include="Html\Table.cs" />
+    <Compile Include="Html\Grid.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

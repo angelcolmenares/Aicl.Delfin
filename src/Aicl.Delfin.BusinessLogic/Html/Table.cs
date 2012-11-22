@@ -3,6 +3,47 @@ using ServiceStack.Markdown;
 namespace Aicl.Delfin.Html
 {
 
+	public abstract class TagWithStyle:TagBuilder{
+
+		public TagWithStyle(string tagName):base(tagName){
+
+		}
+
+		public ElementStyle Style {
+			get;set;
+		}
+
+		protected string ToHtml(){
+
+			if(Style!=default(ElementStyle)){
+				var style= Style.ToString();
+				if(!string.IsNullOrEmpty(style)) Attributes["style"]= style;
+			}
+
+			return base.ToString(TagRenderMode.Normal);
+		}
+
+		public override string ToString ()
+		{
+			return ToHtml();
+		}
+
+	}
+
+	public class Paragrag:TagWithStyle{
+
+		public Paragrag():base("p"){}
+
+		public string Text {get;set;}
+
+		public override string ToString(){
+
+			if(!string.IsNullOrEmpty(Text)) InnerHtml =Text;
+			return base.ToHtml();
+		}
+
+	}
+
 	#region Table
 	public class Table:TagBuilder
 	{
@@ -18,7 +59,11 @@ namespace Aicl.Delfin.Html
 		public Table ():base("table")
 		{
 			RowsCount=0;
-			AlternateRowStyle=new RowStyle(){BackgroundColor="#E1EEF4"};
+			InnerHtml=string.Empty;
+		}
+
+		internal Table(string tagName):base(tagName){
+			RowsCount=0;
 			InnerHtml=string.Empty;
 		}
 
@@ -73,8 +118,12 @@ namespace Aicl.Delfin.Html
 			}
 		}
 
-		public static RowStyle AlternateRowStyle {
-			get ;set;
+		public  RowStyle AlternateRowStyle { get;set;}
+
+		public  RowStyle DefaultAlternateRowStyle {
+			get {
+				return new RowStyle(){BackgroundColor="#E1EEF4"};
+			}
 		}
 
 		public static CellStyle DefaultCellStyle {
@@ -100,52 +149,42 @@ namespace Aicl.Delfin.Html
 			InnerHtml=string.Empty;
 		}
 
-		public void AddCell(Cell cell){
+		public void AddCell(TagCell cell){
 			InnerHtml=InnerHtml+cell.ToString(CellStyle); 
 		}
 
+		public int? RowSpan {get;set;}
+
 		internal string ToString(RowStyle rowStyle){
+
+			if (RowSpan.HasValue && RowSpan.Value!=default(int))
+				Attributes["rowspan"]=RowSpan.Value.ToString();
 
 			RowStyle rs = Style??rowStyle;
 			if(rs!=default(RowStyle)){
 				var style= rs.ToString();
 				if(!string.IsNullOrEmpty(style)) Attributes["style"]= style;
 			}
+
 			return base.ToString(TagRenderMode.Normal);
 		}
 	}
 
-	public class TableHeader:Row{
+	public class TableHeader:Table{
 
-		public TableHeader():base(){}
-		public void AddColumnHeader(ColumnHeader columnHeader){
-			InnerHtml=InnerHtml+columnHeader.ToString(CellStyle); 
+		public TableHeader():base("thead"){
+
 		}
-		public override string ToString ()
-		{
-			var tag = new TagBuilder("thead");
-			tag.InnerHtml= base.ToString(Style);
-			return tag.ToString(TagRenderMode.Normal);
-		}
+
 	}
 
-	public class TableFooter:Row{
+	public class TableFooter:Table{
 
-		public TableFooter():base(){}
-		public void AddColumnFooter(ColumnFooter columnFooter){
-			InnerHtml=InnerHtml+columnFooter.ToString(CellStyle); 
-		}
-		public override string ToString ()
-		{
-			var tag = new TagBuilder("tfoot");
-			tag.InnerHtml= base.ToString(Style);
-			return tag.ToString(TagRenderMode.Normal);
-		}
+		public TableFooter():base("tfoot"){}
 	}
 
 
 	#endregion Row
-
 
 
 	#region Cell
@@ -158,15 +197,20 @@ namespace Aicl.Delfin.Html
 		}
 
 		public TagCell(string tag,object value):base(tag){
-			SetInnerText(value.ToString());
+			InnerHtml= value.ToString();
 		}
 
 		public object Value{
 			get{ return InnerHtml;}
-			set{ SetInnerText(value.ToString());}
+			set{ InnerHtml=value.ToString();}
 		}
 
+		public int? ColumnSpan{get;set;}
+
 		internal string ToString(CellStyle cellStyle){
+
+			if(ColumnSpan.HasValue && ColumnSpan.Value!=default(int))
+				Attributes["colspan"]=ColumnSpan.Value.ToString();
 
 			CellStyle cs = Style??cellStyle;
 			if(cs!=default(CellStyle)){
@@ -282,6 +326,8 @@ namespace Aicl.Delfin.Html
 		public string FontWeight{get;set;}
 		public string FontStyle{get;set;}
 		public string FontFamily{get;set;}
+		public string TextAlign {get;set;}
+
 
 /*
 font-size: 15px; 
@@ -307,6 +353,8 @@ font-family: verdana,arial,sans-serif;
 				r=string.Format("{0} font-style:{1};",r, FontStyle);
 			if(!string.IsNullOrEmpty(FontFamily)) 
 				r=string.Format("{0} font-family:{1};",r, FontFamily);
+			if(!string.IsNullOrEmpty(TextAlign)) 
+				r=string.Format("{0} text-align:{1};",r, TextAlign);
 
 
 			return r.Trim();
@@ -463,9 +511,8 @@ font-family: verdana,arial,sans-serif;
 
 	public class RowStyle:ElementStyle{
 
-		public RowStyle():base(){
-					
-		}
+		public RowStyle():base(){}
+
 
 		public override string ToString ()
 		{
@@ -473,16 +520,20 @@ font-family: verdana,arial,sans-serif;
 		}
 	}
 
+	//-------------------------------------------------------------------------------
+
 	public class CellStyle:ElementStyle{
 
-		public CellStyle():base(){
-					
-		}
+		public CellStyle():base(){}
+
 		public CellBorder BorderStyle {get;set;}
+
 
 		public override string ToString ()
 		{
-			return base.ToString() + ((BorderStyle==default(CellBorder))?"":BorderStyle.ToString());
+			return 
+				base.ToString()+
+					((BorderStyle==default(CellBorder))?"":BorderStyle.ToString());
 		}
 	}
 
