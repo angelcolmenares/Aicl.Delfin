@@ -92,6 +92,7 @@
     <Compile Include="Report\Extensions.cs" />
     <Compile Include="Html\Table.cs" />
     <Compile Include="Html\Grid.cs" />
+    <Compile Include="Html\HtmlTable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
