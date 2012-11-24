@@ -3,34 +3,115 @@ using ServiceStack.Markdown;
 
 namespace Aicl.Delfin.Html
 {
+	public class Paragragh:TagBae{
 
-	public class HtmlDiv:HtmlTagBase{
+		public Paragragh():base("p"){
+			Style = ParagrahStyle()
+		}
+		// TODO : check :=>
+		public string Text {get;set;}
+
+		public override string ToString(){
+
+			if(!string.IsNullOrEmpty(Text)) InnerHtml =Text;
+			return base.ToHtml();
+		}
+
+	
+
+	public class HtmlDiv:TagBase{
 
 		public HtmlDiv():base("div"){
 			Style = new HtmlDivStyle();
 		}
 
-		public void AddHtmlTag(HtmlTagBase tag){
+		public void AddHtmlTag(TagBase tag){
 			InnerHtml= InnerHtml+ tag;
 		}
 
 	}
 
-	public class HtmlTable:HtmlTagBase
+	public class HtmlTable:TableBase
 	{
-		int RowsCount{get;set;}
+		public HtmlTable ():base("table"){}
+
+		public HtmlTableHeader CreateTableHeader(){
+			return new HtmlTableHeader();
+		}
+
+		public HtmlTableFooter CreateTableFooter(){
+			return new HtmlTableFooter();
+		}
+
+		public HtmlTableHeader Header {
+			get; set;
+		}
+
+		public HtmlTableFooter Footer {
+			get; set;
+		}
+
+		public override string ToString ()
+		{
+
+			if(Footer!=default(HtmlTableFooter)){
+				InnerHtml= Footer.ToString()+ InnerHtml;
+			}
+
+			if(Header!=default(HtmlTableHeader)){
+				InnerHtml= Header.ToString()+ InnerHtml;
+			}
+
+			return base.ToString();
+		}
+
+	}
+
+	public class HtmlTableHeader:TableBase
+	{
+		protected internal HtmlTableHeader ():base("thead"){}
+
+		public override RowBase CreateRow(){
+			HtmlHeaderRow row = new HtmlHeaderRow();
+
+			row.Style= RowsCount%2==0?
+				RowStyle??row.Style:
+					AlternateRowStyle??RowStyle??row.Style;
+			RowsCount++;
+			return row;
+		}
+	}
+
+	public class HtmlTableFooter:TableBase{
+
+		public HtmlTableFooter():base("tfoot"){}
+
+		public override RowBase CreateRow(){
+			HtmlFooterRow row = new HtmlFooterRow();
+
+			row.Style= RowsCount%2==0?
+				RowStyle??row.Style:
+					AlternateRowStyle??RowStyle??row.Style;
+			RowsCount++;
+			return row;
+		}
+	}
+
+	//--
+	public abstract class TableBase:TagBase
+	{
+		protected int RowsCount{get;set;}
 
 		public HtmlRowStyle RowStyle{get;set;}
 		public HtmlRowStyle AlternateRowStyle { get;set;}
 
-		public HtmlTable ():base("table"){
+		protected internal TableBase (string tagName):base(tagName){
 			Style = new HtmlTableStyle();
 			RowsCount=0;
 		}
 
-
-		public RowTag CreateRow(){
-			RowTag row = new RowTag();
+		public virtual RowBase CreateRow(){
+			HtmlRow row = new HtmlRow();
 
 			row.Style= RowsCount%2==0?
 				RowStyle??row.Style:
@@ -39,7 +120,7 @@ namespace Aicl.Delfin.Html
 			return row;
 		}
 
-		public void AddRow(RowTag row){
+		public void AddRow(RowBase row){
 			InnerHtml=InnerHtml+row.ToString();
 		}
 
@@ -71,13 +152,41 @@ namespace Aicl.Delfin.Html
 
 	}
 
-	public  class RowTag:TagBuilder{
+	//--
 
-		protected internal RowTag():base("tr"){
+	public class HtmlRow:RowBase{
+		protected internal HtmlRow():base(){}
+	}
+
+	public class HtmlHeaderRow:RowBase{
+		protected internal HtmlHeaderRow():base(){}
+
+		public override CellBase CreateCell(){
+			HtmlHeaderCell cell = new HtmlHeaderCell();
+			if(CellStyle!=default(HtmlCellStyle)) cell.Style= CellStyle;
+			Console.WriteLine("Create HtmlHeaderCell {0}", cell);
+			return cell;
+		}
+	}
+
+	public class HtmlFooterRow:RowBase{
+		protected internal HtmlFooterRow():base(){}
+
+		public override CellBase CreateCell(){
+			HtmlFooterCell cell = new HtmlFooterCell();
+			if(CellStyle!=default(HtmlCellStyle)) cell.Style= CellStyle;
+			return cell;
+		}
+	}
+
+	//--
+	public abstract class RowBase:TagBuilder{
+
+		protected internal RowBase():base("tr"){
 			Style= new HtmlRowStyle();
 		}
 
-		public HtmlRowStyleBase Style{get;set;}
+		public RowStyleBase Style{get;set;}
 
 		public HtmlCellStyle CellStyle{get;set;}
 
@@ -91,15 +200,13 @@ namespace Aicl.Delfin.Html
 			}
 		}
 
-		public HtmlCellBase CreateCell(){
-
+		public virtual CellBase CreateCell(){
 			HtmlCell cell = new HtmlCell();
 			if(CellStyle!=default(HtmlCellStyle)) cell.Style= CellStyle;
-
 			return cell;
 		}
 
-		public void AddCell(HtmlCellBase cell){
+		public virtual void AddCell(CellBase cell){
 			InnerHtml=InnerHtml +cell.ToString();
 		}
 
@@ -111,7 +218,7 @@ namespace Aicl.Delfin.Html
 			if (RowSpan.HasValue && RowSpan.Value!=default(int))
 				Attributes["rowspan"]=RowSpan.Value.ToString();
 
-			if( Style!=default(HtmlRowStyleBase) ){
+			if( Style!=default(RowStyleBase) ){
 				var s = Style.ToString();
 				if( !string.IsNullOrEmpty(s)) Attributes["style"]= Style.ToString();
 			}
@@ -120,23 +227,34 @@ namespace Aicl.Delfin.Html
 		}
 
 	}
+	//--
 
-	public class HtmlRowStyle:HtmlRowStyleBase{
 
+	public class HtmlRowStyle:RowStyleBase{
 		public HtmlRowStyle():base(){
-
 		}
 	}
 
 
-	public class HtmlCell:HtmlCellBase{
+	public class HtmlCell:CellBase{
 		internal protected HtmlCell():base("td"){}
 	}
 
+	public class HtmlHeaderCell:CellBase
+	{
+		public HtmlHeaderCell():base("th"){}
 
-	public abstract class HtmlCellBase:HtmlTagBase{
+	}
 
-		internal protected HtmlCellBase(string tagName):base(tagName){
+	public class HtmlFooterCell:CellBase{
+		public HtmlFooterCell():base("th"){}
+	}
+
+
+
+	public abstract class CellBase:TagBase{
+
+		internal protected CellBase(string tagName):base(tagName){
 			Style = new HtmlCellStyle();
 		}
 
@@ -158,7 +276,7 @@ namespace Aicl.Delfin.Html
 			}
 		}
 
-		public void AddHtmlTag(HtmlTagBase tag){
+		public void AddHtmlTag(TagBase tag){
 			InnerHtml= InnerHtml+ tag;
 		}
 
@@ -169,7 +287,7 @@ namespace Aicl.Delfin.Html
 	}
 
 
-	public class HtmlCellStyle:HtmlElementStyleBase{
+	public class HtmlCellStyle:ElementStyleBase{
 
 		public HtmlCellStyle():base(){
 			Border= new CellBorderProperty();
@@ -182,11 +300,11 @@ namespace Aicl.Delfin.Html
 	}
 
 
-	public abstract class HtmlTagBase:TagBuilder{  
+	public abstract class TagBase:TagBuilder{  
 
-		public HtmlTagBase(string tagName):base(tagName){}
+		public TagBase(string tagName):base(tagName){}
 
-		public virtual HtmlElementStyleBase Style {get;set;}
+		public virtual ElementStyleBase Style {get;set;}
 
 		public string Id {
 			get{
@@ -201,7 +319,7 @@ namespace Aicl.Delfin.Html
 
 		public override string ToString ()
 		{
-			if( Style!=default(HtmlElementStyleBase) ){
+			if( Style!=default(ElementStyleBase) ){
 				var s = Style.ToString();
 				if( !string.IsNullOrEmpty(s)) Attributes["style"]= Style.ToString();
 			}
@@ -212,7 +330,7 @@ namespace Aicl.Delfin.Html
 
 	//--
 
-	public class HtmlTableStyle:HtmlElementStyleBase{
+	public class HtmlTableStyle:ElementStyleBase{
 
 		public HtmlTableStyle():base(){
 			Border= new TableBorderProperty();
@@ -220,7 +338,7 @@ namespace Aicl.Delfin.Html
 
 	}
 
-	public class HtmlDivStyle:HtmlElementStyleBase{
+	public class HtmlDivStyle:ElementStyleBase{
 
 		public HtmlDivStyle():base(){
 			Border= new DivBorderProperty();
@@ -228,9 +346,9 @@ namespace Aicl.Delfin.Html
 	}
 
 
-	public abstract class HtmlRowStyleBase{  //base de  HtmlElementStyle 
+	public abstract class RowStyleBase{  //base de  HtmlElementStyle 
 
-		public HtmlRowStyleBase()
+		public RowStyleBase()
 		{
 			Width = new WidthProperty();
 			Height= new HeightProperty();
@@ -283,9 +401,9 @@ namespace Aicl.Delfin.Html
 	}
 
 
-	public abstract class HtmlElementStyleBase:HtmlRowStyleBase{  //antiguo ElementStyle 
+	public abstract class ElementStyleBase:RowStyleBase{  //antiguo ElementStyle 
 
-		public HtmlElementStyleBase():base(){}
+		public ElementStyleBase():base(){}
 
 		public virtual BorderPropertyBase Border {get;set;}
 
