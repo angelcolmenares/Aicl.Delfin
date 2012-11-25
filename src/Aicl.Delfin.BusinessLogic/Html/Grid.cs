@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Collections.Generic;
 using ServiceStack.Markdown;
@@ -160,3 +161,4 @@ namespace Aicl.Delfin.Html
 	}
 }
 
+*/

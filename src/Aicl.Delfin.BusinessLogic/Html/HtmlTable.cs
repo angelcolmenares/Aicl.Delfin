@@ -3,21 +3,21 @@ using ServiceStack.Markdown;
 
 namespace Aicl.Delfin.Html
 {
-	public class Paragragh:TagBae{
+	public class HtmlParagragh:TagBase{
 
-		public Paragragh():base("p"){
-			Style = ParagrahStyle()
-		}
-		// TODO : check :=>
-		public string Text {get;set;}
-
-		public override string ToString(){
-
-			if(!string.IsNullOrEmpty(Text)) InnerHtml =Text;
-			return base.ToHtml();
+		public HtmlParagragh():base("p"){
+			Style = new HtmlStyle();
 		}
 
-	
+		public string Text {
+			get{
+				return InnerHtml;
+			}
+			set{
+				InnerHtml=value;
+			}
+		}
+	}
 
 	public class HtmlDiv:TagBase{
 
@@ -33,14 +33,9 @@ namespace Aicl.Delfin.Html
 
 	public class HtmlTable:TableBase
 	{
-		public HtmlTable ():base("table"){}
-
-		public HtmlTableHeader CreateTableHeader(){
-			return new HtmlTableHeader();
-		}
-
-		public HtmlTableFooter CreateTableFooter(){
-			return new HtmlTableFooter();
+		public HtmlTable ():base("table"){
+			Header= new HtmlTableHeader();
+			Footer = new HtmlTableFooter();
 		}
 
 		public HtmlTableHeader Header {
@@ -73,10 +68,9 @@ namespace Aicl.Delfin.Html
 
 		public override RowBase CreateRow(){
 			HtmlHeaderRow row = new HtmlHeaderRow();
-
 			row.Style= RowsCount%2==0?
-				RowStyle??row.Style:
-					AlternateRowStyle??RowStyle??row.Style;
+				RowStyle:
+				AlternateRowStyle??RowStyle;
 			RowsCount++;
 			return row;
 		}
@@ -87,11 +81,11 @@ namespace Aicl.Delfin.Html
 		public HtmlTableFooter():base("tfoot"){}
 
 		public override RowBase CreateRow(){
-			HtmlFooterRow row = new HtmlFooterRow();
 
+			HtmlFooterRow row = new HtmlFooterRow();
 			row.Style= RowsCount%2==0?
-				RowStyle??row.Style:
-					AlternateRowStyle??RowStyle??row.Style;
+				RowStyle:
+				AlternateRowStyle??RowStyle;
 			RowsCount++;
 			return row;
 		}
@@ -108,14 +102,15 @@ namespace Aicl.Delfin.Html
 		protected internal TableBase (string tagName):base(tagName){
 			Style = new HtmlTableStyle();
 			RowsCount=0;
+			RowStyle = new HtmlRowStyle();
+			AlternateRowStyle= new HtmlRowStyle();
 		}
 
 		public virtual RowBase CreateRow(){
 			HtmlRow row = new HtmlRow();
-
 			row.Style= RowsCount%2==0?
-				RowStyle??row.Style:
-					AlternateRowStyle??RowStyle??row.Style;
+				RowStyle:
+				AlternateRowStyle??RowStyle;
 			RowsCount++;
 			return row;
 		}
@@ -124,35 +119,7 @@ namespace Aicl.Delfin.Html
 			InnerHtml=InnerHtml+row.ToString();
 		}
 
-		public static HtmlRowStyle DefaultAlternateRowStyle {
-			get {
-				return new HtmlRowStyle(){BackgroundColor="#E1EEF4"};
-			}
-		}
-
-		public static HtmlTableStyle DefaultTableStyle {
-			get {return new HtmlTableStyle{
-					Border = new  TableBorderProperty {
-						Width=new BorderWidthProperty(){
-							AllSides=1
-						},
-						Style ="solid",
-						AllBorderSpacing=0,
-						Radius= new BorderRadiusProperty(){
-							AllSides=10
-						},
-						Color="black"
-					},
-					Padding = new PaddingProperty{
-						AllSides=10
-					}
-				};
-			}
-		}
-
 	}
-
-	//--
 
 	public class HtmlRow:RowBase{
 		protected internal HtmlRow():base(){}
@@ -179,14 +146,13 @@ namespace Aicl.Delfin.Html
 		}
 	}
 
-	//--
 	public abstract class RowBase:TagBuilder{
 
 		protected internal RowBase():base("tr"){
 			Style= new HtmlRowStyle();
 		}
 
-		public RowStyleBase Style{get;set;}
+		public StyleBase Style{get;set;}
 
 		public HtmlCellStyle CellStyle{get;set;}
 
@@ -210,7 +176,6 @@ namespace Aicl.Delfin.Html
 			InnerHtml=InnerHtml +cell.ToString();
 		}
 
-
 		public int? RowSpan {get;set;}
 
 		public override string ToString ()
@@ -218,7 +183,7 @@ namespace Aicl.Delfin.Html
 			if (RowSpan.HasValue && RowSpan.Value!=default(int))
 				Attributes["rowspan"]=RowSpan.Value.ToString();
 
-			if( Style!=default(RowStyleBase) ){
+			if( Style!=default(StyleBase) ){
 				var s = Style.ToString();
 				if( !string.IsNullOrEmpty(s)) Attributes["style"]= Style.ToString();
 			}
@@ -227,10 +192,9 @@ namespace Aicl.Delfin.Html
 		}
 
 	}
-	//--
 
 
-	public class HtmlRowStyle:RowStyleBase{
+	public class HtmlRowStyle:StyleBase{
 		public HtmlRowStyle():base(){
 		}
 	}
@@ -281,7 +245,7 @@ namespace Aicl.Delfin.Html
 		}
 
 		public void SetValue(object value){
-			InnerHtml=value.ToString();
+			InnerHtml= value!=null?value.ToString():"";
 		}
 
 	}
@@ -328,7 +292,6 @@ namespace Aicl.Delfin.Html
 		}
 	}
 
-	//--
 
 	public class HtmlTableStyle:ElementStyleBase{
 
@@ -345,10 +308,14 @@ namespace Aicl.Delfin.Html
 		}
 	}
 
+	public class HtmlStyle:ElementStyleBase{
+		public HtmlStyle():base(){}
+	}
 
-	public abstract class RowStyleBase{  //base de  HtmlElementStyle 
 
-		public RowStyleBase()
+	public abstract class StyleBase{  
+
+		public StyleBase()
 		{
 			Width = new WidthProperty();
 			Height= new HeightProperty();
@@ -401,7 +368,7 @@ namespace Aicl.Delfin.Html
 	}
 
 
-	public abstract class ElementStyleBase:RowStyleBase{  //antiguo ElementStyle 
+	public abstract class ElementStyleBase:StyleBase{  //antiguo ElementStyle 
 
 		public ElementStyleBase():base(){}
 
@@ -415,8 +382,6 @@ namespace Aicl.Delfin.Html
 
 		}
 	}
-
-	//--
 
 
 	public class WidthProperty:MeasurePropertyBase{

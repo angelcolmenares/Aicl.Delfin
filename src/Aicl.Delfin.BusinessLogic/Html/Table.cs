@@ -1,3 +1,4 @@
+/*
 using System;
 using ServiceStack.Markdown;
 namespace Aicl.Delfin.Html
@@ -328,14 +329,6 @@ namespace Aicl.Delfin.Html
 		public string FontFamily{get;set;}
 		public string TextAlign {get;set;}
 
-
-/*
-font-size: 15px; 
-font-weight: bold; 
-font-style : normal || italic 
-font-family: verdana,arial,sans-serif;
-
-*/
 		public string Color {get;set;}
 
 		public override string ToString ()
@@ -539,7 +532,16 @@ font-family: verdana,arial,sans-serif;
 
 
 }
+*/
 
+
+/*
+font-size: 15px; 
+font-weight: bold; 
+font-style : normal || italic 
+font-family: verdana,arial,sans-serif;
+
+*/
 /*
 font-size: 15px; 
 font-weight: bold; 
