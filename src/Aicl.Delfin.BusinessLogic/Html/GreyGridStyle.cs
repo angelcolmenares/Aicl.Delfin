@@ -1,27 +1,27 @@
 namespace Aicl.Delfin.Html
 {
 
-	public class BlueGridStyle:GridStyleBase
+	public class GreyGridStyle:GridStyleBase
 	{
-		public BlueGridStyle ():base()
+		public GreyGridStyle ():base()
 		{
 			TableStyle.Border= new  TableBorderProperty 
 			{
 				Width=new BorderWidthProperty(){
-					AllSides=1
+					AllSides=0
 				},
 				Style ="solid",
 				AllBorderSpacing=0,
 				Radius= new BorderRadiusProperty(){
 					AllSides=10
 				},
-					Color="black"
+					//Color= "#DFDCE8" // "#EBE8F5" // "#F5F2FF"
 			};
 
 			TableStyle.Padding.AllSides=10;
 
-			HeaderStyle.BackgroundColor= "#00557F";
-			HeaderStyle.Color="#FFFFFF";
+			//HeaderStyle.BackgroundColor= "#F5F2FF";// "#006699";// "#00557F";
+			//HeaderStyle.Color="#000000";// "#FFFFFF";
 
 			AlternateRowStyle.BackgroundColor= "#E1EEF4";
 
@@ -30,7 +30,7 @@ namespace Aicl.Delfin.Html
 			HeaderCellStyle.Padding.AllSides=4;
 			CellStyle.Padding.AllSides=2;
 
-
+			TableStyle.BackgroundColor="#F5F2FF";
 
 		}
 

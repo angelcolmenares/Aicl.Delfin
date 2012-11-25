@@ -94,8 +94,8 @@
     <Compile Include="Html\Grid.cs" />
     <Compile Include="Html\HtmlTable.cs" />
     <Compile Include="Html\HtmlGrid.cs" />
-    <Compile Include="Html\GridStyles.cs" />
     <Compile Include="Html\Renderers.cs" />
+    <Compile Include="Html\GreyGridStyle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

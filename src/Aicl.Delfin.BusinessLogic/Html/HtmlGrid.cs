@@ -90,14 +90,16 @@ namespace Aicl.Delfin.Html
 			table.Header.AddRow(trh);
 
 
+			var rowIndex=0;
 			foreach(var data in DataSource){
+
 				var dr = table.CreateRow();
 
 				foreach(var column in Columns){
 					var dt = dr.CreateCell();
 					dr.CellStyle = column.CellStyle;
 					if (column.CellRenderFunc!=null){
-						dt.SetValue( column.CellRenderFunc(data));
+						dt.SetValue( column.CellRenderFunc(data,rowIndex));
 					}
 					else{
 						dt.SetValue("");
@@ -105,6 +107,7 @@ namespace Aicl.Delfin.Html
 					dr.AddCell(dt);
 				}
 				table.AddRow(dr);
+				rowIndex++;
 			}
 
 			return table.ToString();
@@ -177,7 +180,7 @@ namespace Aicl.Delfin.Html
 
 		public HtmlCellStyle CellStyle {get;set;}  // stilo de las celdas con el valor 
 
-		public  Func<T,object> CellRenderFunc{
+		public  Func<T,int,object> CellRenderFunc{
 			get;set;
 		}
 
