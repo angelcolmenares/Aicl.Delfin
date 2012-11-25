@@ -131,7 +131,6 @@ namespace Aicl.Delfin.Html
 		public override CellBase CreateCell(){
 			HtmlHeaderCell cell = new HtmlHeaderCell();
 			if(CellStyle!=default(HtmlCellStyle)) cell.Style= CellStyle;
-			Console.WriteLine("Create HtmlHeaderCell {0}", cell);
 			return cell;
 		}
 	}

@@ -15,22 +15,22 @@ namespace Aicl.Delfin.Html
 				Radius= new BorderRadiusProperty(){
 					AllSides=10
 				},
-					//Color= "#DFDCE8" // "#EBE8F5" // "#F5F2FF"
+				//Color= "#DFDCE8" // "#EBE8F5" // "#F5F2FF"
 			};
 
 			TableStyle.Padding.AllSides=10;
+			TableStyle.BackgroundColor="#F5F2FF";
 
 			//HeaderStyle.BackgroundColor= "#F5F2FF";// "#006699";// "#00557F";
 			//HeaderStyle.Color="#000000";// "#FFFFFF";
 
+			CellStyle.Padding.AllSides=2;
 			AlternateRowStyle.BackgroundColor= "#E1EEF4";
 
 			TitleStyle.Padding.AllSides=4;
 
 			HeaderCellStyle.Padding.AllSides=4;
-			CellStyle.Padding.AllSides=2;
-
-			TableStyle.BackgroundColor="#F5F2FF";
+			FooterCellStyle.Padding.AllSides=4;
 
 		}
 

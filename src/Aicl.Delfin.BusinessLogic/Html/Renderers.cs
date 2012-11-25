@@ -35,7 +35,6 @@ namespace Aicl.Delfin.Html
 		                             )
 		{
 			HtmlStyle style;
-			Console.WriteLine("Decimal  value:'{0}'", value);
 
 			if( condition!=null){
 				style= (condition(value)? trueStyle: falseStyle )??new HtmlStyle(){TextAlign="right" };
@@ -57,7 +56,6 @@ namespace Aicl.Delfin.Html
 		                             Func<decimal,bool> condition=null
 		                             )
 		{
-			Console.WriteLine("Decimal ? value:'{0}'", value);
 			if(value.HasValue) return Format(value.Value, format,trueStyle, falseStyle, condition);
 
 			return new HtmlParagragh(){

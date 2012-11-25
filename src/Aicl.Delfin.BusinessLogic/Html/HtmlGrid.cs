@@ -17,8 +17,12 @@ namespace Aicl.Delfin.Html
 
 			if(Style!=default(GridStyleBase)){
 				gc.CellStyle=Style.CellStyle;
-				gc.HeaderCellStyle= Style.HeaderCellStyle;
-				gc.HeaderTextSytle= Style.HeaderTextStyle;
+
+				gc.HeaderCellStyle= Style.HeaderCellStyle;  // th
+				gc.HeaderTextSytle= Style.HeaderTextStyle;  // p
+
+				gc.FooterCellStyle= Style.FooterCellStyle;  // th
+
 			} 
 
 			return gc;
@@ -72,18 +76,14 @@ namespace Aicl.Delfin.Html
 
 			}
 
-			Console.WriteLine( "Columnas '{0}'", Columns.Count);
-
 			if(DataSource==null || Columns==null || Columns.Count==0) return table.ToString();
-
 
 			var trh = table.Header.CreateRow();
 			foreach(var column in Columns){
-				Console.WriteLine("Creando columna {0} - {1}", column.HeaderText, column.HeaderCellStyle);
 				var th = trh.CreateCell();
+				th.Style = column.HeaderCellStyle;
 				if (!string.IsNullOrEmpty (column.HeaderText)){
 					th.SetValue(column.HeaderText);
-					th.Style = column.HeaderCellStyle;
 				}
 				trh.AddCell(th);
 			}
@@ -110,6 +110,34 @@ namespace Aicl.Delfin.Html
 				rowIndex++;
 			}
 
+			//--
+			var trf = table.Footer.CreateRow();
+			foreach(var column in Columns){
+				var th = trf.CreateCell();
+				th.Style = column.FooterCellStyle;
+				if (column.SummaryRenderFunc!=null){
+					th.SetValue(column.SummaryRenderFunc());
+				}
+				trf.AddCell(th);
+			}
+			table.Footer.AddRow(trf);
+
+
+			if(!string.IsNullOrEmpty(FootNote)){
+				var tr = table.Footer.CreateRow();
+				var th =  tr.CreateCell();
+				th.ColumnSpan= (Columns!=null && Columns.Count>0) ?Columns.Count: 1;
+
+				th.SetValue( Style.FootNoteStyle!=default(HtmlStyle)?
+				            (new HtmlParagragh{Text=FootNote, Style= Style.FootNoteStyle}).ToString():
+							FootNote
+				);
+				tr.AddCell(th);
+				table.Footer.AddRow(tr);
+			}
+
+			//--
+
 			return table.ToString();
 		}
 	}
@@ -121,20 +149,20 @@ namespace Aicl.Delfin.Html
 
 	public abstract class GridStyleBase{
 
-		public HtmlStyle TitleStyle {get;set;}
+		public HtmlStyle TitleStyle {get;set;}  //p
 
-		public HtmlStyle FootNoteStyle {get;set;}
+		public HtmlStyle FootNoteStyle {get;set;}  //p
 
-		public HtmlRowStyle RowStyle {get;set;}
+		public HtmlRowStyle RowStyle {get;set;}  // tr
 
-		public HtmlRowStyle AlternateRowStyle {get;set;}
+		public HtmlRowStyle AlternateRowStyle {get;set;} //tr
 
-		public HtmlTableStyle TableStyle {get;set;}
+		public HtmlTableStyle TableStyle {get;set;}      //table
 
 
 		// GridColumn Style:
 
-		public HtmlCellStyle CellStyle {get;set;}
+		public HtmlCellStyle CellStyle {get;set;}  // td
 
 		public HtmlTableStyle HeaderStyle {get;set;} // thead style
 
@@ -144,8 +172,7 @@ namespace Aicl.Delfin.Html
 
 		public HtmlCellStyle FooterCellStyle {get;set;}  // cell style  th
 
-		public HtmlStyle HeaderTextStyle {get;set;}  // 
-
+		public HtmlStyle HeaderTextStyle {get;set;}  //  p
 
 		public GridStyleBase(){
 			RowStyle = new HtmlRowStyle();
@@ -159,6 +186,7 @@ namespace Aicl.Delfin.Html
 			HeaderCellStyle= new HtmlCellStyle();
 			FooterCellStyle = new HtmlCellStyle();
 			HeaderTextStyle = new HtmlStyle();
+
 		}
 
 	}
@@ -174,9 +202,11 @@ namespace Aicl.Delfin.Html
 	{
 		public string HeaderText{get;set;}
 
-		public HtmlStyle HeaderTextSytle{get;set;}
+		public HtmlStyle HeaderTextSytle{get;set;}  //p
 
-		public HtmlCellStyle HeaderCellStyle {get;set;}  // cell style  th
+		public HtmlCellStyle HeaderCellStyle {get;set;}  // cell style  th for header 
+
+		public HtmlCellStyle FooterCellStyle {get;set;}  // cell style  th for summary rows
 
 		public HtmlCellStyle CellStyle {get;set;}  // stilo de las celdas con el valor 
 
@@ -184,7 +214,7 @@ namespace Aicl.Delfin.Html
 			get;set;
 		}
 
-		public  Func<T,object> SummaryRenderFunc{ // footer
+		public  Func<object> SummaryRenderFunc{ // footer
 
 			get;set;
 		}
@@ -193,17 +223,9 @@ namespace Aicl.Delfin.Html
 			CellStyle= new HtmlCellStyle();
 			HeaderCellStyle=new HtmlCellStyle();
 			HeaderTextSytle = new HtmlStyle();
+			FooterCellStyle = new HtmlCellStyle();
 		}
 
-
-
-		//public virtual SqlExpressionVisitor<T> Select<TKey>(Expression<Func<T, TKey>> fields){
-
-		// Header : Texto y Estilo
-		// Cell:
-		// 	Value: Que voy a Mostrar
-		// 	Renderer : como lo voy a mostar
-		// Footer : Texto y Estilo
 	}
 
 
