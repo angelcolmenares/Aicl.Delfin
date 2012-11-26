@@ -59,14 +59,12 @@ namespace Aicl.Delfin.Html
 			table.AlternateRowStyle= Style.AlternateRowStyle;
 
 			table.Header.Style= Style.HeaderStyle;
-
 			table.Footer.Style= Style.FooterStyle;
 
 			if(!string.IsNullOrEmpty( Title)){
 				var tr = table.Header.CreateRow();
 				var th =  tr.CreateCell();
 				th.ColumnSpan= (Columns!=null && Columns.Count>0) ?Columns.Count: 1;
-
 				th.SetValue( Style.TitleStyle!=default(HtmlStyle)?
 				            (new HtmlParagragh{Text=Title, Style= Style.TitleStyle}).ToString():
 							Title
@@ -82,13 +80,21 @@ namespace Aicl.Delfin.Html
 			foreach(var column in Columns){
 				var th = trh.CreateCell();
 				th.Style = column.HeaderCellStyle;
+				if(column.HeaderCellColumnSpan.HasValue && column.HeaderCellColumnSpan.Value!=default(int))
+					th.ColumnSpan=column.HeaderCellColumnSpan;
+
 				if (!string.IsNullOrEmpty (column.HeaderText)){
 					th.SetValue(column.HeaderText);
+					trh.AddCell(th);
 				}
-				else{
-					th.Attributes.Add("height","0");
-					th.SetValue(Renderers.HtmlSpace);
-				}
+
+			}
+			if (string.IsNullOrEmpty( trh.InnerHtml)) {
+				var th = trh.CreateCell();
+				th.Style =  Style.HeaderCellStyle; //// ?? TODO : confirm !
+				th.ColumnSpan= Columns.Count; 
+				th.Attributes.Add("height","0");
+				th.SetValue(Renderers.HtmlSpace);
 				trh.AddCell(th);
 			}
 			table.Header.AddRow(trh);
@@ -119,22 +125,32 @@ namespace Aicl.Delfin.Html
 			foreach(var column in Columns){
 				var th = trf.CreateCell();
 				th.Style = column.FooterCellStyle;
+				if(column.FooterCellColumnSpan.HasValue && column.FooterCellColumnSpan.Value!=default(int))
+					th.ColumnSpan=column.FooterCellColumnSpan;
+
 				if (column.FooterRenderFunc!=null){
 					th.SetValue(column.FooterRenderFunc());
+					trf.AddCell(th);
 				}
-				else{
-					th.Attributes.Add("height","0");
-					th.SetValue(Renderers.HtmlSpace);
-				}
-				trf.AddCell(th);
+
 			}
+
+			if (string.IsNullOrEmpty( trf.InnerHtml)) {
+				var thf = trf.CreateCell();
+				thf.Style =  Style.FooterCellStyle; // ?? TODO : confirm !
+				thf.ColumnSpan= Columns.Count; 
+				thf.Attributes.Add("height","0");
+				thf.SetValue(Renderers.HtmlSpace);
+				trf.AddCell(thf);
+			}
+
 			table.Footer.AddRow(trf);
 
 
 			if(!string.IsNullOrEmpty(FootNote)){
 				var tr = table.Footer.CreateRow();
 				var th =  tr.CreateCell();
-				th.ColumnSpan= (Columns!=null && Columns.Count>0) ?Columns.Count: 1;
+				th.ColumnSpan= Columns.Count;
 
 				th.SetValue( Style.FootNoteStyle!=default(HtmlStyle)?
 				            (new HtmlParagragh{Text=FootNote, Style= Style.FootNoteStyle}).ToString():
@@ -217,6 +233,10 @@ namespace Aicl.Delfin.Html
 		public HtmlCellStyle FooterCellStyle {get;set;}  // cell style  th for summary rows
 
 		public HtmlCellStyle CellStyle {get;set;}  // stilo de las celdas con el valor 
+
+		public int? HeaderCellColumnSpan {get;set;}
+
+		public int? FooterCellColumnSpan {get;set;}
 
 		public  Func<T,int,object> CellRenderFunc{
 			get;set;

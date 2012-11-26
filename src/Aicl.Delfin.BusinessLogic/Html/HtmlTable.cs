@@ -214,7 +214,6 @@ namespace Aicl.Delfin.Html
 	}
 
 
-
 	public abstract class CellBase:TagBase{
 
 		internal protected CellBase(string tagName):base(tagName){
