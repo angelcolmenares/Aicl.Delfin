@@ -85,6 +85,10 @@ namespace Aicl.Delfin.Html
 				if (!string.IsNullOrEmpty (column.HeaderText)){
 					th.SetValue(column.HeaderText);
 				}
+				else{
+					th.Attributes.Add("height","0");
+					th.SetValue(Renderers.HtmlSpace);
+				}
 				trh.AddCell(th);
 			}
 			table.Header.AddRow(trh);
@@ -115,8 +119,12 @@ namespace Aicl.Delfin.Html
 			foreach(var column in Columns){
 				var th = trf.CreateCell();
 				th.Style = column.FooterCellStyle;
-				if (column.SummaryRenderFunc!=null){
-					th.SetValue(column.SummaryRenderFunc());
+				if (column.FooterRenderFunc!=null){
+					th.SetValue(column.FooterRenderFunc());
+				}
+				else{
+					th.Attributes.Add("height","0");
+					th.SetValue(Renderers.HtmlSpace);
 				}
 				trf.AddCell(th);
 			}
@@ -214,7 +222,7 @@ namespace Aicl.Delfin.Html
 			get;set;
 		}
 
-		public  Func<object> SummaryRenderFunc{ // footer
+		public  Func<object> FooterRenderFunc{ // footer
 
 			get;set;
 		}

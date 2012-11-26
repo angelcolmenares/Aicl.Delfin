@@ -4,6 +4,8 @@ namespace Aicl.Delfin.Html
 {
 	public  static  class Renderers
 	{
+		internal static readonly string HtmlSpace = "&nbsp;";
+
 		public static HtmlParagragh Format(this bool value, string trueValue="Yes", string falseValue="No",
 		                                   HtmlStyle trueStyle=null, 
 		                                   HtmlStyle falseStyle=null){
