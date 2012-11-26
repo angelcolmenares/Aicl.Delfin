@@ -320,6 +320,7 @@ namespace Aicl.Delfin.Html
 			Height= new HeightProperty();
 			Padding = new PaddingProperty();
 			Margin = new MarginProperty();
+			FontSize = new FontSizeProperty();
 
 			Color=string.Empty;
 			BackgroundColor=string.Empty;
@@ -333,7 +334,7 @@ namespace Aicl.Delfin.Html
 
 		public string BackgroundColor {get;set;}
 
-		public int? FontSize{get;set;}
+		public FontSizeProperty FontSize{get;set;}
 		public string FontWeight{get;set;}
 		public string FontStyle{get;set;}
 		public string FontFamily{get;set;}
@@ -343,14 +344,13 @@ namespace Aicl.Delfin.Html
 
 		public override string ToString ()
 		{
-			var r= string.Format ("{0}{1}{2}{3}", Width, Height, Padding,Margin);
+			var r= string.Format ("{0}{1}{2}{3}{4}", Width, Height, Padding,Margin, FontSize);
 
 			if(!string.IsNullOrEmpty(BackgroundColor)) 
 				r=string.Format("{0} background-color:{1};",r, BackgroundColor);
 			if(!string.IsNullOrEmpty(Color)) 
 				r=string.Format("{0} color:{1};",r, Color);
-			if(FontSize.HasValue)
-				r=string.Format("{0} font-size:{1};",r, FontSize.Value);
+
 			if(!string.IsNullOrEmpty(FontWeight)) 
 				r=string.Format("{0} font-weight:{1};",r, FontWeight);
 			if(!string.IsNullOrEmpty(FontStyle)) 
@@ -383,6 +383,12 @@ namespace Aicl.Delfin.Html
 	}
 
 
+	public class FontSizeProperty:MeasurePropertyBase{
+
+		public FontSizeProperty():base("font-size"){}
+	
+	}
+
 	public class WidthProperty:MeasurePropertyBase{
 
 		public WidthProperty():base("width"){}
@@ -403,9 +409,9 @@ namespace Aicl.Delfin.Html
 		}
 
 		public int? Value {get;set;}
-		public string Property {get;set;}
+		protected internal string Property {get;set;}
 
-		string Unit {get;set;}
+		public string Unit {get;set;}
 
 		public override string ToString ()
 		{
@@ -506,7 +512,10 @@ namespace Aicl.Delfin.Html
 
 	public abstract class BorderPropertyBase{
 
-		public BorderPropertyBase(){}
+		public BorderPropertyBase(){
+			Width = new BorderWidthProperty();
+			Radius = new BorderRadiusProperty();
+		}
 
 		public BorderWidthProperty Width {get;set;}
 		public BorderRadiusProperty Radius {get;set;}
