@@ -44,6 +44,9 @@ namespace Aicl.Delfin.Html
 
 		public abstract GridColumnBase<T> CreateGridColumn();
 
+		public TagBase HeaderBand {get;set;}
+		public TagBase FooterBand {get;set;}
+
 		public virtual void AddGridColum(GridColumnBase<T> gridColumn){
 			Columns.Add(gridColumn);
 		}
@@ -61,6 +64,7 @@ namespace Aicl.Delfin.Html
 			table.Header.Style= Style.HeaderStyle;
 			table.Footer.Style= Style.FooterStyle;
 
+			// header
 			if(!string.IsNullOrEmpty( Title)){
 				var tr = table.Header.CreateRow();
 				var th =  tr.CreateCell();
@@ -71,40 +75,49 @@ namespace Aicl.Delfin.Html
 				);
 				tr.AddCell(th);
 				table.Header.AddRow(tr);
-
 			}
 
-			if(DataSource==null || Columns==null || Columns.Count==0) return table.ToString();
+			if(HeaderBand!=default(TagBase)){
+				var hbr= table.Header.CreateRow();
+				var hbc = hbr.CreateCell();
+				hbc.Style.TextAlign="left";
+				hbc.Style.FontWeight="normal";
+				hbc.ColumnSpan= (Columns!=null && Columns.Count>0) ?Columns.Count: 1;
+				hbc.InnerHtml=HeaderBand.ToString();
+				hbr.AddCell(hbc);
+				table.Header.AddRow(hbr);
+			}
 
 			var trh = table.Header.CreateRow();
+			int number=0;
+			int filled=0; 
 			foreach(var column in Columns){
 				var th = trh.CreateCell();
 				th.Style = column.HeaderCellStyle;
+
 				if(column.HeaderCellColumnSpan.HasValue && column.HeaderCellColumnSpan.Value!=default(int))
 					th.ColumnSpan=column.HeaderCellColumnSpan;
 
 				if (!string.IsNullOrEmpty (column.HeaderText)){
 					th.SetValue(column.HeaderText);
-					trh.AddCell(th);
+					filled+= ((th.ColumnSpan.HasValue && th.ColumnSpan.Value>0)?th.ColumnSpan.Value:1  );
 				}
-
-			}
-			if (string.IsNullOrEmpty( trh.InnerHtml)) {
-				var th = trh.CreateCell();
-				th.Style =  Style.HeaderCellStyle; //// ?? TODO : confirm !
-				th.ColumnSpan= Columns.Count; 
-				th.Attributes.Add("height","0");
-				th.SetValue(Renderers.HtmlSpace);
+				else if(number==filled ){
+					th.Attributes.Add("height","0");
+					th.SetValue(Renderers.HtmlSpace);
+					filled++;
+				}
 				trh.AddCell(th);
+				number++;
 			}
 			table.Header.AddRow(trh);
 
+			// TBody
+			if(DataSource==null || Columns==null || Columns.Count==0) return table.ToString();
 
 			var rowIndex=0;
 			foreach(var data in DataSource){
-
 				var dr = table.CreateRow();
-
 				foreach(var column in Columns){
 					var dt = dr.CreateCell();
 					dr.CellStyle = column.CellStyle;
@@ -120,8 +133,10 @@ namespace Aicl.Delfin.Html
 				rowIndex++;
 			}
 
-			//--
+
+			// Footer
 			var trf = table.Footer.CreateRow();
+			number=0; filled=0;
 			foreach(var column in Columns){
 				var th = trf.CreateCell();
 				th.Style = column.FooterCellStyle;
@@ -130,28 +145,35 @@ namespace Aicl.Delfin.Html
 
 				if (column.FooterRenderFunc!=null){
 					th.SetValue(column.FooterRenderFunc());
-					trf.AddCell(th);
+					filled+= ((th.ColumnSpan.HasValue && th.ColumnSpan.Value>0)?th.ColumnSpan.Value:1  );
 				}
-
+				else if(number==filled ){
+					th.Attributes.Add("height","0");
+					th.SetValue(Renderers.HtmlSpace);
+					filled++;
+				}
+				trf.AddCell(th);
+				number++;
 			}
-
-			if (string.IsNullOrEmpty( trf.InnerHtml)) {
-				var thf = trf.CreateCell();
-				thf.Style =  Style.FooterCellStyle; // ?? TODO : confirm !
-				thf.ColumnSpan= Columns.Count; 
-				thf.Attributes.Add("height","0");
-				thf.SetValue(Renderers.HtmlSpace);
-				trf.AddCell(thf);
-			}
-
 			table.Footer.AddRow(trf);
+
+
+			if(FooterBand!=default(TagBase)){
+				var fbr= table.Footer.CreateRow();
+				var fbc = fbr.CreateCell();
+				fbc.Style.TextAlign="left";
+				fbc.Style.FontWeight="normal";
+				fbc.ColumnSpan= (Columns!=null && Columns.Count>0) ?Columns.Count: 1;
+				fbc.InnerHtml=FooterBand.ToString();
+				fbr.AddCell(fbc);
+				table.Footer.AddRow(fbr);
+			}
 
 
 			if(!string.IsNullOrEmpty(FootNote)){
 				var tr = table.Footer.CreateRow();
 				var th =  tr.CreateCell();
-				th.ColumnSpan= Columns.Count;
-
+				th.ColumnSpan= (Columns!=null && Columns.Count>0) ?Columns.Count: 1;
 				th.SetValue( Style.FootNoteStyle!=default(HtmlStyle)?
 				            (new HtmlParagragh{Text=FootNote, Style= Style.FootNoteStyle}).ToString():
 							FootNote
@@ -160,7 +182,6 @@ namespace Aicl.Delfin.Html
 				table.Footer.AddRow(tr);
 			}
 
-			//--
 
 			return table.ToString();
 		}
