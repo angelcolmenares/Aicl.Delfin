@@ -9,6 +9,7 @@ using ServiceStack.ServiceInterface.Auth;
 using System.Text;
 using Aicl.Delfin.BusinessLogic;
 using System;
+using Aicl.Cayita;
 
 namespace Aicl.Delfin.Report
 {

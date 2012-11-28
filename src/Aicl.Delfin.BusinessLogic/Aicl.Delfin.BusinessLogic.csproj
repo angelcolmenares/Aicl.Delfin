@@ -90,12 +90,31 @@
     <Compile Include="Report\OfertaMargin.cs" />
     <Compile Include="Report\OfertaHtml.cs" />
     <Compile Include="Report\Extensions.cs" />
-    <Compile Include="Html\Table.cs" />
-    <Compile Include="Html\Grid.cs" />
-    <Compile Include="Html\HtmlTable.cs" />
-    <Compile Include="Html\HtmlGrid.cs" />
     <Compile Include="Html\Renderers.cs" />
-    <Compile Include="Html\GreyGridStyle.cs" />
+    <Compile Include="Html\MeasureProperties.cs" />
+    <Compile Include="Html\SideProperties.cs" />
+    <Compile Include="Html\BorderProperties.cs" />
+    <Compile Include="Html\Styles.cs" />
+    <Compile Include="Html\TagBase.cs" />
+    <Compile Include="Html\Tags.cs" />
+    <Compile Include="Html\Table\HtmlTable.cs" />
+    <Compile Include="Html\Table\TableBase.cs" />
+    <Compile Include="Html\Table\HtmlTableFooter.cs" />
+    <Compile Include="Html\Table\HtmlTableHeader.cs" />
+    <Compile Include="Html\Table\CellBase.cs" />
+    <Compile Include="Html\Table\HtmlCell.cs" />
+    <Compile Include="Html\Table\HtmlCellStyle.cs" />
+    <Compile Include="Html\Table\CellBorderProperty.cs" />
+    <Compile Include="Html\Table\RowBase.cs" />
+    <Compile Include="Html\Table\HtmlRow.cs" />
+    <Compile Include="Html\Table\HtmlRowStyle.cs" />
+    <Compile Include="Html\Grid\HtmlGrid.cs" />
+    <Compile Include="Html\Grid\GridBase.cs" />
+    <Compile Include="Html\Grid\GridStyleBase.cs" />
+    <Compile Include="Html\Grid\HtmlGridStyle.cs" />
+    <Compile Include="Html\Grid\GridColumn.cs" />
+    <Compile Include="Html\Grid\GridColumnBase.cs" />
+    <Compile Include="Html\Extensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -103,6 +122,8 @@
     <Folder Include="Auth\" />
     <Folder Include="Report\" />
     <Folder Include="Html\" />
+    <Folder Include="Html\Table\" />
+    <Folder Include="Html\Grid\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aicl.Delfin.Model\Aicl.Delfin.Model.csproj">

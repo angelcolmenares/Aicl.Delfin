@@ -6,7 +6,8 @@ using Aicl.Delfin.Model.Types;
 using System.Collections.Generic;
 using ServiceStack.Common;
 using ServiceStack.ServiceInterface.Auth;
-using Aicl.Delfin.BusinessLogic;
+using Aicl.Cayita;
+
 
 namespace Aicl.Delfin.Report
 {

@@ -8,6 +8,7 @@ using ServiceStack.OrmLite;
 using Mono.Linq.Expressions;
 using ServiceStack.Common.Web;
 using System.Collections.Generic;
+using Aicl.Cayita;
 
 namespace Aicl.Delfin.Interface
 {

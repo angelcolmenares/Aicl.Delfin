@@ -1,5 +1,9 @@
-namespace Aicl.Delfin.Html
+namespace Aicl.Cayita
 {
+	public class HtmlGridStyle:GridStyleBase{
+		public HtmlGridStyle():base(){}
+	}
+
 	public class GreyGridStyle:GridStyleBase
 	{
 		public GreyGridStyle ():base()

@@ -1,10 +1,9 @@
 using System;
 
-namespace Aicl.Delfin.Html
+namespace Aicl.Cayita
 {
 	public  static  class Renderers
 	{
-		internal static readonly string HtmlSpace = "&nbsp;";
 
 		public static HtmlParagragh Format(this bool value, string trueValue="Yes", string falseValue="No",
 		                                   HtmlStyle trueStyle=null, 
@@ -133,11 +132,6 @@ namespace Aicl.Delfin.Html
 				       format,  trueStyle, falseStyle, condition  );
 				
 		}
-
-
-
-
-
 
 	}
 }
