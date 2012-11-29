@@ -64,8 +64,6 @@ namespace Aicl.Cayita
 			int number=0;
 			int filled=0; 
 			foreach(var column in Columns){
-				System.Console.WriteLine("Columns {0} Filled {1}", Columns.Count, filled);
-				if(filled>=( (Columns!=null && Columns.Count>0) ?Columns.Count: 1 )) break;
 				var th = trh.CreateCell();
 				th.Style = column.HeaderCellStyle;
 
@@ -83,11 +81,12 @@ namespace Aicl.Cayita
 				}
 				trh.AddCell(th);
 				number++;
+				if(filled>=( Columns.Count)) break;
 			}
 			table.Header.AddRow(trh);
 
 			// TBody
-			if(DataSource==null || Columns==null || Columns.Count==0) return table.ToString();
+			if(DataSource==null ||  Columns.Count==0) return table.ToString();
 
 			var rowIndex=0;
 			foreach(var data in DataSource){
@@ -112,9 +111,10 @@ namespace Aicl.Cayita
 			var trf = table.Footer.CreateRow();
 			number=0; filled=0;
 			foreach(var column in Columns){
-				if(filled>=( (Columns!=null && Columns.Count>0) ?Columns.Count: 1 )) break;
+
 				var th = trf.CreateCell();
 				th.Style = column.FooterCellStyle;
+
 				if(column.FooterCellColumnSpan.HasValue && column.FooterCellColumnSpan.Value!=default(int))
 					th.ColumnSpan=column.FooterCellColumnSpan;
 
@@ -129,6 +129,7 @@ namespace Aicl.Cayita
 				}
 				trf.AddCell(th);
 				number++;
+				if(filled>=( Columns.Count)) break;
 			}
 			table.Footer.AddRow(trf);
 
