@@ -606,6 +606,10 @@
     <Content Include="modules\tarea\index.html" />
     <Content Include="modules\app\controller\Tarea.js" />
     <Content Include="modules\app\view\tarea\Panel.js" />
+    <Content Include="resources\GOTHIC.TTF" />
+    <Content Include="resources\GOTHICB.TTF" />
+    <Content Include="resources\GOTHICBI.TTF" />
+    <Content Include="resources\GOTHICI.TTF" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">

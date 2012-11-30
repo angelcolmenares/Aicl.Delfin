@@ -31,6 +31,9 @@ namespace Aicl.Cayita
 			AlternateRowStyle = new HtmlRowStyle();
 			CellStyle = new HtmlCellStyle();
 			TableStyle = new HtmlTableStyle();
+			TableStyle.FontFamily="Century Gothic, Arial, Helvetica, sans-serif";
+			TableStyle.FontSize.Value=95;
+			TableStyle.FontSize.Unit="%";
 			HeaderStyle= new HtmlTableStyle();
 			FooterStyle = new HtmlTableStyle();
 			TitleStyle = new HtmlStyle();

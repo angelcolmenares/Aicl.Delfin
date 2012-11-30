@@ -6,12 +6,10 @@ namespace Aicl.Cayita
 
 		public HtmlTableFooter():base("tfoot"){}
 
-		public override RowBase CreateRow(){
+		public override RowBase CreateRow(string alternateRowCss=null){
 
 			HtmlFooterRow row = new HtmlFooterRow();
-			row.Style= RowsCount%2==0?
-				RowStyle:
-				AlternateRowStyle??RowStyle;
+			ApplyStyleToRow (row, alternateRowCss);
 			RowsCount++;
 			return row;
 		}

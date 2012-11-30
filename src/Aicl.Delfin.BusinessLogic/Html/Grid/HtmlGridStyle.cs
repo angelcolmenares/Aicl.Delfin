@@ -1,8 +1,17 @@
 namespace Aicl.Cayita
 {
+
 	public class HtmlGridStyle:GridStyleBase{
-		public HtmlGridStyle():base(){}
+		public HtmlGridStyle():base(){
+
+			TitleStyle.Padding.AllSides=4;
+
+			FootNoteStyle.TextAlign="left";
+			FootNoteStyle.FontSize.Value=90;
+			FootNoteStyle.FontSize.Unit="%";
+		}
 	}
+
 
 	public class GreyGridStyle:GridStyleBase
 	{
@@ -27,7 +36,6 @@ namespace Aicl.Cayita
 
 			TableStyle.BackgroundColor="#F5F2FF";
 
-			HeaderCellStyle.Padding.AllSides=2;
 			HeaderCellStyle.Padding.AllSides=2;
 			HeaderCellStyle.Border.Width.Bottom=2;
 			HeaderCellStyle.Border.Color="#C9C9C9";

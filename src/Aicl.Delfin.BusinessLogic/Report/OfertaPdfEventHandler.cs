@@ -9,6 +9,7 @@ namespace Aicl.Delfin.Report
 {
 	public class OfertaPdfEventHandler:PdfPageEventHelper
     {
+
         // This is the contentbyte object of the writer
         PdfContentByte cb;
 
@@ -27,8 +28,14 @@ namespace Aicl.Delfin.Report
 		public Pedido Pedido {get; set;}        
 		public Empresa Empresa {get;set;}
 		public string Prefijo {get;set;}
+
+		public Font F7 {get;set;}
+		public Font F8 {get;set;}
+		public Font F10 {get;set;}
+
+		//public string FontFamilyName {get;set;}
         
-        #endregion
+		#endregion
 
         // we override the onOpenDocument method
         public override void OnOpenDocument(PdfWriter writer, Document document)
@@ -68,7 +75,7 @@ namespace Aicl.Delfin.Report
 			cell.Border= PdfPCell.NO_BORDER;
 			leftTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(Empresa.Nit, new Font(){Size=8}));
+			cell = new PdfPCell(new Phrase(Empresa.Nit, F8));
 			cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
 			cell.Border= PdfPCell.NO_BORDER;
 			leftTable.AddCell(cell);
@@ -87,74 +94,74 @@ namespace Aicl.Delfin.Report
 
             headerTable.AddCell(rightTableCell);
 
-			cell = new PdfPCell(new Phrase("", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			cell.Colspan=3;
 			rightTable.AddCell(cell);
 
 			var textoFormato=string.Format("FLPA0201");
-			cell = new PdfPCell(new Phrase(textoFormato, new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(textoFormato, F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase("", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			cell.Colspan=3;
 			rightTable.AddCell(cell);
 
 			textoFormato=string.Format("EDICION:08 (2012-09-14)");
-			cell = new PdfPCell(new Phrase(textoFormato, new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(textoFormato, F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			cell.PaddingBottom = 8;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase("Oferta No:", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("Oferta No:", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(string.Format("{0}-{1}", Prefijo, Pedido.Consecutivo), new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(string.Format("{0}-{1}", Prefijo, Pedido.Consecutivo), F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase("Forma de Pago:", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("Forma de Pago:", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(Pedido.DescripcionFormaPago, new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(Pedido.DescripcionFormaPago, F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
 
-			cell = new PdfPCell(new Phrase("Fecha Envio:", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("Fecha Envio:", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
 			cell = new PdfPCell(new Phrase(Pedido.FechaEnvio.HasValue? Pedido.FechaEnvio.Value.Format():"BORRADOR !!!",
-			                               new Font(){Size=10}));
+			                               F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase("Fecha Aceptación:", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("Fecha Aceptación:", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(Pedido.FechaAceptacion.Format(), new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(Pedido.FechaAceptacion.Format(), F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase("Valida Hasta:", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("Valida Hasta:", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(Pedido.VigenteHasta.Format(), new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(Pedido.VigenteHasta.Format(), F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase("Enviado por :", new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase("Enviado por :", F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
-			cell = new PdfPCell(new Phrase(Pedido.NombreEnviadoPor, new Font(){Size=10}));
+			cell = new PdfPCell(new Phrase(Pedido.NombreEnviadoPor, F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
 
@@ -185,7 +192,7 @@ namespace Aicl.Delfin.Report
 			/*
 			PdfPTable footerTable = new PdfPTable(1);
 			footerTable.TotalWidth = pageSize.Width;
-						var cell = new PdfPCell(new Phrase(s.ToString(), new Font(){Size=8}));
+						var cell = new PdfPCell(new Phrase(s.ToString(), F8));
 			cell.FixedHeight= cellHeight;
 			cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
 			cell.Border= PdfPCell.NO_BORDER;

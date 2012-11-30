@@ -26,7 +26,9 @@ namespace Aicl.Delfin.Report
 		<meta http-equiv=""Content-Type"" content=""text/html"" charset=""utf-8"" />
 	</head>
 	<body>
+    <div style=""font-size:95%; font-family:Century Gothic, Arial, Helvetica, sans-serif;"">
 		{0}{1}{2}{3}{4}
+	</div>
 	</body>
 </html>",
 			                            ConstruirEncabezado(empresa, pedido, textoInicial),
@@ -177,10 +179,7 @@ namespace Aicl.Delfin.Report
 
 			var filasFormatoHtml = ConstruirFilasFormato(filasFormato);
 
-			return string.Format(@"<head>
- <meta http-equiv=""Content-Type"" content=""text/html"" charset=""utf-8"" />
-</head>
-    {0}
+			return string.Format(@"{0}
 	<table style=""border-collapse: collapse; width: 100%; "">
 		<tbody>
 			<tr>

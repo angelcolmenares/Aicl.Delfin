@@ -7,7 +7,6 @@ using System.IO;
 using System.Collections.Generic;
 using ServiceStack.ServiceInterface.Auth;
 using System.Text;
-using Aicl.Delfin.BusinessLogic;
 using System;
 using Aicl.Cayita;
 
@@ -17,15 +16,23 @@ namespace Aicl.Delfin.Report
 	{
 		internal readonly string FontFamilyName = "unifont";
 
+		Font f7;
+		Font f8;
+		Font f10;
+
 		public OfertaPdf():this(AppDomain.CurrentDomain.BaseDirectory){}
 
 		public OfertaPdf (string applicationFilePath)
 		{
-			var fontPath= Path.Combine( Path.Combine(applicationFilePath, "resources"), "Ubuntu-R.ttf");
+			//var fontPath= Path.Combine( Path.Combine(applicationFilePath, "resources"), "Ubuntu-R.ttf");
+			var fontPath= Path.Combine( Path.Combine(applicationFilePath, "resources"), "GOTHIC.TTF");
 			//FontFactory.Register("/usr/share/fonts/truetype/unifont/unifont.ttf","unifont");
 			//FontFactory.Register("//usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf","unifont");
 			//FontFactory.Register("//usr/share/fonts/truetype/ttf-liberation/LiberationSans-Regular.ttf","unifont");
 			FontFactory.Register(fontPath,FontFamilyName);
+			f7 = FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,7);
+			f8 = FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,8);
+			f10 = FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,10);
 		}
 
 		public void CreatePDF(Empresa empresa, IAuthSession user, Pedido pedido,
@@ -50,45 +57,50 @@ namespace Aicl.Delfin.Report
 					LogoFile=logFile,
 					Empresa = empresa,
 					Pedido = pedido,
-					Prefijo = prefijo
+					Prefijo = prefijo,
+					//FontFamilyName= FontFamilyName,
+					F10=f10,
+					F7=f7,
+					F8=f8
 				};
 
 	            PDFWriter.PageEvent = PageEventHandler;           
 
 	            document.Open();
 
+
 				PdfPTable solicitadPor = new PdfPTable(1);
-				PdfPCell cell = new PdfPCell(new Phrase("Solicitado Por:",new Font{Size=8}));
+				PdfPCell cell = new PdfPCell(new Phrase("Solicitado Por:",f8));
 				cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
 				solicitadPor.AddCell(cell);
 
-				cell = new PdfPCell(new Phrase(pedido.NombreCliente,new Font{Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.NombreCliente,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				solicitadPor.AddCell(cell);
-				cell = new PdfPCell(new Phrase(pedido.NitCliente,new Font{Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.NitCliente,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				solicitadPor.AddCell(cell);
-				cell = new PdfPCell(new Phrase(pedido.NombreContacto,new Font{Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.NombreContacto,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				solicitadPor.AddCell(cell);
-				cell = new PdfPCell(new Phrase(pedido.MailContacto,new Font{Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.MailContacto,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				solicitadPor.AddCell(cell);
 
 				PdfPTable destinatario = new PdfPTable(1);
-				cell = new PdfPCell(new Phrase("Destinatario:", new Font{Size=8}));
+				cell = new PdfPCell(new Phrase("Destinatario:", f8));
 				cell.HorizontalAlignment= PdfPCell.ALIGN_CENTER;
 				destinatario.AddCell(cell);
 
-				cell = new PdfPCell(new Phrase(pedido.NombreDestinatario, new Font(){Size=10}));
+				cell = new PdfPCell(new Phrase(pedido.NombreDestinatario, f10));
 				cell.Border= PdfPCell.NO_BORDER;
 				destinatario.AddCell(cell);
 
-				cell = new PdfPCell(new Phrase(pedido.CargoDestinatario,new Font(){Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.CargoDestinatario,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				destinatario.AddCell(cell);
 
-				cell = new PdfPCell(new Phrase(pedido.DireccionDestinatario+"-"+pedido.NombreCiudad,new Font(){Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.DireccionDestinatario+"-"+pedido.NombreCiudad,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				destinatario.AddCell(cell);
 
@@ -96,11 +108,11 @@ namespace Aicl.Delfin.Report
 						              pedido.TelefonoDestinatario,
 						              (!pedido.TelefonoDestinatario.IsNullOrEmpty() && !pedido.FaxDestinatario.IsNullOrEmpty())?
 						              "-"+pedido.FaxDestinatario:
-						              pedido.FaxDestinatario)+ "-" + pedido.CelularDestinatario ,new Font(){Size=8}));
+						              pedido.FaxDestinatario)+ "-" + pedido.CelularDestinatario ,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				destinatario.AddCell(cell);
 
-				cell = new PdfPCell(new Phrase(pedido.MailDestinatario,new Font(){Size=8}));
+				cell = new PdfPCell(new Phrase(pedido.MailDestinatario,f8));
 				cell.Border= PdfPCell.NO_BORDER;
 				destinatario.AddCell(cell);
 
@@ -151,7 +163,6 @@ namespace Aicl.Delfin.Report
 
 			var unifont7= FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 			unifont7.Size=7;
-
 
 			//foreach(var grupo in grupos){
 
@@ -233,17 +244,17 @@ namespace Aicl.Delfin.Report
 			PdfPTable  itemTable = new PdfPTable(6);
 			itemTable.WidthPercentage=95;
 
-			var cell = new PdfPCell(new Phrase("Resumen Oferta", new Font(){Size=10}));
+			var cell = new PdfPCell(new Phrase("Resumen Oferta", f10));
 			cell.Colspan = 6;
 			itemTable.AddCell(cell);
 			itemTable.HeaderRows=1;
 
 			foreach(var fila in filas){
-				cell = new PdfPCell(new Phrase(fila.Label,new Font(){Size=10}));
+				cell = new PdfPCell(new Phrase(fila.Label,f10));
 				cell.HorizontalAlignment=2;
 				itemTable.AddCell(cell);
 
-				cell = new PdfPCell(new Phrase(fila.Value.ToString(),new Font(){Size=10}));
+				cell = new PdfPCell(new Phrase(fila.Value.ToString(),f10));
 				itemTable.AddCell(cell);
 			}
 
@@ -255,7 +266,7 @@ namespace Aicl.Delfin.Report
 			string nota = string.Format("Nota : El precio {0}incluye gastos de envio",
 			                            pedido.IncluyeGastosEnvio? " ": "NO ");
 
-			var pr = new Paragraph(nota, new Font{Size=8});
+			var pr = new Paragraph(nota, f8);
 			pr.IndentationLeft=18;
 			document.Add(pr);
 		}
@@ -268,7 +279,7 @@ Tambien se da por entendida la aceptación por parte del cliente si éste da una
 Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profesionales sobre los resultados de la calibracion.",		
 				empresa.CuentaBancaria, empresa.Nombre);
 
-			var p = new Paragraph(html.ToString(),new Font{Size=7});
+			var p = new Paragraph(html.ToString(),f7);
 			p.IndentationLeft=18;
 			p.IndentationRight=18;
 			document.Add(p);
@@ -278,7 +289,9 @@ Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profes
 			if(pedido.Observacion.IsNullOrEmpty()) return ;
 
 			var html = 	"Observación: "+ pedido.Observacion;
-			var p = new Paragraph(html,new Font(Font.FontFamily.HELVETICA, 7, Font.BOLD));
+			var font=FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,7,Font.BOLD);
+			var p = new Paragraph(html,font);
+			//var p = new Paragraph(html,new Font(Font.FontFamily.HELVETICA, 7, Font.BOLD));
 			p.IndentationLeft=18;
 			p.IndentationRight=18;
 			document.Add(p);
@@ -294,7 +307,9 @@ Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profes
 {2}
 ",		
 			user.DisplayName, user.LastName, user.Email);
-			var p = new Paragraph(html.ToString(),new Font(Font.FontFamily.HELVETICA, 9, Font.BOLDITALIC));
+			var font=FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,9,Font.BOLDITALIC);
+			var p = new Paragraph(html.ToString(),font);
+			//var p = new Paragraph(html.ToString(),new Font(Font.FontFamily.HELVETICA, 9, Font.BOLDITALIC));
 			p.IndentationLeft=18;
 			p.IndentationRight=18;
 			document.Add(p);

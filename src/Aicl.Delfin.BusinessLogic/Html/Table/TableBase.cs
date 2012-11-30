@@ -1,10 +1,8 @@
-
-
 namespace Aicl.Cayita
 {
 	public abstract class TableBase:TagBase
 	{
-		protected int RowsCount{get;set;}
+		public int RowsCount{get; protected set;}
 
 		public HtmlRowStyle RowStyle{get;set;}
 		public HtmlRowStyle AlternateRowStyle { get;set;}
@@ -16,17 +14,27 @@ namespace Aicl.Cayita
 			AlternateRowStyle= new HtmlRowStyle();
 		}
 
-		public virtual RowBase CreateRow(){
+		public virtual RowBase CreateRow(string alternateRowCss=null){
 			HtmlRow row = new HtmlRow();
-			row.Style= RowsCount%2==0?
-				RowStyle:
-				AlternateRowStyle??RowStyle;
+			ApplyStyleToRow (row, alternateRowCss);
 			RowsCount++;
 			return row;
 		}
 
 		public void AddRow(RowBase row){
 			InnerHtml=InnerHtml+row.ToString();
+		}
+
+
+		protected void ApplyStyleToRow ( RowBase row, string alternateRowCss=null)
+		{
+			if (RowsCount % 2 == 0)
+				row.Style = RowStyle;
+			else {
+				row.Style = AlternateRowStyle ?? RowStyle;
+				if (!string.IsNullOrEmpty (alternateRowCss))
+					row.Attributes ["class"] = alternateRowCss;
+			}
 		}
 
 	}

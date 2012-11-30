@@ -115,6 +115,7 @@
     <Compile Include="Html\Grid\GridColumn.cs" />
     <Compile Include="Html\Grid\GridColumnBase.cs" />
     <Compile Include="Html\Extensions.cs" />
+    <Compile Include="Html\Grid\GridCss.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

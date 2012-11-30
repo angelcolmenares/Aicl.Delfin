@@ -4,11 +4,9 @@ namespace Aicl.Cayita
 	{
 		protected internal HtmlTableHeader ():base("thead"){}
 
-		public override RowBase CreateRow(){
+		public override RowBase CreateRow(string alternateRowCss=null){
 			HtmlHeaderRow row = new HtmlHeaderRow();
-			row.Style= RowsCount%2==0?
-				RowStyle:
-				AlternateRowStyle??RowStyle;
+			ApplyStyleToRow (row, alternateRowCss);
 			RowsCount++;
 			return row;
 		}

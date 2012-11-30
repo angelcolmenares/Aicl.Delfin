@@ -19,15 +19,26 @@ namespace Aicl.Cayita
 		public TagBase HeaderBand {get;set;}
 		public TagBase FooterBand {get;set;}
 
+		public GridCss Css {get;set;}
+
 		public virtual void AddGridColum(GridColumnBase<T> gridColumn){
 			Columns.Add(gridColumn);
 		}
 
-		public GridBase (){}
+		public GridBase (){
+			Css= new GridCss();
+		}
 
 		public override string ToString ()
 		{
+			string alternateRowCss=string.Empty;
+
 			HtmlTable table = new HtmlTable();
+			if(Css!=default(GridCss)){
+				if(!string.IsNullOrEmpty( Css.Name)) table.Attributes["class"]= Css.Name;
+				alternateRowCss= Css.AlternateRow;
+
+			}
 
 			table.Style= Style.TableStyle;
 			table.RowStyle= Style.RowStyle;
@@ -88,14 +99,14 @@ namespace Aicl.Cayita
 			// TBody
 			if(DataSource==null ||  Columns.Count==0) return table.ToString();
 
-			var rowIndex=0;
+
 			foreach(var data in DataSource){
-				var dr = table.CreateRow();
+				var dr = table.CreateRow(alternateRowCss);
 				foreach(var column in Columns){
 					var dt = dr.CreateCell();
 					dr.CellStyle = column.CellStyle;
 					if (column.CellRenderFunc!=null){
-						dt.SetValue( column.CellRenderFunc(data,rowIndex));
+						dt.SetValue( column.CellRenderFunc(data,table.RowsCount-1));
 					}
 					else{
 						dt.SetValue("");
@@ -103,9 +114,8 @@ namespace Aicl.Cayita
 					dr.AddCell(dt);
 				}
 				table.AddRow(dr);
-				rowIndex++;
-			}
 
+			}
 
 			// Footer
 			var trf = table.Footer.CreateRow();
@@ -157,7 +167,6 @@ namespace Aicl.Cayita
 				tr.AddCell(th);
 				table.Footer.AddRow(tr);
 			}
-
 
 			return table.ToString();
 		}
