@@ -53,7 +53,10 @@ namespace Aicl.Cayita
 
 		public override string ToString ()
 		{
-			int? t, r, b, l=null;
+			int? t=null;
+			int? r=null;
+			int? b=null;
+			int? l=null;
 			if(Left.HasValue){
 				l=Left.Value;
 				b= Bottom??(AllSides??0);
