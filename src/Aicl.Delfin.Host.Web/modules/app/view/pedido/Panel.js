@@ -856,28 +856,63 @@ Ext.define('App.view.pedidoitem.Form', {
                     maxLength: 128
                 },
                 {
-                    xtype: 'numberfield',
-                    anchor: '50%',
-                    name: 'Cantidad',
-                    fieldLabel: 'Cantidad',
-                    allowDecimals: false,
-                    value:1
-                },
-                {
-                    xtype: 'numberfield',
-                    anchor: '50%',
-                    name: 'DiasEntrega',
-                    fieldLabel: 'Dias Entrega',
-                    allowDecimals: false,
-                    value:8
-                },{
-                    xtype: 'numberfield',
-                    anchor: '50%',
-                    name: 'Descuento',
-                    fieldLabel: 'Descuento %',
-                    decimalPrecision: 6,
-                    value:0
-                }
+                            xtype: 'fieldcontainer',
+                            fieldDefaults: {
+                                msgTarget: 'side',
+                                labelWidth: 80,
+                                labelAlign: 'right'
+                            },
+                            layout: {
+                                type: 'hbox'
+                            },
+                            items: [
+                                {
+                                    xtype: 'numberfield',
+                                    flex: 2,
+                                    name: 'ValorUnitario',
+                                    fieldLabel: 'Valor (Con IVA)',
+									allowDecimals: false,
+                                },
+                                {
+				                    xtype: 'numberfield',
+            				        flex:1,
+                    				name: 'Descuento',
+                    				fieldLabel: 'Descuento %',
+                    				decimalPrecision: 6,
+                    				value:0
+                				}
+                            ]
+                        },
+						{
+                            xtype: 'fieldcontainer',
+                            fieldDefaults: {
+                                msgTarget: 'side',
+                                labelWidth: 80,
+                                labelAlign: 'right'
+                            },
+                            layout: {
+                                type: 'hbox'
+                            },
+                            items: [
+								{
+				            	    xtype: 'numberfield',
+				            	    flex: 2,
+				                    name: 'Cantidad',
+                				    fieldLabel: 'Cantidad',
+                				    allowDecimals: false,
+				                    value:1
+                				},
+                				{
+				                    xtype: 'numberfield',
+				                    flex: 1,
+                				    name: 'DiasEntrega',
+                				    fieldLabel: 'Dias Entrega',
+                				    allowDecimals: false,
+				                    value:8
+                				}
+                            ]
+                        }
+
             ],
             dockedItems: [
                 {

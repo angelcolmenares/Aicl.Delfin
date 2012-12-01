@@ -101,5 +101,7 @@ namespace Aicl.Delfin.Model.Types
 		[StringLength(36)]
 		public string Edicion{get;set;}
 
+		public bool CambiarPrecio {get;set;}
+
 	}
 }

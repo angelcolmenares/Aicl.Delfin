@@ -9,6 +9,7 @@ using Mono.Linq.Expressions;
 using ServiceStack.Common.Web;
 using System.Collections.Generic;
 using Aicl.Cayita;
+using Aicl.Delfin.DataAccess;
 
 namespace Aicl.Delfin.Interface
 {
@@ -91,7 +92,10 @@ namespace Aicl.Delfin.Interface
 				request.NombreServicio= servicio.Nombre;
 
 				var procedimiento = proxy.CheckExistAndActivo<Procedimiento>(request.IdProcedimiento, f=>f.Nombre);
-				request.ValorUnitario=procedimiento.ValorUnitario;
+				var empresa = proxy.GetEmpresa(); 
+				if(!empresa.CambiarPrecio){
+					request.ValorUnitario=procedimiento.ValorUnitario;
+				}
 				request.PorcentajeIva=procedimiento.PorcentajeIva;
 				
 				request.DescripcionProcedimiento=procedimiento.Descripcion;
@@ -146,8 +150,12 @@ namespace Aicl.Delfin.Interface
 				var servicio = proxy.CheckExistAndActivo<Servicio>(request.IdServicio, f=>f.Nombre);
 				request.NombreServicio= servicio.Nombre;
 
+				
 				var procedimiento = proxy.CheckExistAndActivo<Procedimiento>(request.IdProcedimiento, f=>f.Nombre);
-				request.ValorUnitario=procedimiento.ValorUnitario;
+				var empresa = proxy.GetEmpresa(); 
+				if(!empresa.CambiarPrecio){
+					request.ValorUnitario=procedimiento.ValorUnitario;
+				}
 				request.PorcentajeIva=procedimiento.PorcentajeIva;
 
 				request.Descripcion= request.Descripcion.Encode();

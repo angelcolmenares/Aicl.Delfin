@@ -99,7 +99,7 @@ namespace Aicl.Delfin.Report
 			cell.Colspan=3;
 			rightTable.AddCell(cell);
 
-			var textoFormato=string.Format("FLPA0201");
+			var textoFormato=Empresa.Formato;
 			cell = new PdfPCell(new Phrase(textoFormato, F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			rightTable.AddCell(cell);
@@ -109,7 +109,7 @@ namespace Aicl.Delfin.Report
 			cell.Colspan=3;
 			rightTable.AddCell(cell);
 
-			textoFormato=string.Format("EDICION:08 (2012-09-14)");
+			textoFormato=Empresa.Edicion;
 			cell = new PdfPCell(new Phrase(textoFormato, F10));
 			cell.Border= PdfPCell.NO_BORDER;
 			cell.PaddingBottom = 8;

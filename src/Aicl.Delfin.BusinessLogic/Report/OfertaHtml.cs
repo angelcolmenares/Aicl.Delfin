@@ -169,8 +169,8 @@ namespace Aicl.Delfin.Report
 
 			var filasFormato = new List<Fila>(
 				new Fila[]{
-				new Fila{Value="FLPA0201" },
-				new Fila{Value="EDICION:08 (2012-09-14)"},
+				new Fila{Value=empresa.Formato },
+				new Fila{Value=empresa.Edicion},
 				new Fila{Value=string.Empty.ValueOrHtmlSpace()},
 				new Fila{Value=string.Empty.ValueOrHtmlSpace()},
 				new Fila{Value=string.Empty.ValueOrHtmlSpace()},
