@@ -305,6 +305,27 @@ Ext.define('App.view.empresa.Form', {
                                     vtype: 'email'
                                 }
                             ]
+                        },
+                        {
+                            xtype: 'panel',
+                            title: 'Otras Opciones',
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    name: 'Formato',
+                                    fieldLabel: 'Formato'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'Edicion',
+                                    fieldLabel: 'Edicion'
+                                },
+                                {
+                                    xtype: 'checkboxfield',
+                                    name: 'CambiarPrecio',
+                                    fieldLabel: 'Permitir Modificar Precio'
+                                }
+                            ]
                         }
                     ]
                 }

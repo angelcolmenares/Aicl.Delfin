@@ -523,7 +523,8 @@ Ext.define('App.controller.Pedido',{
     		IdServicio: record.get('IdServicio'),
     		IdProcedimiento: record.get('IdProcedimiento'),
     		NombreServicio: record.get('NombreServicio'),
-    		Descripcion: record.get('NombreProcedimiento')
+    		Descripcion: record.get('NombreProcedimiento'),
+    		ValorUnitario: record.get('ValorUnitarioProcedimiento')
     	});
     	    	
     	irf.setValues({
