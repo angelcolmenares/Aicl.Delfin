@@ -1,6 +1,7 @@
 using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
+using ServiceStack.Redis;
 
 namespace Aicl.Delfin.Interface
 {
@@ -27,6 +28,16 @@ namespace Aicl.Delfin.Interface
 			if(session!=null && session.IsAuthenticated)
 			{
 				req.SaveSession(session);// refresh session TTL
+				var cache = req.TryResolve<IRedisClientsManager>();
+				if(cache!=null){
+					using(var client = cache.GetClient()){
+						var pattern = string.Format("urn:{0}:*", req.GetSessionId());
+						var keys =client.SearchKeys(pattern);
+						foreach(var k in keys) {
+							client.ExpireEntryIn(k, AuthProvider.DefaultSessionExpiry);
+						}
+					}
+				}
 			}
 		}
 	

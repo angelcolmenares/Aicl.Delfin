@@ -374,6 +374,15 @@ namespace Aicl.Delfin.DataAccess
 			});
 		}
 
+
+		public T GetUserData<T>(string key){
+			return CreateRedisClient().Get<T>(key);
+		}
+
+		public void  SetUserData<T>(string key, T value, TimeSpan expiresIn){
+			CreateRedisClient().Set<T>(key,value, expiresIn);
+		}
+
     }
 }
 

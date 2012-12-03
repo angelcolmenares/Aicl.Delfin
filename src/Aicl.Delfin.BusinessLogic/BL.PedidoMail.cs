@@ -22,7 +22,8 @@ namespace Aicl.Delfin.BusinessLogic
         public static Response<PedidoMail> Get(this PedidoMail request,
 		                                     Factory factory,
 		                                     IHttpRequest httpRequest,
-		                                     Mailer mailService)
+		                                     Mailer mailService,
+		                                     User user)
         {
 
 			return factory.Execute(proxy=>{
@@ -44,24 +45,21 @@ namespace Aicl.Delfin.BusinessLogic
 
 
 				var oferta = new OfertaHtml();
-				var userSession = httpRequest.GetSession();   // el de esta session...
-				IAuthSession user= new AuthUserSession();  // el que lo envio !!!
+				User sendBy= new User();  // el que lo envio !!!
 
-				if(userSession.Id!=pedido.IdEnviadoPor.ToString()){
-					var userAuth= proxy.FirstOrDefault<UserAuth>(q=>q.Id==pedido.IdEnviadoPor);
-					if(userAuth==default(UserAuth)){
-						userAuth = new UserAuth(){
-							DisplayName="indefinido",
+				if(user.Id !=pedido.IdEnviadoPor){
+					sendBy= proxy.FirstOrDefault<User>(q=>q.Id==pedido.IdEnviadoPor);
+					if(sendBy==default(User)){
+						user = new User(){
+							FirstName="indefinido",
 							LastName="indefinido"
 						};
 
 					}
-					user.PopulateWith(userAuth);
 				}
 				else{
-					user.PopulateWith(userSession);
+					sendBy.PopulateWith(user);
 				}
-
 				var empresa = proxy.GetEmpresa(); 
 
 				var html = oferta.ConstruirHtmlReport(empresa,
@@ -75,10 +73,10 @@ namespace Aicl.Delfin.BusinessLogic
 					request.Asunto:
 						string.Format("Envio Oferta No:{0}", pedido.Consecutivo.ToString().PadLeft(8,'0'));
 
-				message.ReplyToList.Add(userSession.Email);
-				message.From= new MailAddress(userSession.Email);
+				message.ReplyToList.Add(user.Email);
+				message.From= new MailAddress(user.Email);
 
-				var mc= !pedido.MailContacto.IsNullOrEmpty()?pedido.MailContacto:userSession.Email;
+				var mc= !pedido.MailContacto.IsNullOrEmpty()?pedido.MailContacto:user.Email;
 
 				message.To.Add(mc);
 
@@ -88,7 +86,7 @@ namespace Aicl.Delfin.BusinessLogic
 					message.CC.Add(pedido.MailDestinatario);
 				}
 
-				message.Bcc.Add(userSession.Email);
+				message.Bcc.Add(user.Email);
 
 				if(!empresa.ApplicationMailBox.IsNullOrEmpty()){
 					message.Bcc.Add(empresa.ApplicationMailBox);

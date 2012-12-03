@@ -16,7 +16,7 @@ namespace Aicl.Delfin.Report
 
 		public OfertaHtml (){}
 
-		public string ConstruirHtmlReport(Empresa empresa, IAuthSession user,
+		public string ConstruirHtmlReport(Empresa empresa, User user,
 		                                  Pedido pedido, List<PedidoItem> items,
 		                                  string textoInicial=default(string)){
 
@@ -321,7 +321,7 @@ namespace Aicl.Delfin.Report
 			return html.ToString();
 		}
 
-		public string ConstruirCondiciones(Empresa empresa,Pedido pedido, IAuthSession user){
+		public string ConstruirCondiciones(Empresa empresa,Pedido pedido, User user){
 			StringBuilder html = new StringBuilder();
 			html.AppendFormat(@"<table style=""border-collapse: collapse; width: 100%; "">
 									<thead>
@@ -373,7 +373,7 @@ namespace Aicl.Delfin.Report
 	<p> Direccion antigua: {12}</p>
 ",
 			                  empresa.CuentaBancaria, 
-			                  empresa.Nombre, user.DisplayName, user.LastName, user.Email,
+			                  empresa.Nombre, user.FirstName+" "+ user.LastName, user.Cargo , user.Email,
 			                  empresa.Direccion,empresa.Telefono, empresa.Fax, 
 			                  empresa.Web,empresa.Mail, empresa.Ciudad, empresa.Pais, empresa.DireccionAntigua,
 			                  pedido.Observacion.IsNullOrEmpty()?

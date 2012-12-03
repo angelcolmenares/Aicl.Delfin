@@ -1,12 +1,12 @@
 using System;
 using System.Globalization;
-using System.Collections.Generic;
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.FluentValidation;
 using Aicl.Delfin.Model.Types;
+using ServiceStack.Redis;
 
 namespace Aicl.Delfin.Interface
 {
@@ -43,6 +43,21 @@ namespace Aicl.Delfin.Interface
 
 					if(usermeta.ExpiresAt.HasValue && usermeta.ExpiresAt.Value<DateTime.Now)
 						throw HttpError.Unauthorized("la cuenta  ha expirado");
+				}
+
+				var cache = authService.TryResolve<IRedisClientsManager>();
+				if(cache!=null){
+					var sessionId = authService.GetSessionId();
+				    using (var client = cache.GetClient())
+					{
+						User user = new User();
+						user.PopulateWith(userAuth);
+						user.Activo=usermeta.Activo;
+						user.Cargo= usermeta.Cargo;
+						user.ExpiresAt= usermeta.ExpiresAt;
+						client.Set<User>( user.GetUserDataUrn(sessionId,"_user_"), user,SessionExpiry.Value );
+
+					}
 				}
 			
 				session.PopulateWith(userAuth);

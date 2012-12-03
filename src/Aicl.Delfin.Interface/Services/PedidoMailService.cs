@@ -17,7 +17,8 @@ namespace Aicl.Delfin.Interface
 		public override object OnGet(PedidoMail request)
 		{
 			try{
-				return request.Get(Factory, RequestContext.Get<IHttpRequest>(), MailService);
+				var user = GetUser();
+				return request.Get(Factory, RequestContext.Get<IHttpRequest>(), MailService, user);
 			}
 			catch(Exception e){
 				return HttpResponse.ErrorResult<Response<PedidoMail>>(e,"GetPedidoMailError");

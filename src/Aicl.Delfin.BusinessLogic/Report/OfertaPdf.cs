@@ -35,7 +35,7 @@ namespace Aicl.Delfin.Report
 			f10 = FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,10);
 		}
 
-		public void CreatePDF(Empresa empresa, IAuthSession user, Pedido pedido,
+		public void CreatePDF(Empresa empresa, User user, Pedido pedido,
 		                      List<PedidoItem> items,
 		                      string logFile, string prefijo, Stream file,
 		                      OfertaMargin margin)
@@ -271,7 +271,7 @@ namespace Aicl.Delfin.Report
 			document.Add(pr);
 		}
 
-		public void ConstruirCondiciones(Document document, Empresa empresa, IAuthSession user){
+		public void ConstruirCondiciones(Document document, Empresa empresa, User user){
 			StringBuilder html = new StringBuilder();
 			html.AppendFormat(
 @"Si esta de acuerdo con la oferta, por favor enviar:1 Comunicación escrita (Carta, Orden de Compra, Orden de Servicio u Orden de Trabajo). 2 Soporte de Pago ( via fax o e-mail):Consignación en la {0} a nombre de {1}. 3 La comunicación debe contener la siguiente informacion:3.1 Razón Social completa de la empresa, Direccion y Nit. 3.2 Número de la presente oferta. 3.3 Código o Número de Identificación del equipo (en caso de que no tenga este código, este será; asignado por {1}). 3.4 Dirección exacta (donde estan ubicados los equipos) - Información para el certificado. 3.5 Nombres de las personas encargadas de los equipos o departamento de metrología para comunicarnos en caso de necesidad. 3.6 Al enviar los equipos favor anexar copia de esta oferta.
@@ -285,7 +285,7 @@ Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profes
 			document.Add(p);
 		}
 
-		public void ConstruirObservacion(Document document, Empresa empresa, Pedido pedido, IAuthSession user){
+		public void ConstruirObservacion(Document document, Empresa empresa, Pedido pedido, User user){
 			if(pedido.Observacion.IsNullOrEmpty()) return ;
 
 			var html = 	"Observación: "+ pedido.Observacion;
@@ -298,7 +298,7 @@ Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profes
 		}
 
 
-		public void ConstruirFirma(Document document, Empresa empresa, IAuthSession user){
+		public void ConstruirFirma(Document document, Empresa empresa, User user){
 			StringBuilder html = new StringBuilder();
 			html.AppendFormat(
 @"
@@ -306,7 +306,7 @@ Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profes
 {1}
 {2}
 ",		
-			user.DisplayName, user.LastName, user.Email);
+			user.FirstName+" "+user.LastName, user.Cargo, user.Email);
 			var font=FontFactory.GetFont(FontFamilyName,BaseFont.IDENTITY_H, BaseFont.EMBEDDED,9,Font.BOLDITALIC);
 			var p = new Paragraph(html.ToString(),font);
 			//var p = new Paragraph(html.ToString(),new Font(Font.FontFamily.HELVETICA, 9, Font.BOLDITALIC));

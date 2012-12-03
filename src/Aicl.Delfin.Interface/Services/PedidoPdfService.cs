@@ -14,7 +14,8 @@ namespace Aicl.Delfin.Interface
 		public override object OnGet(PedidoPdf request)
 		{
 			try{
-				return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+				var user = GetUser();
+				return request.Get(Factory, RequestContext.Get<IHttpRequest>(), user);
 			}
 			catch(Exception e){
 				return HttpResponse.ErrorResult<Response<PedidoPdf>>(e,"GetPedidoPdfError");

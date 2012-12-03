@@ -17,7 +17,8 @@ namespace Aicl.Delfin.BusinessLogic
 		#region Get
         public static object Get(this PedidoPdf request,
 		                         Factory factory,
-		                         IHttpRequest httpRequest)
+		                         IHttpRequest httpRequest,
+		                         User user)
         {
 
 			return factory.Execute(proxy=>{
@@ -33,22 +34,20 @@ namespace Aicl.Delfin.BusinessLogic
 					//proxy.Get<PedidoItem>(q=>q.IdPedido==pedido.Id).OrderBy(f=>f.IdServicio).ToList();
 
 
-				var userSession = httpRequest.GetSession();   // el de esta session...
-				IAuthSession user= new AuthUserSession();  // el que lo envio !!!
+				User sendBy= new User();  // el que lo envio !!!
 
-				if(userSession.Id!=pedido.IdEnviadoPor.ToString()){
-					var userAuth= proxy.FirstOrDefault<UserAuth>(q=>q.Id==pedido.IdEnviadoPor);
-					if(userAuth==default(UserAuth)){
-						userAuth = new UserAuth(){
-							DisplayName="indefinido",
+				if(user.Id !=pedido.IdEnviadoPor){
+					sendBy= proxy.FirstOrDefault<User>(q=>q.Id==pedido.IdEnviadoPor);
+					if(sendBy==default(User)){
+						user = new User(){
+							FirstName="indefinido",
 							LastName="indefinido"
 						};
 
 					}
-					user.PopulateWith(userAuth);
 				}
 				else{
-					user.PopulateWith(userSession);
+					sendBy.PopulateWith(user);
 				}
 
 				var empresa = proxy.GetEmpresa(); 

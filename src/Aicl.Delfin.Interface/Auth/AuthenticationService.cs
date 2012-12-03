@@ -9,6 +9,7 @@ using Aicl.Delfin.Model.Types;
 using Aicl.Delfin.Model.Operations;
 using Aicl.Delfin.DataAccess;
 using Aicl.Delfin.BusinessLogic;
+using ServiceStack.Redis;
 
 namespace Aicl.Delfin.Interface
 {
@@ -69,6 +70,20 @@ namespace Aicl.Delfin.Interface
 			var response =authService.Delete(new Auth {
 					provider = AuthService.LogoutAction
 			});
+
+
+			var cache = authService.TryResolve<IRedisClientsManager>();
+			if(cache!=null){
+				var sessionId = authService.GetSessionId();
+			    using (var client = cache.GetClient())
+				{
+
+					var pattern = string.Format("urn:{0}:*", sessionId);
+					var keys =client.SearchKeys(pattern);
+					client.RemoveAll(keys);
+
+				}
+			}
 				
 			return response;
 		}
