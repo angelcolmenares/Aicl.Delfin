@@ -42,6 +42,13 @@ namespace Aicl.Cayita
 			}
 		}
 
+		public override string ToString ()
+		{
+
+			return base.ToString(TagRenderMode.SelfClosing);
+
+		}
+
 	}
 
 

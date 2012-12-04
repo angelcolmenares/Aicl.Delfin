@@ -4,6 +4,8 @@ namespace Aicl.Cayita
 {
 	public abstract class GridBase <T>
 	{
+		public string Id {get;set;}
+
 		public string Title {get;set;}
 
 		public string FootNote {get;set;}
@@ -34,6 +36,8 @@ namespace Aicl.Cayita
 			string alternateRowCss=string.Empty;
 
 			HtmlTable table = new HtmlTable();
+			if(!string.IsNullOrEmpty(Id)) table.Id=Id;
+
 			if(Css!=default(GridCss)){
 				if(!string.IsNullOrEmpty( Css.Name)) table.Attributes["class"]= Css.Name;
 				alternateRowCss= Css.AlternateRow;

@@ -139,4 +139,7 @@
   <ItemGroup>
     <Content Include="BL.PedidoItem.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="BL.InformeOfertas.cs" />
+  </ItemGroup>
 </Project>

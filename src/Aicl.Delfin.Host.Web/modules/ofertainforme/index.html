@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <title>Informe de Ofertas</title>
+    <link rel="stylesheet" type="text/css" href="../../extjs/resources/css/ext-all-gray.css"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/util.css"/>
+	<script type="text/javascript" src="../../extjs/bootstrap.js"></script>
+    <script type="text/javascript" src="../../resources/util.js"></script>
+	<script type="text/javascript">
+		Ext.onReady(function(){
+    	
+    	var el =Ext.get("resultados");
+    	el.setVisible(false);
+    		
+    	var formRequest = Ext.create('Ext.form.Panel', {
+    		renderTo:"formulario",
+    		layout:"hbox",
+        	frame:true,
+        	bodyStyle:'padding:5px 5px 0',
+        	fieldDefaults: {
+            	msgTarget: 'side',
+            	labelWidth: 80,
+				labelAlign: 'right'
+        	},    
+        	items: [{
+            	fieldLabel: 'Desde',
+            	name: 'Desde',
+            	format:	'd.m.Y',
+				xtype     : 'datefield',
+				allowBlank:false
+        	},{
+            	fieldLabel: 'Hasta',
+            	name: 'Hasta',
+            	format:	'd.m.Y',
+				xtype     : 'datefield',
+				allowBlank:false
+        	},{
+                xtype: 'button',
+                action: 'execute',
+                flex: 0,
+                margin: '0 2 2 20',
+                iconCls: 'find',
+                formBind: true,	 
+                
+                handler:function(){	
+            	
+	            	var form = formRequest.getForm();
+	            	var record = form.getFieldValues();
+	            	
+	            	Aicl.Util.executeRestRequest({
+						url : Aicl.Util.getUrlApi()+'/OfertaInforme/read',
+						method : 'get',
+						success : function(result) {
+							el.setVisible(true, true);
+							el.setHTML(result.Html);
+						},
+						
+						params : record
+					});
+				}
+            },
+            {
+                xtype: 'button',
+                action: 'sendmail',
+                flex: 0,
+                margin: '0 2 2 2',
+                iconCls: 'mail',
+                formBind: true,	 
+            }]
+    	});
+    		
+        	
+		});
+	</script>
+</head>
+<!-- <body style="text-align: center;"> !-->
+<body>
+	<div id="formulario"></div>
+	<br/>
+	<div id="resultados" class="cayitagridwhite"></div>	
+</body>
+</html>

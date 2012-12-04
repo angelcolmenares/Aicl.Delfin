@@ -7,7 +7,7 @@ body {
     font-size:13px;
 }
 p {
-    margin-bottom:15px;
+    margin-bottom:5px;
 }
 h1 {
     font-size:18px;
@@ -339,7 +339,6 @@ ul.x-boxselect-list.x-boxselect-singleselect {
   border: 0px ;
 }
 
-
 .cayitagridwhite {
 	padding:8px 8px 4px; background-color:white;border-width:1px;
 	border-style:solid;border-color:#DFDCE8;border-radius:10px;
@@ -347,17 +346,19 @@ ul.x-boxselect-list.x-boxselect-singleselect {
 	font-family: Century Gothic, Arial, Helvetica, sans-serif;
 	font-size:95%;  
 }
-
-.cayitagridwhite thead tr:last-child th {padding:2px;border-width:0px 0px 2px;border-style:solid;border-color:#DFDCE8;}
-
-.cayitagridwhite td {padding:2px;}
-
-.cayitagridwhite tfoot th {padding:2px;}
-
-.cayitagridwhite tfoot tr:first-child th {border-width:2px 0px 0px 0px;border-style:solid;border-color:#DFDCE8;}
-
+.cayitagridwhite thead th {text-align: center;font-weight: bold; }
+.cayitagridwhite thead tr:last-child th {
+	padding:2px 8px 2px 4px;
+	border-width:0px 0px 2px;
+	border-style:solid;border-color:#DFDCE8;}
+.cayitagridwhite td {padding:2px 8px 2px 4px;}
+.cayitagridwhite tfoot th {padding:2px 8px 2px 4px;}
+.cayitagridwhite tfoot tr:first-child th {
+	border-width:2px 0px 0px 0px;
+	border-style:solid;
+	border-color:#DFDCE8;
+	font-weight: bold;}
 .cayitagridwhite .alt td { background-color:#E1EEF4; }
-
 
 .cayitagridgrey {
 	padding:8px 8px 4px; background-color:#F5F2FF;border-width:0px;
@@ -366,16 +367,19 @@ ul.x-boxselect-list.x-boxselect-singleselect {
 	font-family: Century Gothic, Arial, Helvetica, sans-serif;
 	font-size:95%;  
 }
-
-.cayitagridgrey thead tr:last-child th {padding:2px;border-width:0px 0px 2px;border-style:solid;border-color:#C9C9C9;}
-
-.cayitagridgrey td {padding:2px;}
-
-.cayitagridgrey tfoot th {padding:2px;}
-
-.cayitagridgrey tfoot tr:first-child th {border-width:2px 0px 0px 0px;border-style:solid;border-color:#C9C9C9;}
-
-.cayitagridgrey .alt td { background-color:E1EEF4; }
+.cayitagridgrey thead th {text-align: center;font-weight: bold; }
+.cayitagridgrey thead tr:last-child th {
+	padding:2px 8px 2px 4px;
+	border-width:0px 0px 2px;
+	border-style:solid;border-color:#C9C9C9;}
+.cayitagridgrey td {padding:2px 8px 2px 4px;}
+.cayitagridgrey tfoot th {padding:2px 8px 2px 4px; }
+.cayitagridgrey tfoot tr:first-child th {
+	border-width:2px 0px 0px 0px;
+	border-style:solid;
+	border-color:#C9C9C9;
+	font-weight: bold;}
+.cayitagridgrey .alt td { background-color:#E1EEF4; }
 
 
 .cayitagridblue {
@@ -386,13 +390,16 @@ ul.x-boxselect-list.x-boxselect-singleselect {
 	font-size:95%;  
 
 }
-
-.cayitagridblue thead tr:last-child th {padding:2px;border-width:0px 0px 2px;border-style:solid;border-color:#CAD6DB;}
-
-.cayitagridblue td {padding:2px;}
-
-.cayitagridblue tfoot th {padding:2px;}
-
-.cayitagridblue tfoot tr:first-child th {border-width:2px 0px 0px 0px;border-style:solid;border-color:#CAD6DB;}
-
+.cayitagridblue thead th {text-align: center;font-weight: bold; }
+.cayitagridblue thead tr:last-child th {
+	padding:2px 8px 2px 4px;
+	border-width:0px 0px 2px;
+	border-style:solid;border-color:#CAD6DB;}
+.cayitagridblue td {padding:2px 8px 2px 4px;}
+.cayitagridblue tfoot th {padding:2px 8px 2px 4px;}
+.cayitagridblue tfoot tr:first-child th {
+	border-width:2px 0px 0px 0px;
+	border-style:solid;
+	border-color:#CAD6DB;
+	font-weight: bold;}
 .cayitagridblue .alt td { background-color:#F5F2FF; }

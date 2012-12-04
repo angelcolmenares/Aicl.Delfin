@@ -610,6 +610,7 @@
     <Content Include="resources\GOTHICB.TTF" />
     <Content Include="resources\GOTHICBI.TTF" />
     <Content Include="resources\GOTHICI.TTF" />
+    <Content Include="modules\ofertainforme\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -629,6 +630,7 @@
     <Folder Include="WebApp\resources\" />
     <Folder Include="modules\tarea\" />
     <Folder Include="modules\app\view\tarea\" />
+    <Folder Include="modules\ofertainforme\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

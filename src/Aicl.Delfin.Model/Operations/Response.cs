@@ -23,4 +23,20 @@ namespace Aicl.Delfin.Model.Operations
         }
 
 	}
+
+
+	public class HtmlResponse:IHasResponseStatus 
+	{
+        
+		public HtmlResponse ()
+		{
+			ResponseStatus= new ResponseStatus();
+		}
+		
+		public ResponseStatus ResponseStatus { get; set; }
+		
+		public string  Html {get; set;}       
+
+	}
+
 }

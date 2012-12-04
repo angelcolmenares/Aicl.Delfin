@@ -14,11 +14,23 @@ namespace Aicl.Delfin.Model.Types
 
 	}
 
+	public class OfertaAgrupada{
+		public OfertaAgrupada(){}
+
+		public string AgrupadaPor {get;set;}
+		public int CantidadEnviada {get;set;}
+		public decimal ValorEnviado {get;set;}
+		public int CantidadAceptada {get;set;}
+		public decimal ValorAceptado {get;set;}
+	}
+
+
 	[Alias("Pedido")]
 	[JoinTo(typeof(Contacto),"IdContacto","Id",Order=0)]
 	[JoinTo(typeof(Contacto),typeof(Cliente),"IdCliente","Id", Order=1)]
 	[JoinTo(typeof(UserAuth),"IdEnviadoPor","Id", ChildAlias="SendBy", Order=2)]
 	[JoinTo(typeof(PedidoItem),"Id","IdPedido",Order=3)]
+	[JoinTo(typeof(PedidoItem), typeof(Procedimiento),"IdProcedimiento","Id", Order=4) ]
 	public class OfertaInforme
 	{
 
@@ -57,6 +69,9 @@ namespace Aicl.Delfin.Model.Types
 		public int IdServicio {get;set;}
 		[BelongsTo(typeof(PedidoItem))]
 		public int IdProcedimiento {get;set;}
+
+		[BelongsTo(typeof(Procedimiento),"Nombre")]
+		public string NombreProcedimiento {get; set;}
 
 	}
 }
