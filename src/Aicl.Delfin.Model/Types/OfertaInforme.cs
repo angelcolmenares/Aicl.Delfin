@@ -42,6 +42,7 @@ namespace Aicl.Delfin.Model.Types
 		public int IdCreadoPor {get;set;}
 		public int IdContacto {get;set;}
 		public int IdEnviadoPor {get;set;}
+		public int Consecutivo {get;set;}
 
 		public DateTime FechaEnvio{get;set;}
 		public DateTime? FechaAceptacion {get;set;}

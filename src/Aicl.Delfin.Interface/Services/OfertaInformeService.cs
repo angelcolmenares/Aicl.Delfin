@@ -41,16 +41,29 @@ namespace Aicl.Delfin.Interface
 				return Factory.Execute(proxy=>{
 					           
 					var ofertas = proxy.Get(visitor); 
-					var resumenPorUsuario = 
-						(from o in ofertas 
-						group o by o.NombreEnviadoPor into g
-						select new  OfertaAgrupada { 
-						AgrupadaPor=g.Key, 
-						CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
-						ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
-						CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
-						ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0 )
-					}).ToList();
+
+					var resumenPorUsuario =(
+						from o in ofertas
+						group o by o.NombreEnviadoPor into newGroup1
+						from newGroup2 in
+						(
+							from o in newGroup1
+							group o by o.Id into gi
+							select new {
+								FechaEnvio=gi.Max(p=>p.FechaEnvio),
+								ValorUnitario=gi.Sum(p=>p.ValorUnitario),
+								FechaAceptacion=gi.Max(p=>p.FechaAceptacion),
+							}
+						)
+						group newGroup2 by newGroup1.Key into g
+						select new OfertaAgrupada{
+							AgrupadaPor=g.Key,
+							CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
+							ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
+							CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
+							ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0)
+						}
+					).ToList();
 
 					HtmlGrid<OfertaAgrupada> gridUsuario = 
 						BuildGridAgrupadoPor(resumenPorUsuario,
@@ -74,16 +87,29 @@ namespace Aicl.Delfin.Interface
 						                     string.Format( "Ofertas por Procedimiento<br/>Desde: {0}  Hasta: {1}",
 						                                     request.Desde.Format(), request.Hasta.Format()));
 
-					var resumenPorCliente = 
-						(from o in ofertas 
-						group o by o.NombreCliente into g
-						select new  OfertaAgrupada { 
-						AgrupadaPor=g.Key, 
-						CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
-						ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
-						CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
-						ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0 )
-					}).ToList();
+					var resumenPorCliente = (
+						from o in ofertas
+						group o by o.NombreCliente into newGroup1
+						from newGroup2 in
+						(
+							from o in newGroup1
+							group o by o.Id into gi
+							select new {
+								FechaEnvio=gi.Max(p=>p.FechaEnvio),
+								ValorUnitario=gi.Sum(p=>p.ValorUnitario),
+								FechaAceptacion=gi.Max(p=>p.FechaAceptacion),
+							}
+						)
+						group newGroup2 by newGroup1.Key into g
+						select new OfertaAgrupada{
+							AgrupadaPor=g.Key,
+							CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
+							ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
+							CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
+							ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0)
+						}
+					).ToList();
+
 
 					HtmlGrid<OfertaAgrupada> gridCliente = 
 						BuildGridAgrupadoPor(resumenPorCliente,
@@ -93,14 +119,33 @@ namespace Aicl.Delfin.Interface
 					//----------------------------------
 					var empresa=proxy.GetEmpresa();
 
+					var pedidos=(
+						from p in ofertas
+						group p by p.Id into g
+						select new  OfertaInforme{
+						ValorUnitario= g.Sum(f=>f.ValorUnitario),
+						NombreCliente= g.Max(f=>f.NombreCliente),
+						Consecutivo =  g.Max(f=>f.Consecutivo),
+						FechaAceptacion =  g.Max(f=>f.FechaAceptacion),
+						NombreEnviadoPor= g.Max(f=>f.NombreEnviadoPor),
+
+					}).ToList();
+
+
+
 					HtmlGrid<OfertaInforme> gridOfertas = new HtmlGrid<OfertaInforme>();
-					gridOfertas.DataSource= ofertas.OrderByDescending(f=>f.ValorUnitario).ToList();
+					gridOfertas.DataSource= pedidos.OrderByDescending(f=>f.ValorUnitario).ToList();
 					gridOfertas.Css = new CayitaGridGrey();
 					gridOfertas.Title=  string.Format( "Relacion de Ofertas Enviadas<br/>Desde: {0}  Hasta: {1}",
 						                                     request.Desde.Format(), request.Hasta.Format());
 
-
 					var gc = gridOfertas.CreateGridColumn();
+					gc.HeaderText="Consecutivo";
+					gc.CellRenderFunc=(row, index)=>row.Consecutivo.Format();
+					gridOfertas.AddGridColum(gc);
+
+
+					gc = gridOfertas.CreateGridColumn();
 					gc.HeaderText="Cliente";
 					gc.CellRenderFunc=(row, index)=>row.NombreCliente;
 					gridOfertas.AddGridColum(gc);
@@ -108,7 +153,7 @@ namespace Aicl.Delfin.Interface
 					gc = gridOfertas.CreateGridColumn();
 					gc.HeaderText="Valor";
 					gc.CellRenderFunc=(row, index)=>row.ValorUnitario.Format();
-					gc.FooterRenderFunc= ()=> ofertas.Sum(f=>f.ValorUnitario).Format();
+					gc.FooterRenderFunc= ()=> pedidos.Sum(f=>f.ValorUnitario).Format();
 					gridOfertas.AddGridColum(gc);
 
 					gc = gridOfertas.CreateGridColumn();
@@ -133,9 +178,10 @@ namespace Aicl.Delfin.Interface
 
 
 					return new HtmlResponse{
-						Html= gridUsuario.ToString()+"<br/>"+ gridProcedimiento.ToString()+
+						Html= gridUsuario.ToString()+
 							"<br/>"+ gridCliente.ToString()+
-							"<br/>"+ gridOfertas.ToString()
+							"<br/>"+ gridOfertas.ToString()+
+							"<br/>"+ gridProcedimiento.ToString()
                 	};
 
 				});
