@@ -142,6 +142,7 @@ namespace Aicl.Delfin.Interface
 					var gc = gridOfertas.CreateGridColumn();
 					gc.HeaderText="Consecutivo";
 					gc.CellRenderFunc=(row, index)=>row.Consecutivo.Format();
+					gc.FooterRenderFunc=()=> pedidos.Count.Format();
 					gridOfertas.AddGridColum(gc);
 
 
@@ -168,6 +169,7 @@ namespace Aicl.Delfin.Interface
 
 						return "";
 					};
+					gc.FooterRenderFunc=()=> pedidos.Count(f=>f.FechaAceptacion.HasValue).Format();
 					gridOfertas.AddGridColum(gc);
 
 
