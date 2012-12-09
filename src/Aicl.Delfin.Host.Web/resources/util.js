@@ -396,7 +396,7 @@
 		},
 		
 		getPublishKey: function(){
-			return sessionStorage["publihsKey"];
+			return sessionStorage["publishKey"];
 		},
 		
 		getSubscribeKey: function(){
