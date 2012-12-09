@@ -36,6 +36,17 @@ namespace Aicl.Delfin.DataAccess
 						Cryptor.Desencriptar(empresa.MailServerPassword,
 						                     CryptoKey);
 				}
+				if(!empresa.PublishKey.IsNullOrEmpty())
+					empresa.PublishKey= Cryptor.Desencriptar(empresa.PublishKey, CryptoKey);
+
+				if(!empresa.SubscribeKey.IsNullOrEmpty())
+					empresa.SubscribeKey= Cryptor.Desencriptar(empresa.SubscribeKey, CryptoKey);
+
+				if(!empresa.SecretKey.IsNullOrEmpty())
+					empresa.SecretKey= Cryptor.Desencriptar(empresa.SecretKey, CryptoKey);
+
+				if(!empresa.MailLogToken.IsNullOrEmpty())
+					empresa.MailLogToken= Cryptor.Desencriptar(empresa.MailLogToken, CryptoKey);
 			}
 
 			return empresa;
@@ -54,9 +65,33 @@ namespace Aicl.Delfin.DataAccess
 						Cryptor.Encriptar(empresa.MailServerPassword,
 						                     CryptoKey);
 			}
+
+			var pk = empresa.PublishKey;
+			if(!pk.IsNullOrEmpty())
+				empresa.PublishKey=Cryptor.Encriptar(pk, CryptoKey);
+
+
+			var sk = empresa.SecretKey;
+			if(!sk.IsNullOrEmpty())
+				empresa.SecretKey=Cryptor.Encriptar(sk, CryptoKey);
+
+			var suk = empresa.SubscribeKey;
+			if(!suk.IsNullOrEmpty())
+				empresa.SubscribeKey=Cryptor.Encriptar(suk, CryptoKey);
+
+			var tk = empresa.MailLogToken;
+			if(!tk.IsNullOrEmpty())
+				empresa.MailLogToken=Cryptor.Encriptar(tk, CryptoKey);
+
+
 			proxy.Create(empresa);
 
 			empresa.MailServerPassword=ps;
+			empresa.PublishKey=pk;
+			empresa.SecretKey=sk;
+			empresa.SubscribeKey=suk;
+			empresa.MailLogToken=tk;
+
 		}
 
 		public static void PutEmpresa(this DALProxy proxy, Empresa empresa)
@@ -71,9 +106,33 @@ namespace Aicl.Delfin.DataAccess
 						Cryptor.Encriptar(empresa.MailServerPassword,
 						                     CryptoKey);
 			}
+
+			var pk = empresa.PublishKey;
+			if(!pk.IsNullOrEmpty())
+				empresa.PublishKey=Cryptor.Encriptar(pk, CryptoKey);
+
+
+			var sk = empresa.SecretKey;
+			if(!sk.IsNullOrEmpty())
+				empresa.SecretKey=Cryptor.Encriptar(sk, CryptoKey);
+
+			var suk = empresa.SubscribeKey;
+			if(!suk.IsNullOrEmpty())
+				empresa.SubscribeKey=Cryptor.Encriptar(suk, CryptoKey);
+
+			var tk = empresa.MailLogToken;
+			if(!tk.IsNullOrEmpty())
+				empresa.MailLogToken=Cryptor.Encriptar(tk, CryptoKey);
+
+
 			proxy.Update(empresa);
 
 			empresa.MailServerPassword=ps;
+			empresa.PublishKey=pk;
+			empresa.SecretKey=sk;
+			empresa.SubscribeKey=suk;
+			empresa.MailLogToken=tk;
+
 		}
 
 		public static void DeleteEmpresa(this DALProxy proxy, Empresa empresa)

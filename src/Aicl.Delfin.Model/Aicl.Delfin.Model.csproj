@@ -90,6 +90,7 @@
     <Compile Include="Types\Auth\RolePermission.cs" />
     <Compile Include="Types\Tarea.cs" />
     <Compile Include="Types\OfertaInforme.cs" />
+    <Compile Include="Types\MailEvent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

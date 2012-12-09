@@ -70,6 +70,12 @@
     <Reference Include="ServiceStack.OrmLite.MySql">
       <HintPath>..\..\lib\ServiceStack.OrmLite.MySql.dll</HintPath>
     </Reference>
+    <Reference Include="Aicl.PubNub">
+      <HintPath>..\..\lib\Aicl.PubNub.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

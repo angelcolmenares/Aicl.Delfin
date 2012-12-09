@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ServiceStack.ServiceInterface.ServiceModel;
+using Aicl.Delfin.Model.Types;
 
 namespace Aicl.Delfin.Model.Operations
 {
@@ -38,5 +39,21 @@ namespace Aicl.Delfin.Model.Operations
 		public string  Html {get; set;}       
 
 	}
+
+	public class MailEventResponse:IHasResponseStatus 
+	{
+        
+		public MailEventResponse ()
+		{
+			ResponseStatus= new ResponseStatus();
+			MailEvent = new MailEvent();
+		}
+		
+		public ResponseStatus ResponseStatus { get; set; }
+		
+		public MailEvent  MailEvent {get; set;}       
+
+	}
+
 
 }

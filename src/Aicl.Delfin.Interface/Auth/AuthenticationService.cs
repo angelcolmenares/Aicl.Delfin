@@ -15,6 +15,8 @@ namespace Aicl.Delfin.Interface
 {
 	public class AuthenticationService:RestServiceBase<Authentication>
 	{
+		public AppConfig Config {get;set;}
+
 		public Factory Factory{ get; set;}
 		
 		public override object OnPost (Authentication request)
@@ -46,7 +48,7 @@ namespace Aicl.Delfin.Interface
                 throw ex;
             };
             
-            Aicl.Delfin.Model.Types.Authorization auth = new Aicl.Delfin.Model.Types.Authorization(){
+            Authorization auth = new Authorization(){
                 UserId= int.Parse(session.UserAuthId)
             };
             
@@ -56,10 +58,20 @@ namespace Aicl.Delfin.Interface
 			session.Roles= aur.Roles.ConvertAll(f=>f.Name);  //(from r in aur.Roles select r.Name).ToList();
             
             authService.SaveSession(session);
+
+			var empresa= Factory.Execute(proxy=>{
+				return proxy.GetEmpresa();
+			});
+
             return new AuthenticationResponse(){
                 DisplayName= session.DisplayName.IsNullOrEmpty()? session.UserName: session.DisplayName,
                 Roles= aur.Roles,
-                Permissions= aur.Permissions
+                Permissions= aur.Permissions,
+				Channel= Config.Channel,
+				PublishKey = empresa.PublishKey,
+				SubscribeKey= empresa.SubscribeKey,
+				SecretKey = empresa.SecretKey
+
             };
 
 		}

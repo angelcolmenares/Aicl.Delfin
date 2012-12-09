@@ -53,6 +53,12 @@
     <Reference Include="Mono.Linq.Expressions">
       <HintPath>..\..\lib\Mono.Linq.Expressions.dll</HintPath>
     </Reference>
+    <Reference Include="Aicl.PubNub">
+      <HintPath>..\..\lib\Aicl.PubNub.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +92,7 @@
     <Compile Include="Services\EmpresaService.cs" />
     <Compile Include="Services\TareaService.cs" />
     <Compile Include="Services\OfertaInformeService.cs" />
+    <Compile Include="Services\MailEventService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

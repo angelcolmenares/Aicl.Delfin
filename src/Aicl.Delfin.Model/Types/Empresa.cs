@@ -103,5 +103,18 @@ namespace Aicl.Delfin.Model.Types
 
 		public bool CambiarPrecio {get;set;}
 
+		[StringLength(128)]
+		public string PublishKey{get;set;}
+
+		[StringLength(128)]
+		public string SubscribeKey{get;set;}
+
+		[StringLength(128)]
+		public string SecretKey{get;set;}
+
+		[StringLength(128)]
+		public string MailLogToken{get;set;}
+
+
 	}
 }

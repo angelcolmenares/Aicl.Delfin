@@ -84,7 +84,24 @@ Ext.define('App.controller.Login',{
 	    	}
 		});
 		
-    	var vp=Ext.create('Ext.Viewport', {
+		var ta = Ext.create("Ext.form.TextArea");
+		
+		var pubnub = PUBNUB.init({
+    		publish_key   : Aicl.Util.getPublishKey(),
+    		subscribe_key : Aicl.Util.getSubscribeKey(),
+    		ssl           : false,
+    		origin        : 'pubsub.pubnub.com'
+		});
+		
+		pubnub.subscribe({
+			channel: Aicl.Util.getChannel(),
+    	    callback: function(message){
+    	    console.log(message);
+            ta.setValue( JSON.stringify(message) +'\n'+ ta.getValue()) ;
+          }
+        });
+
+		var vp=Ext.create('Ext.Viewport', {
         	layout: {
         		type: 'border',
             	padding: 2
@@ -117,6 +134,11 @@ Ext.define('App.controller.Login',{
             			src : 'intro.html'
         			}
             	}]
+        	},{
+            	region: 'south',
+            	layout:'fit',
+            	height:30,
+            	items:[ta]
         	}]
     	});
 	},
@@ -130,3 +152,4 @@ Ext.define('App.controller.Login',{
 		}
     }    
 });
+

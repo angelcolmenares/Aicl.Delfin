@@ -15,7 +15,7 @@ using ServiceStack.OrmLite.MySql;
 
 using Aicl.Delfin.DataAccess;
 using Aicl.Delfin.Interface;
-using ServiceStack.ServiceHost;
+using Aicl.PubNub;
 
 namespace Aicl.Delfin.Host.Web
 {
@@ -88,7 +88,12 @@ namespace Aicl.Delfin.Host.Web
 
 			var mailer = new Mailer(empresa);
 
-            container.Register(appSettings);
+			Channel channel = new Channel(empresa.PublishKey,
+			                              empresa.SubscribeKey, empresa.SecretKey,"",false);
+
+				
+			container.Register(channel);
+            container.Register(new AppConfig(appSettings){MailLogToken=empresa.MailLogToken});
             container.Register<Factory>(factory);
 			container.Register(mailer);
             //container.Register<ICacheClient>(new MemoryCacheClient { FlushOnDispose = false });

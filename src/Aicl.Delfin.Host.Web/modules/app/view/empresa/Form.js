@@ -303,6 +303,26 @@ Ext.define('App.view.empresa.Form', {
                                     maxLength: 128,
                                     maxLengthText: 'Maximo 128 Caracteres',
                                     vtype: 'email'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'PublishKey',
+                                    fieldLabel: 'PublishKey'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'SubscribeKey',
+                                    fieldLabel: 'SubscribeKey'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'SecretKey',
+                                    fieldLabel: 'SecretKey'
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'MailLogToken',
+                                    fieldLabel: 'MailLogToken'
                                 }
                             ]
                         },

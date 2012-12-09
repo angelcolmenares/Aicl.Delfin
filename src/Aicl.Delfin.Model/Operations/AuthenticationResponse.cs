@@ -20,7 +20,12 @@ namespace Aicl.Delfin.Model.Operations
 		public List<AuthPermission> Permissions {get; set;}
 		public List<AuthRole> Roles {get; set;}
 		public string DisplayName { get; set;}
-		
+
+		public string PublishKey{get;set;}
+		public string SubscribeKey{get;set;}
+		public string SecretKey{get;set;}
+		public string Channel{get;set;}
+
 
 	}
 }
