@@ -3147,8 +3147,8 @@ Ext.define('App.store.RemoteTarea',{
     	});
 		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
 });
-
 // fin stores
+
 
 /* ---------------------------------------------------------------------------
 WAIT! - This file depends on instructions from the PUBNUB Cloud.
