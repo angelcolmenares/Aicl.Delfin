@@ -96,8 +96,25 @@ Ext.define('App.controller.Login',{
 		pubnub.subscribe({
 			channel: Aicl.Util.getChannel(),
     	    callback: function(message){
-    	    console.log(message);
-            ta.setValue( JSON.stringify(message) +'\n'+ ta.getValue()) ;
+    	    
+            if(message.Data && message.Data.MailLogToken){
+            	
+            	var mailLog = Ext.getDom('mail-log-div');
+            	var src= 'resources/icons/fam/accept.gif';
+            	var msg = 'Ok. Enviado';
+            	var color = 'black';
+            	var receptor= message.Data.Recipient;
+            	
+            	if (message.Data.Event!="delivered"){
+            		src= 'resources/icons/fam/cross.gif';
+            		msg = 'Error. No Enviado';
+            		color = 'red';
+            		receptor= receptor+ ': ' + message.Data.Description;
+            	}
+            	mailLog.innerHTML=
+            	Ext.String.format("<img src='{0}' /><span style='color:{1};'> {2} </span>{3}<br/>{4}",
+            	src, color, msg, receptor, mailLog.innerHTML ) ;
+            }
           }
         });
 
@@ -137,8 +154,13 @@ Ext.define('App.controller.Login',{
         	},{
             	region: 'south',
             	layout:'fit',
-            	height:30,
-            	items:[ta]
+            	height:40,
+            	overflowX:'hidden',
+            	overflowY:'auto',
+            	items:[{
+            		xtype:'component',
+            		id: 'mail-log-div'
+            	}]
         	}]
     	});
 	},
