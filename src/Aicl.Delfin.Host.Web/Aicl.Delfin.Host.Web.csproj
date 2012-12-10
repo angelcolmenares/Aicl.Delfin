@@ -617,6 +617,8 @@
     <Content Include="resources\GOTHICBI.TTF" />
     <Content Include="resources\GOTHICI.TTF" />
     <Content Include="modules\ofertainforme\index.html" />
+    <Content Include="resources\icons\silk\report.png" />
+    <Content Include="modules\app\view\reportCP\Window.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -637,6 +639,7 @@
     <Folder Include="modules\tarea\" />
     <Folder Include="modules\app\view\tarea\" />
     <Folder Include="modules\ofertainforme\" />
+    <Folder Include="modules\app\view\reportCP\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

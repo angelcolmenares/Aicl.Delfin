@@ -51,7 +51,7 @@ namespace Aicl.Delfin.Interface
 							group o by o.Id into gi
 							select new {
 								FechaEnvio=gi.Max(p=>p.FechaEnvio),
-								ValorUnitario=gi.Sum(p=>p.ValorUnitario),
+								Valor=gi.Sum(p=>p.Valor*p.Cantidad),
 								FechaAceptacion=gi.Max(p=>p.FechaAceptacion),
 							}
 						)
@@ -59,9 +59,9 @@ namespace Aicl.Delfin.Interface
 						select new OfertaAgrupada{
 							AgrupadaPor=g.Key,
 							CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
-							ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
+							ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.Valor:0),
 							CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
-							ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0)
+							ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.Valor:0)
 						}
 					).ToList();
 
@@ -76,10 +76,10 @@ namespace Aicl.Delfin.Interface
 						group o by o.NombreProcedimiento into g
 						select new  OfertaAgrupada { 
 						AgrupadaPor=g.Key, 
-						CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
-						ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
-						CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
-						ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0 )
+						CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?p.Cantidad:0),
+						ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.Valor*p.Cantidad:0),
+						CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.Cantidad:0),
+						ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.Valor*p.Cantidad:0 )
 					}).ToList();
 
 					HtmlGrid<OfertaAgrupada> gridProcedimiento = 
@@ -96,7 +96,7 @@ namespace Aicl.Delfin.Interface
 							group o by o.Id into gi
 							select new {
 								FechaEnvio=gi.Max(p=>p.FechaEnvio),
-								ValorUnitario=gi.Sum(p=>p.ValorUnitario),
+								Valor=gi.Sum(p=>p.Valor*p.Cantidad),
 								FechaAceptacion=gi.Max(p=>p.FechaAceptacion),
 							}
 						)
@@ -104,9 +104,9 @@ namespace Aicl.Delfin.Interface
 						select new OfertaAgrupada{
 							AgrupadaPor=g.Key,
 							CantidadEnviada= g.Sum( p=> (p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta )?1:0),
-							ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.ValorUnitario:0),
+							ValorEnviado = g.Sum(p=>(p.FechaEnvio>=request.Desde && p.FechaEnvio<=request.Hasta)?p.Valor:0),
 							CantidadAceptada= g.Sum( p=> (p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?1:0),
-							ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.ValorUnitario:0)
+							ValorAceptado = g.Sum(p=>(p.FechaAceptacion>=request.Desde && p.FechaAceptacion<=request.Hasta)?p.Valor:0)
 						}
 					).ToList();
 
@@ -123,7 +123,7 @@ namespace Aicl.Delfin.Interface
 						from p in ofertas
 						group p by p.Id into g
 						select new  OfertaInforme{
-						ValorUnitario= g.Sum(f=>f.ValorUnitario),
+						Valor= g.Sum(f=>f.Valor*f.Cantidad),
 						NombreCliente= g.Max(f=>f.NombreCliente),
 						Consecutivo =  g.Max(f=>f.Consecutivo),
 						FechaAceptacion =  g.Max(f=>f.FechaAceptacion),
@@ -134,7 +134,7 @@ namespace Aicl.Delfin.Interface
 
 
 					HtmlGrid<OfertaInforme> gridOfertas = new HtmlGrid<OfertaInforme>();
-					gridOfertas.DataSource= pedidos.OrderByDescending(f=>f.ValorUnitario).ToList();
+					gridOfertas.DataSource= pedidos.OrderByDescending(f=>f.Valor).ToList();
 					gridOfertas.Css = new CayitaGridGrey();
 					gridOfertas.Title=  string.Format( "Relacion de Ofertas Enviadas<br/>Desde: {0}  Hasta: {1}",
 						                                     request.Desde.Format(), request.Hasta.Format());
@@ -153,8 +153,8 @@ namespace Aicl.Delfin.Interface
 								
 					gc = gridOfertas.CreateGridColumn();
 					gc.HeaderText="Valor";
-					gc.CellRenderFunc=(row, index)=>row.ValorUnitario.Format();
-					gc.FooterRenderFunc= ()=> pedidos.Sum(f=>f.ValorUnitario).Format();
+					gc.CellRenderFunc=(row, index)=>row.Valor.Format();
+					gc.FooterRenderFunc= ()=> pedidos.Sum(f=>f.Valor).Format();
 					gridOfertas.AddGridColum(gc);
 
 					gc = gridOfertas.CreateGridColumn();

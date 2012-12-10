@@ -14,9 +14,19 @@ namespace Aicl.Delfin.Model.Types
 
 	}
 
-	public class OfertaAgrupada{
-		public OfertaAgrupada(){}
+	[RestService("/ClienteProcedimiento/{Id}","get,post")]
+	public class ClienteProcedimientoRequest{
 
+		public ClienteProcedimientoRequest(){}
+		public int Id{get;set;}
+
+	}
+
+
+
+	public class OfertaAgrupada{
+
+		public OfertaAgrupada(){}
 		public string AgrupadaPor {get;set;}
 		public int CantidadEnviada {get;set;}
 		public decimal ValorEnviado {get;set;}
@@ -44,15 +54,15 @@ namespace Aicl.Delfin.Model.Types
 		public int IdEnviadoPor {get;set;}
 		public int Consecutivo {get;set;}
 
-		public DateTime FechaEnvio{get;set;}
+		public DateTime? FechaEnvio{get;set;}
 		public DateTime? FechaAceptacion {get;set;}
 		public DateTime? FechaAnulado {get;set;}
 
 
 		[BelongsTo(typeof(PedidoItem))]
 		public int IdPedido {get; set;}
-		[BelongsTo(typeof(PedidoItem))]
-		public decimal ValorUnitario {get; set;}
+		[BelongsTo(typeof(PedidoItem),"ValorUnitario")]
+		public decimal Valor {get; set;}
 		[BelongsTo(typeof(PedidoItem))]
 		public decimal PorcentajeIva {get; set;}
 		[BelongsTo(typeof(PedidoItem))]
@@ -65,6 +75,9 @@ namespace Aicl.Delfin.Model.Types
 
 		[BelongsTo(typeof(Cliente),"Nombre")]
         public string NombreCliente {get;set;}
+
+		[BelongsTo(typeof(Cliente),"Id")]
+        public int IdCliente {get;set;}
 
 		[BelongsTo(typeof(PedidoItem))]
 		public int IdServicio {get;set;}

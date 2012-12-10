@@ -229,6 +229,9 @@ pre.code{
     background-image: url('icons/silk/cross.png') !important;
 }
 
+.report{
+	background-image: url('icons/silk/report.png') !important;
+}
 
 .search-item {
             padding: 5px 10px;

@@ -24,7 +24,8 @@ Ext.define('App.controller.Cliente', {
     ],
     views: [
         'cliente.Panel',
-        'cliente.Window'
+        'cliente.Window',
+        'reportCP.Window'
     ],
 
     refs: [
@@ -175,8 +176,31 @@ Ext.define('App.controller.Cliente', {
         }
     },
 
+    onReportButtonClick: function(button, e, options) {
+        var id= this.getClienteForm().getForm().findField("Id").getValue();
+        var me=this;
+
+        Aicl.Util.executeRestRequest({
+            url : Aicl.Util.getUrlApi()+'/ClienteProcedimiento/'+id,
+            method : 'get',
+            success : function(result) {
+
+                me.reportWindow.show();
+                var report = Ext.getDom('report-cp');
+                report.innerHTML=result.Html;
+            }
+
+        });
+
+
+
+
+
+    },
+
     init: function(application) {
         this.selectClienteWindow= new App.view.cliente.Window();
+        this.reportWindow = new App.view.reportCP.Window();
 
 
         this.control({
@@ -221,6 +245,9 @@ Ext.define('App.controller.Cliente', {
             },
             "gridpanel[name=TareaList]": {
                 selectionchange: this.onTareaListSelectionChange
+            },
+            "toolbar[name=MainToolbar] button[action=report]": {
+                click: this.onReportButtonClick
             }
         });
     },

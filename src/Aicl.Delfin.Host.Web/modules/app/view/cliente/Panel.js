@@ -72,6 +72,12 @@ Ext.define('App.view.cliente.Panel', {
                             action: 'remove',
                             iconCls: 'remove',
                             tooltip: 'Borrar Cliente'
+                        },
+                        {
+                            xtype: 'button',
+                            action: 'report',
+                            iconCls: 'report',
+                            tooltip: 'Procedimientos Ofertados'
                         }
                     ]
                 }
@@ -353,8 +359,8 @@ Ext.define('App.view.cliente.Panel', {
                     items: [
                         {
                             xtype: 'gridpanel',
-                            flex: 1,
                             name: 'TareaList',
+                            flex: 1,
                             height: 150,
                             autoScroll: true,
                             enableColumnHide: false,
@@ -438,13 +444,13 @@ Ext.define('App.view.cliente.Panel', {
                         },
                         {
                             xtype: 'form',
-                            flex: 1,
                             name: 'TareaForm',
                             fieldDefaults: {
                                 msgTarget: 'side',
                                 labelWidth: 80,
                                 labelAlign: 'right'
                             },
+                            flex: 1,
                             margin: '5 5 0 5',
                             style: {
                                 border: 0,
@@ -455,8 +461,8 @@ Ext.define('App.view.cliente.Panel', {
                             dockedItems: [
                                 {
                                     xtype: 'toolbar',
-                                    dock: 'top',
                                     name: 'TareaToolbar',
+                                    dock: 'top',
                                     border: 0,
                                     items: [
                                         {
