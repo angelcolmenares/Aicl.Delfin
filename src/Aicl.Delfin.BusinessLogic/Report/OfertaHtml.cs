@@ -146,9 +146,7 @@ namespace Aicl.Delfin.Report
     <tbody style=""margin: 0.5em; border-collapse: collapse;  border: 1px #ccc solid; "">
         {0}
     </tbody>
-    </table>
-    <p style=""font-weight: bold"">Nota : El precio {1}incluye gastos de envio</p>",
-			                     ConstruirFilasResumen(filas), pedido.IncluyeGastosEnvio? " ": "NO ");
+    </table>",ConstruirFilasResumen(filas));
 
 		}
 
@@ -331,54 +329,44 @@ namespace Aicl.Delfin.Report
 									</thead>	
 									<tbody style=""margin: 0.5em; border-collapse: collapse;  border: 1px #ccc solid; "">
 									<tr>
-										<td>			
-			<p>
-				Si esta de acuerdo con la oferta, por favor enviar:</p>
-			<ul>
-				<li>
-					Comunicaci&oacute;n escrita (Carta, Orden de Compra, Orden de Servicio u Orden de Trabajo)</li>
-				<li>
-					Soporte de Pago ( via fax o e-mail): &nbsp;Consignaci&oacute;n en la {0}</li>
-			</ul>
-			<p>
-				La comunicaci&oacute;n debe contener la siguiente informacion:</p>
-			<ul>
-				<li>
-					Razon Social completa de la empresa, Direccion &nbsp;y Nit.</li>
-				<li>
-					N&uacute;mero de la presente oferta.</li>
-				<li>
-					C&oacute;digo o N&uacute;mero de Identificaci&oacute;n del equipo (en caso de que no tenga este c&oacute;digo, este ser&aacute; asignado por {1})</li>
-				<li>
-					Direcci&oacute;n exacta (donde estan ubicados los equipos) - Informaci&oacute;n para el certificado.</li>
-				<li>
-					Nombres de las personas encargadas de los equipos o departamento de metrolog&iacute;a para comunicarnos en caso de necesidad.</li>
-				<li>
-					Al enviar los equipos favor anexar copia de esta oferta.</li>
-			</ul>
-			<p>
-				Tambien se da por entendida la aceptaci&oacute;n por parte del cliente si est&eacute; da una autorizaci&oacute;n verbal (telef&oacute;nica), o trae el instrumento para calibrar o realiza el pago correspodiente.</p>
-			<p>
-				Si tiene alguna inquietud comun&iacute;quese con nosotros. No se emiten juicios profesionales sobre los resultados de la calibracion.</p>
-			{13}	
-			<p>{2}</p>
-			<p>{3}</p>
-			<p>{4}</p>
-		</td>
-		</tr>
-		</tbody>
-		</table>
-
-	<p>{5} Tel:{6} Telefax:{7} {8} e-mail:{9} {10}-{11}</p>
-	<p> Direccion antigua: {12}</p>
-",
-			                  empresa.CuentaBancaria, 
-			                  empresa.Nombre, user.FirstName+" "+ user.LastName, user.Cargo , user.Email,
-			                  empresa.Direccion,empresa.Telefono, empresa.Fax, 
-			                  empresa.Web,empresa.Mail, empresa.Ciudad, empresa.Pais, empresa.DireccionAntigua,
+										<td>
+<ul>
+<li>Los precios se basan en la mejor información disponible proporcionada por el cliente y pueden ser revisados tras la inspección del equipo.</li>
+<li>Las condiciones del servicio se definen en el formato FLPA0208 adjunto, por favor leerlo detenidamente y diligenciarlo.</li>
+<li>Colmetrik no recoge equipos, ni asume gastos de los envíos de estos.</li>
+<li>Los pagos se deben realizar en el {0} a nombre de {1}, ya sea por transferencia electrónica  o consignación.</li>
+<li>Si acepta el servicio descrito, favor enviar Orden de Compra indicando en ella el número de la oferta y los ítem aceptados para el proceso de Calibración.</li>
+<li>La información que el cliente envía para la elaboración de la oferta y para la emisión de los certificados, formato FLPA0206 y FLPA0207 respectivamente, debe ser clara y correcta.</li>
+<li>La recepción de los equipos y la programación del servicio de Calibración se realiza de acuerdo a la disponibilidad del laboratorio y es informada por Colmetrik después de la aceptación del servicio.</li>
+<li>En esta oferta no se emiten Juicios Profesionales sobre los resultados de la calibración.</li>
+</ul>
+{13}	
+<p>{2}</p>
+<p>{3}</p>
+<p>{4}</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>{5} Tel:{6} Telefax:{7} {8} e-mail:{9} {10}-{11}</p>
+<p> Direccion antigua: {12}</p>",
+			                  empresa.CuentaBancaria,
+			                  empresa.Nombre,
+			                  user.FirstName+" "+ user.LastName,
+			                  user.Cargo,
+			                  user.Email,
+			                  empresa.Direccion,
+			                  empresa.Telefono,
+			                  empresa.Fax, 
+			                  empresa.Web,
+			                  empresa.Mail,
+			                  empresa.Ciudad,
+			                  empresa.Pais, 
+			                  empresa.DireccionAntigua,
 			                  pedido.Observacion.IsNullOrEmpty()?
-			                  "<br />":
-			                  string.Format("<p style=\"font-weight:bold;\">Observación:{0}</p><br />",pedido.Observacion));
+			                    "<br />"
+			                    : string.Format("<p style=\"font-weight:bold;\">Observación:{0}</p><br />",
+			                                    pedido.Observacion));
 			return html.ToString();
 		}
 

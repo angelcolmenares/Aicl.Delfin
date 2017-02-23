@@ -133,7 +133,7 @@ namespace Aicl.Delfin.Report
 
 				ConstruirTablaItems(document,items);
 				ConstruirResumen(document, items);
-				ConstruirNotaGastosEnvio(document, pedido);
+				//ConstruirNotaGastosEnvio(document, pedido);
 				ConstruirCondiciones(document, empresa, user);
 				ConstruirObservacion(document, empresa, pedido, user);
 				ConstruirFirma(document, empresa, user);
@@ -261,7 +261,7 @@ namespace Aicl.Delfin.Report
 			document.Add(itemTable);
 
 		}
-
+		/*
 		public void ConstruirNotaGastosEnvio(Document document, Pedido pedido){
 			string nota = string.Format("Nota : El precio {0}incluye gastos de envio",
 			                            pedido.IncluyeGastosEnvio? " ": "NO ");
@@ -270,14 +270,21 @@ namespace Aicl.Delfin.Report
 			pr.IndentationLeft=18;
 			document.Add(pr);
 		}
+		*/
 
 		public void ConstruirCondiciones(Document document, Empresa empresa, User user){
-			StringBuilder html = new StringBuilder();
+			var html = new StringBuilder();
 			html.AppendFormat(
-@"Si esta de acuerdo con la oferta, por favor enviar:1 Comunicación escrita (Carta, Orden de Compra, Orden de Servicio u Orden de Trabajo). 2 Soporte de Pago ( via fax o e-mail):Consignación en la {0} a nombre de {1}. 3 La comunicación debe contener la siguiente informacion:3.1 Razón Social completa de la empresa, Direccion y Nit. 3.2 Número de la presente oferta. 3.3 Código o Número de Identificación del equipo (en caso de que no tenga este código, este será; asignado por {1}). 3.4 Dirección exacta (donde estan ubicados los equipos) - Información para el certificado. 3.5 Nombres de las personas encargadas de los equipos o departamento de metrología para comunicarnos en caso de necesidad. 3.6 Al enviar los equipos favor anexar copia de esta oferta.
-Tambien se da por entendida la aceptación por parte del cliente si éste da una autorización verbal (telefónica), o trae el instrumento para calibrar o realiza el pago correspodiente.
-Si tiene alguna inquietud comuníquese con nosotros. No se emiten juicios profesionales sobre los resultados de la calibracion.",		
-				empresa.CuentaBancaria, empresa.Nombre);
+@"1 Los precios se basan en la mejor información disponible proporcionada por el cliente y pueden ser revisados tras 
+la inspección del equipo. 2 Las condiciones del servicio se definen en el formato FLPA0208 adjunto, por favor leerlo 
+detenidamente y diligenciarlo. 3 Colmetrik no recoge equipos, ni asume gastos de los envíos de estos. 4 Los pagos se 
+deben realizar en el {0} a nombre de {1}, ya sea por transferencia electrónica  o consignación. 5 Si acepta el servicio 
+descrito, favor enviar Orden de Compra indicando en ella el número de la oferta y los ítem aceptados para el proceso de 
+Calibración. 6 La información que el cliente envía para la elaboración de la oferta y para la emisión de los 
+certificados, formato FLPA0206 y FLPA0207 respectivamente, debe ser clara y correcta. 7 La recepción de los equipos y la  
+programación del servicio de Calibración se realiza de acuerdo a la disponibilidad del laboratorio y es informada por 
+Colmetrik después de la aceptación del servicio. 8 En esta oferta no se emiten Juicios Profesionales sobre los 
+resultados de la calibración.", empresa.CuentaBancaria, empresa.Nombre);
 
 			var p = new Paragraph(html.ToString(),f7);
 			p.IndentationLeft=18;
