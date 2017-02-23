@@ -275,16 +275,15 @@ namespace Aicl.Delfin.Report
 		public void ConstruirCondiciones(Document document, Empresa empresa, User user){
 			var html = new StringBuilder();
 			html.AppendFormat(
-@"1 Los precios se basan en la mejor información disponible proporcionada por el cliente y pueden ser revisados tras 
-la inspección del equipo. 2 Las condiciones del servicio se definen en el formato FLPA0208 adjunto, por favor leerlo 
-detenidamente y diligenciarlo. 3 Colmetrik no recoge equipos, ni asume gastos de los envíos de estos. 4 Los pagos se 
-deben realizar en el {0} a nombre de {1}, ya sea por transferencia electrónica  o consignación. 5 Si acepta el servicio 
-descrito, favor enviar Orden de Compra indicando en ella el número de la oferta y los ítem aceptados para el proceso de 
-Calibración. 6 La información que el cliente envía para la elaboración de la oferta y para la emisión de los 
-certificados, formato FLPA0206 y FLPA0207 respectivamente, debe ser clara y correcta. 7 La recepción de los equipos y la  
-programación del servicio de Calibración se realiza de acuerdo a la disponibilidad del laboratorio y es informada por 
-Colmetrik después de la aceptación del servicio. 8 En esta oferta no se emiten Juicios Profesionales sobre los 
-resultados de la calibración.", empresa.CuentaBancaria, empresa.Nombre);
+@"Condiciones:
+1 Los precios se basan en la mejor información disponible proporcionada por el cliente y pueden ser revisados tras la inspección del equipo.
+2 Las condiciones del servicio se definen en el formato FLPA0208 adjunto, por favor leerlo detenidamente y diligenciarlo.
+3 Colmetrik no recoge equipos, ni asume gastos de los envíos de estos.
+4 Los pagos se deben realizar en el {0} a nombre de {1}, ya sea por transferencia electrónica  o consignación.
+5 Si acepta el servicio descrito, favor enviar Orden de Compra indicando en ella el número de la oferta y los ítem aceptados para el proceso de Calibración.
+6 La información que el cliente envía para la elaboración de la oferta y para la emisión de los certificados, formato FLPA0206 y FLPA0207 respectivamente, debe ser clara y correcta.
+7 La recepción de los equipos y la programación del servicio de Calibración se realiza de acuerdo a la disponibilidad del laboratorio y es informada por Colmetrik después de la aceptación del servicio.
+8 En esta oferta no se emiten Juicios Profesionales sobre los resultados de la calibración.", empresa.CuentaBancaria, empresa.Nombre);
 
 			var p = new Paragraph(html.ToString(),f7);
 			p.IndentationLeft=18;
